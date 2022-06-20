@@ -1,0 +1,447 @@
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="handlers"
+            type="com.ashok.bible.ui.details.DetailsActivity" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_view"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            app:cardCornerRadius="8dp"
+            app:cardUseCompatPadding="true"
+            app:elevation="10dp"
+            app:layout_constraintBottom_toTopOf="@+id/card_bottom"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/trendingImageView"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/banner_1"
+                    android:scaleType="fitXY"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <View
+                    android:id="@+id/view4"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:background="#80000000"
+                    app:layout_constraintBottom_toBottomOf="@+id/trendingImageView"
+                    app:layout_constraintEnd_toEndOf="@+id/trendingImageView"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="@+id/trendingImageView"
+                    app:layout_constraintTop_toTopOf="@+id/trendingImageView"
+                    app:layout_constraintVertical_bias="0.0" />
+
+                <TextView
+                    android:id="@+id/verse_text"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:gravity="center"
+                    android:lineHeight="28sp"
+                    android:textColor="@color/white"
+                    android:textSize="26sp"
+                    app:fontFml='@{"akayakanadaka"}'
+                    app:layout_constraintBottom_toBottomOf="@+id/view4"
+                    app:layout_constraintEnd_toEndOf="@+id/view4"
+                    app:layout_constraintStart_toStartOf="@+id/view4"
+                    app:layout_constraintTop_toTopOf="@+id/view4"
+                    app:layout_constraintVertical_bias="0.42000002" />
+
+                <TextView
+                    android:id="@+id/chapter_text"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="monospace"
+                    android:gravity="center"
+                    android:lineHeight="28sp"
+                    android:textColor="@color/yellow"
+                    android:textSize="22sp"
+                    app:layout_constraintEnd_toEndOf="@+id/verse_text"
+                    app:layout_constraintStart_toStartOf="@+id/verse_text"
+                    app:layout_constraintTop_toBottomOf="@+id/verse_text" />
+
+                <ImageView
+                    android:id="@+id/mic_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:onClick="@{handlers::onClick}"
+                    android:layout_marginEnd="16dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@android:drawable/ic_lock_silent_mode_off"
+                    app:tint="@color/white" />
+
+                <ImageView
+                    android:id="@+id/refresh_image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:onClick="@{handlers::onClick}"
+                    app:layout_constraintEnd_toStartOf="@+id/mic_btn"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/icons_refresh"
+                    app:tint="@color/white" />
+
+                <TextView
+                    android:id="@+id/textView11"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:shadowColor="@color/colorAccent_2"
+                    android:shadowDx="6"
+                    android:shadowDy="6"
+                    android:text="@string/app_name"
+                    android:textColor="@color/white"
+                    app:layout_constraintBottom_toBottomOf="@+id/imageView16"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/imageView16" />
+
+                <ImageView
+                    android:id="@+id/imageView16"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:src="@mipmap/ic_launcher_round"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/textView11" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_bottom"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            app:cardCornerRadius="8dp"
+            app:cardUseCompatPadding="true"
+            app:elevation="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+
+
+                <TextView
+                    android:id="@+id/book_mark_view"
+                    android:layout_width="0dp"
+                    android:layout_height="44dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/round_border_gray"
+                    android:drawableLeft="@drawable/ic_bookmarks_24dp"
+                    android:drawablePadding="2dip"
+                    android:drawableTint="@color/colorAccent"
+                    android:gravity="center"
+                    android:onClick="@{handlers::onClick}"
+                    android:padding="10dp"
+                    android:text="@string/title_bookmark"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="16sp"
+                    app:layout_constraintBottom_toTopOf="@+id/color_1"
+                    app:layout_constraintEnd_toStartOf="@+id/note_view"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+                <ImageView
+                    android:id="@+id/book_mark_select"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:background="#bf000000"
+                    android:src="@drawable/icons_checkmark"
+                    android:tint="@color/white"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="@+id/book_mark_view"
+                    app:layout_constraintEnd_toEndOf="@+id/book_mark_view"
+                    app:layout_constraintStart_toStartOf="@+id/book_mark_view"
+                    app:layout_constraintTop_toTopOf="@+id/book_mark_view" />
+                <TextView
+                    android:id="@+id/note_view"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/round_border_gray"
+                    android:drawableLeft="@drawable/ic_note_24dp"
+                    android:drawableTint="@color/colorAccent"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:onClick="@{handlers::onClick}"
+                    android:text="@string/title_notes"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="16sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/book_mark_view"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/note_select"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:background="#bf000000"
+                    android:src="@drawable/icons_checkmark"
+                    android:tint="@color/white"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="@+id/note_view"
+                    app:layout_constraintEnd_toEndOf="@+id/note_view"
+                    app:layout_constraintStart_toStartOf="@+id/note_view"
+                    app:layout_constraintTop_toTopOf="@+id/note_view" />
+
+                <View
+                    android:id="@+id/color_1"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="#FFEB3B"
+                    app:layout_constraintBottom_toTopOf="@+id/highlights_view"
+                    app:layout_constraintEnd_toStartOf="@+id/color_2"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:onClick="@{handlers::onClick}"
+                    app:layout_constraintTop_toBottomOf="@+id/book_mark_view" />
+                <ImageView
+                    android:id="@+id/color_1_select"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:background="#bf000000"
+                    android:src="@drawable/icons_checkmark"
+                    android:tint="@color/white"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="@+id/color_1"
+                    app:layout_constraintEnd_toEndOf="@+id/color_1"
+                    app:layout_constraintStart_toStartOf="@+id/color_1"
+                    app:layout_constraintTop_toTopOf="@+id/color_1" />
+
+                <View
+                    android:id="@+id/color_2"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:background="#F44336"
+                    android:onClick="@{handlers::onClick}"
+                    app:layout_constraintBottom_toBottomOf="@+id/color_1"
+                    app:layout_constraintEnd_toStartOf="@+id/color_3"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/color_1"
+                    app:layout_constraintTop_toTopOf="@+id/color_1"
+                    app:layout_constraintVertical_bias="0.0" />
+                <ImageView
+                    android:id="@+id/color_2_select"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:background="#bf000000"
+                    android:src="@drawable/icons_checkmark"
+                    android:tint="@color/white"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="@+id/color_2"
+                    app:layout_constraintEnd_toEndOf="@+id/color_2"
+                    app:layout_constraintStart_toStartOf="@+id/color_2"
+                    app:layout_constraintTop_toTopOf="@+id/color_2" />
+
+                <View
+                    android:id="@+id/color_3"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:background="#3F51B5"
+                    android:onClick="@{handlers::onClick}"
+                    app:layout_constraintBottom_toBottomOf="@+id/color_2"
+                    app:layout_constraintEnd_toStartOf="@+id/color_4"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/color_2"
+                    app:layout_constraintTop_toTopOf="@+id/color_2" />
+
+                <ImageView
+                    android:id="@+id/color_3_select"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:background="#bf000000"
+                    android:src="@drawable/icons_checkmark"
+                    android:tint="@color/white"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="@+id/color_3"
+                    app:layout_constraintEnd_toEndOf="@+id/color_3"
+                    app:layout_constraintStart_toStartOf="@+id/color_3"
+                    app:layout_constraintTop_toTopOf="@+id/color_3" />
+
+                <View
+                    android:id="@+id/color_4"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="#4CAF50"
+                    android:onClick="@{handlers::onClick}"
+                    app:layout_constraintBottom_toBottomOf="@+id/color_3"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/color_3"
+                    app:layout_constraintTop_toTopOf="@+id/color_3" />
+                <ImageView
+                    android:id="@+id/color_4_select"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:background="#bf000000"
+                    android:src="@drawable/icons_checkmark"
+                    android:tint="@color/white"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="@+id/color_4"
+                    app:layout_constraintEnd_toEndOf="@+id/color_4"
+                    app:layout_constraintStart_toStartOf="@+id/color_4"
+                    app:layout_constraintTop_toTopOf="@+id/color_4" />
+                <RelativeLayout
+                    android:id="@+id/highlights_view"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/round_border_gray"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:onClick="@{handlers::onClick}"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/share_view"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/color_1">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_highlight_icon"
+                        android:tint="@color/colorAccent" />
+                </RelativeLayout>
+                <ImageView
+                    android:id="@+id/highlights_select"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:background="#bf000000"
+                    android:src="@drawable/icons_checkmark"
+                    android:tint="@color/white"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="@+id/highlights_view"
+                    app:layout_constraintEnd_toEndOf="@+id/highlights_view"
+                    app:layout_constraintStart_toStartOf="@+id/highlights_view"
+                    app:layout_constraintTop_toTopOf="@+id/highlights_view" />
+
+                <RelativeLayout
+                    android:id="@+id/copy_view"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:background="@drawable/round_border_gray"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:onClick="@{handlers::onClick}"
+                    app:layout_constraintBottom_toBottomOf="@+id/share_view"
+                    app:layout_constraintEnd_toStartOf="@+id/download_view"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/share_view"
+                    app:layout_constraintTop_toTopOf="@+id/share_view">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_copy"
+                        android:tint="@color/colorAccent" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/share_view"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:background="@drawable/round_border_gray"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:onClick="@{handlers::onClick}"
+                    app:layout_constraintBottom_toBottomOf="@+id/highlights_view"
+                    app:layout_constraintEnd_toStartOf="@+id/copy_view"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/highlights_view"
+                    app:layout_constraintTop_toTopOf="@+id/highlights_view">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_share"
+                        android:tint="@color/colorAccent" />
+                </RelativeLayout>
+
+
+                <RelativeLayout
+                    android:id="@+id/download_view"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/round_border_gray"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:onClick="@{handlers::onClick}"
+                    app:layout_constraintBottom_toBottomOf="@+id/copy_view"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/copy_view"
+                    app:layout_constraintTop_toTopOf="@+id/copy_view">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/icons_download"
+                        android:tint="@color/colorAccent" />
+                </RelativeLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

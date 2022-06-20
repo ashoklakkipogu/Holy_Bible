@@ -1,0 +1,38 @@
+apply plugin: 'com.android.library'
+apply plugin: 'checkstyle'
+
+dependencies {
+  implementation 'com.android.support:support-v4:28.0.0'
+  implementation 'com.nineoldandroids:library:2.4.0'
+}
+
+android {
+  compileSdkVersion 31
+
+    defaultConfig {
+    minSdkVersion 16
+    targetSdkVersion 31
+    }
+
+  sourceSets {
+    main {
+      manifest.srcFile 'AndroidManifest.xml'
+      java.srcDirs = ['src/main/java']
+      res.srcDirs = ['res']
+    }
+  }
+
+  lintOptions {
+    abortOnError false
+  }
+}
+
+
+task checkstyle(type: Checkstyle) {
+  configFile file('../config/checkstyle/checkstyle.xml')
+  source 'src/main/java'
+  include '**/*.java'
+  exclude '**/gen/**'
+
+  classpath = files()
+}

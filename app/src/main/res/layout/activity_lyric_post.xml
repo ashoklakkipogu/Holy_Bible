@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="handlers"
+            type="com.ashok.bible.ui.lyrics.LyricPostActivity" />
+
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorBackground"
+        tools:context=".view.activity.PostActivity">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@color/colorBackground"
+            app:layout_constraintBottom_toTopOf="@+id/submit_btn"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorBackground">
+
+                <EditText
+                    android:id="@+id/edit_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:background="@drawable/round_border_gray"
+                    android:ems="10"
+                    android:gravity="top"
+                    android:hint="Title"
+                    android:inputType="text"
+                    android:padding="10dp"
+                    android:singleLine="true"
+                    app:layout_constraintEnd_toStartOf="@+id/edit_title_en"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <EditText
+                    android:id="@+id/edit_title_en"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:background="@drawable/round_border_gray"
+                    android:ems="10"
+                    android:gravity="top"
+                    android:hint="Title English"
+                    android:inputType="text"
+                    android:padding="10dp"
+                    android:singleLine="true"
+                    app:layout_constraintBottom_toBottomOf="@+id/edit_title"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/edit_title"
+                    app:layout_constraintTop_toTopOf="@+id/edit_title" />
+
+                <EditText
+                    android:id="@+id/edit_desc"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="16dp"
+                    android:background="@drawable/round_border_gray"
+                    android:ems="10"
+                    android:gravity="top"
+                    android:hint="Description"
+                    android:inputType="text"
+                    android:padding="10dp"
+                    android:singleLine="true"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/edit_title" />
+
+                <EditText
+                    android:id="@+id/edit_youtube"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:background="@drawable/round_border_gray"
+                    android:ems="10"
+                    android:gravity="top"
+                    android:hint="Youtube id"
+                    android:inputType="text"
+                    android:padding="10dp"
+                    android:singleLine="true"
+                    app:layout_constraintEnd_toStartOf="@+id/select_lng"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/edit_desc" />
+
+                <EditText
+                    android:id="@+id/edit_singer"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/round_border_gray"
+                    android:ems="10"
+                    android:gravity="top"
+                    android:hint="Singers"
+                    android:inputType="text"
+                    android:padding="10dp"
+                    android:singleLine="true"
+                    app:layout_constraintEnd_toStartOf="@+id/youtube_lyric_id"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/edit_youtube" />
+
+                <EditText
+                    android:id="@+id/youtube_lyric_id"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:background="@drawable/round_border_gray"
+                    android:ems="10"
+                    android:gravity="top"
+                    android:hint="Youtube Track id"
+                    android:inputType="text"
+                    android:padding="10dp"
+                    android:singleLine="true"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/edit_singer"
+                    app:layout_constraintTop_toBottomOf="@+id/edit_youtube" />
+
+                <EditText
+                    android:id="@+id/edit_content"
+                    android:layout_width="0dp"
+                    android:layout_height="400dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:background="@drawable/round_border_gray"
+                    android:ems="10"
+                    android:gravity="top"
+                    android:hint="Content"
+                    android:inputType="textMultiLine"
+                    android:padding="10dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/edit_singer" />
+
+                <EditText
+                    android:id="@+id/edit_content_en"
+                    android:layout_width="0dp"
+                    android:layout_height="400dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:background="@drawable/round_border_gray"
+                    android:ems="10"
+                    android:gravity="top"
+                    android:hint="Content english"
+                    android:inputType="textMultiLine"
+                    android:padding="10dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/edit_content" />
+
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/select_lng"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:background="@color/colorAccent"
+                    android:onClick="@{handlers::onClick}"
+                    android:padding="5dp"
+                    android:text="Select Language"
+                    android:textColor="@color/color_3"
+                    app:layout_constraintBottom_toBottomOf="@+id/edit_youtube"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/edit_youtube" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </ScrollView>
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/submit_btn"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:onClick="@{handlers::onClick}"
+            android:text="Submit"
+            app:backgroundTint="@color/colorAccent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

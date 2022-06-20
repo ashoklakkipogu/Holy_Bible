@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Bible.iml" filepath="$PROJECT_DIR$/.idea/modules/Bible.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Bible.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Bible.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/draggablepanel/Bible.draggablepanel.iml" filepath="$PROJECT_DIR$/.idea/modules/draggablepanel/Bible.draggablepanel.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/photopicker/Bible.photopicker.iml" filepath="$PROJECT_DIR$/.idea/modules/photopicker/Bible.photopicker.iml" />
+    </modules>
+  </component>
+</project>

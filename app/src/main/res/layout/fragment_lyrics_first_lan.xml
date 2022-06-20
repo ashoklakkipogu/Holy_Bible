@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="handlers"
+            type="com.ashok.bible.ui.lyrics.LyricsFirstLangFragment" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <SearchView
+            android:id="@+id/searchView"
+            android:layout_width="0dp"
+            android:layout_height="35dp"
+            android:background="@color/color_3"
+            android:elevation="2dp"
+            android:queryHint="Search Lyric"
+            android:iconifiedByDefault="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:queryHint="@string/app_name" />
+        <TextView
+            android:id="@+id/empty_view"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:gravity="center"
+            android:textColor="@color/color_2"
+            android:visibility="gone"
+            android:text="No lyrics"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/recycler_view"
+            app:layout_constraintTop_toTopOf="parent" />
+
+       <!-- <com.ashok.bible.utils.recyclerviewfastscroller.RecyclerViewFastScroller
+            android:id="@+id/fast_scroller_contacts"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:handleHeight="32dp"
+            app:handleWidth="@dimen/default_handle_size"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/searchView"
+            app:popupDrawable="@drawable/contacts_fastscroller_drawable"
+            app:popupTextStyle="@style/ContactsPopupTextViewStyle">
+-->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_view"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintTop_toBottomOf="@+id/searchView"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                />
+<!--
+        </com.ashok.bible.utils.recyclerviewfastscroller.RecyclerViewFastScroller>
+-->
+
+        <!--app:mli_initials_number="2"-->
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</layout>

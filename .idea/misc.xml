@@ -1,35 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="DesignSurface">
-    <option name="filePathToZoomLevelMap">
-      <map>
-        <entry key="..\:/Ashok/Bible/Bible App/app/src/main/res/drawable-ldrtl/contacts_fastscroller_drawable.xml" value="0.1725" />
-        <entry key="..\:/Ashok/Bible/Bible App/app/src/main/res/drawable-mdpi/ic_collapse_player.xml" value="0.1" />
-        <entry key="..\:/Ashok/Bible/Bible App/app/src/main/res/drawable/contacts_fastscroller_drawable.xml" value="0.1725" />
-        <entry key="..\:/Ashok/Bible/Bible App/app/src/main/res/drawable/custom_bg_primary.xml" value="0.1725" />
-        <entry key="..\:/Ashok/Bible/Bible App/app/src/main/res/layout/activity_draggale_view.xml" value="0.16354166666666667" />
-        <entry key="..\:/Ashok/Bible/Bible App/app/src/main/res/layout/activity_lyric_expanded.xml" value="0.1" />
-        <entry key="..\:/Ashok/Bible/Bible App/app/src/main/res/layout/bottom_sheet.xml" value="0.1" />
-        <entry key="..\:/Ashok/Bible/Bible App/app/src/main/res/layout/fastscroller_popup.xml" value="0.16354166666666667" />
-        <entry key="..\:/Ashok/Bible/Bible App/app/src/main/res/layout/fastscroller_track_thumb.xml" value="0.16354166666666667" />
-        <entry key="..\:/Ashok/Bible/Bible App/app/src/main/res/layout/favorite_row.xml" value="0.14666666666666667" />
-        <entry key="..\:/Ashok/Bible/Bible App/app/src/main/res/layout/fragment_bottom_player.xml" value="0.16354166666666667" />
-        <entry key="..\:/Ashok/Bible/Bible App/app/src/main/res/layout/fragment_favorite.xml" value="0.16354166666666667" />
-        <entry key="..\:/Ashok/Bible/Bible App/app/src/main/res/layout/fragment_lyrics.xml" value="0.16354166666666667" />
-        <entry key="..\:/Ashok/Bible/Bible App/app/src/main/res/layout/fragment_lyrics_first_lan.xml" value="0.16354166666666667" />
-        <entry key="..\:/Ashok/Bible/Bible App/app/src/main/res/layout/fragment_lyrics_new.xml" value="0.16354166666666667" />
-        <entry key="..\:/Ashok/Bible/Bible App/app/src/main/res/layout/fragment_lyrics_second_lan.xml" value="0.16354166666666667" />
-        <entry key="..\:/Ashok/Bible/Bible App/app/src/main/res/layout/fragment_new_lyrics.xml" value="0.16354166666666667" />
-        <entry key="..\:/Ashok/Bible/Bible App/app/src/main/res/layout/fragment_one.xml" value="0.5" />
-        <entry key="..\:/Ashok/Bible/Bible App/app/src/main/res/layout/fragment_top_player.xml" value="0.16354166666666667" />
-        <entry key="..\:/Ashok/Bible/Bible App/app/src/main/res/layout/fragment_top_top.xml" value="0.16354166666666667" />
-        <entry key="..\:/Ashok/Bible/Bible App/app/src/main/res/layout/fragment_two.xml" value="0.1" />
-        <entry key="..\:/Ashok/Bible/Bible App/app/src/main/res/layout/layout_draggable_panel.xml" value="0.16354166666666667" />
-        <entry key="..\:/Ashok/Bible/Bible App/app/src/main/res/layout/loading_view.xml" value="0.16354166666666667" />
-        <entry key="..\:/Ashok/Bible/Bible App/app/src/main/res/layout/lyric_row.xml" value="0.16354166666666667" />
-        <entry key="..\:/Ashok/Bible/Bible App/app/src/main/res/layout/progress_loading.xml" value="0.16354166666666667" />
-      </map>
-    </option>
+  <component name="ExternalStorageConfigurationManager" enabled="true" />
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_18" default="true" project-jdk-name="18" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK" />
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
 </project>

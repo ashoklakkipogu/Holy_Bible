@@ -1,135 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.ashok.bible">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-
-
+    <uses-permission android:name="android.permission.INTERNET"/>
     <application
         android:name=".App"
         android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
-        android:requestLegacyExternalStorage="true"
         android:supportsRtl="true"
-        android:largeHeap="true"
-        android:hardwareAccelerated="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/Theme.MySplash"
+        tools:targetApi="31">
         <activity
-            android:name=".ui.details.DetailsActivity"
-            android:label="@string/verse"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme1" />
-        <activity android:name=".ui.DraggaleViewActivity" />
+            android:name=".MainActivity"
+            android:exported="false"
+            android:label="@string/title_activity_login"
+            android:theme="@style/Theme.MyApplication" />
         <activity
-            android:name=".ui.feedback.FeedbackActivity"
-            android:label="@string/feedback"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme1" />
-        <activity
-            android:name=".ui.lyrics.LyricExpandedActivity"
-            android:label="@string/title_lyrics"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity
-            android:name=".ui.lyrics.LyricDetailsActivity"
-            android:label="@string/title_lyrics"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".ui.lyrics.LyricsCommentsActivity"
-            android:label="@string/title_lyrics"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".ui.MainActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".ui.bibleindex.BibleIndexActivity"
-            android:label="@string/bible"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".ui.notification.NotificationPostActivity"
-            android:label="@string/notification"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme1" />
-        <activity
-            android:name=".ui.lyrics.LyricPostActivity"
-            android:label="@string/title_lyrics"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme1" />
-
-        <activity
-            android:name=".ui.admin.QuotesPosActivity"
-            android:label="@string/title_quotes"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme1" />
-
-        <activity
-            android:name=".ui.quotes.QuotesDetailsActivity"
-            android:label="@string/title_quotes"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme1" />
-
-        <activity
-            android:name=".ui.admin.BannerPosActivity"
-            android:label="@string/verse"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme1" />
-
-        <activity
-            android:name=".ui.SplashActivity"
+            android:name=".LoginActivity"
             android:exported="true"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:label="@string/app_name"
+            android:theme="@style/Theme.MyApplication">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <meta-data
-            android:name="com.google.firebase.messaging.default_notification_channel_id"
-            android:value="@string/notification_channel_id" />
-        <meta-data
-            android:name="com.google.firebase.messaging.default_notification_icon"
-            android:resource="@drawable/ic_notification" />
-        <meta-data
-            android:name="com.google.firebase.messaging.default_notification_color"
-            android:resource="@color/colorAccent" />
-        <meta-data
-            android:name="com.google.android.gms.ads.APP_ID"
-            android:value="ca-app-pub-2552944737773120~5142065441" />
-        <meta-data
-            android:name="com.google.android.gms.ads.AD_MANAGER_APP"
-            android:value="true" />
-
-        <service
-            android:name=".data.remote.firebase.FirebaseNotificationService"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
-            </intent-filter>
-        </service>
-        <provider
-            android:name="androidx.core.content.FileProvider"
-            android:authorities="com.ashok.bible.fileprovider"
-            android:exported="false"
-            android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/provider_paths" />
-        </provider>
-
-
     </application>
 
 </manifest>

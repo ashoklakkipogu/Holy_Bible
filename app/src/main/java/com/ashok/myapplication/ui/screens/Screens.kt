@@ -21,6 +21,4 @@ sealed class Screens(var router: String, var title: String, var icon: ImageVecto
     object DashboardRoute : Screens("dashboard", "dashboard", Icons.Default.ThumbUp)
     object AuthRoute : Screens("auth", "auth", Icons.Default.ThumbUp)
 
-
-
 }

@@ -14,11 +14,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.ashok.myapplication.R
-import com.ashok.myapplication.ui.theme.MyApplicationTheme
+import com.ashok.myapplication.ui.theme.BibleTheme
 
 @Composable
 fun FavScreen(navController: NavController) {
-    MyApplicationTheme {
+    BibleTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background

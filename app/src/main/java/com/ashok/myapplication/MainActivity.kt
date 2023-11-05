@@ -15,6 +15,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -27,7 +28,7 @@ import com.ashok.myapplication.ui.navigation.dashboardNavGraph
 import com.ashok.myapplication.ui.navigation.drawerContent
 import com.ashok.myapplication.ui.navigation.topAppBar
 import com.ashok.myapplication.ui.screens.Screens
-import com.ashok.myapplication.ui.theme.MyApplicationTheme
+import com.ashok.myapplication.ui.theme.BibleTheme
 import com.ashok.myapplication.ui.utilities.Result
 import com.ashok.myapplication.ui.viewmodel.ProductsViewModel
 import com.ashok.myapplication.ui.viewmodel.UsersViewModel
@@ -44,6 +45,7 @@ class MainActivity : androidx.activity.ComponentActivity() {
     @OptIn(DelicateCoroutinesApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        installSplashScreen()
         viewModel.getAllProducts()
         usersViewModel.getUserList(1)
         lifecycleScope.launch {
@@ -84,7 +86,7 @@ class MainActivity : androidx.activity.ComponentActivity() {
         })
 
         setContent {
-            MyApplicationTheme {
+            BibleTheme {
                 val navController = rememberNavController()
                 val navigationState = rememberDrawerState(initialValue = DrawerValue.Closed)
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -153,7 +155,7 @@ fun MainScreen(
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
-    MyApplicationTheme {
+    BibleTheme {
         MainScreen(
             rememberNavController(),
             rememberDrawerState(initialValue = DrawerValue.Open),

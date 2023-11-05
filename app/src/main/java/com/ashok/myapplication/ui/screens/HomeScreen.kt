@@ -22,7 +22,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.ashok.myapplication.ui.theme.MyApplicationTheme
+import com.ashok.myapplication.ui.theme.BibleTheme
 import com.ashok.myapplication.R
 import com.ashok.myapplication.data.entity.Products
 import com.ashok.myapplication.ui.utilities.Result
@@ -37,7 +37,7 @@ fun HomeScreen(
 ) {
     val productsRes by productsViewModel.products.collectAsState()
     productsViewModel.getAllProducts()
-    MyApplicationTheme {
+    BibleTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background

@@ -17,13 +17,13 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.ashok.myapplication.MainActivity
-import com.ashok.myapplication.ui.theme.MyApplicationTheme
+import com.ashok.myapplication.ui.theme.BibleTheme
 
 @Composable
 fun LoginScreen(navController: NavController, modifier: Modifier = Modifier) {
     val activity = (LocalContext.current as? Activity)
 
-    MyApplicationTheme {
+    BibleTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background

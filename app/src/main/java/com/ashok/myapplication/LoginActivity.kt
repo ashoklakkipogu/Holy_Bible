@@ -16,7 +16,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.ashok.myapplication.ui.navigation.authNavGraph
 import com.ashok.myapplication.ui.screens.Screens
-import com.ashok.myapplication.ui.theme.MyApplicationTheme
+import com.ashok.myapplication.ui.theme.BibleTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -25,7 +25,7 @@ class LoginActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         installSplashScreen()
         setContent {
-            MyApplicationTheme {
+            BibleTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
@@ -55,7 +55,7 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview2() {
-    MyApplicationTheme {
+    BibleTheme {
         Greeting("Android")
     }
 }

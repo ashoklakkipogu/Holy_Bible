@@ -17,11 +17,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.ashok.myapplication.ui.theme.MyApplicationTheme
+import com.ashok.myapplication.ui.theme.BibleTheme
 
 @Composable
 fun RegistrationScreen(navController: NavController, modifier: Modifier = Modifier) {
-    MyApplicationTheme {
+    BibleTheme {
         Surface(
             modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background

@@ -2,11 +2,8 @@ package com.ashok.myapplication.ui.screens
 
 import android.util.Log
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
@@ -34,6 +31,7 @@ import androidx.navigation.compose.rememberNavController
 import com.ashok.myapplication.ui.theme.BibleTheme
 import com.ashok.myapplication.R
 import com.ashok.myapplication.data.entity.Products
+import com.ashok.myapplication.ui.component.bibleVerses
 import com.ashok.myapplication.ui.utilities.Result
 import com.ashok.myapplication.ui.viewmodel.ProductsViewModel
 
@@ -48,8 +46,7 @@ fun HomeScreen(
     productsViewModel.getAllProducts()
     BibleTheme {
         Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.background
+            modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
         ) {
             var products by remember {
                 mutableStateOf(Products())
@@ -64,17 +61,7 @@ fun HomeScreen(
                     val response = (productsRes as Result.Success).data
                     products = response
                     Log.i("HomeScreen", "Success..............${response.data.toString()}")
-                    LazyColumn(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(Color.White)
-                            .padding(20.dp),
-                        state = scrollState
-                    ) {
-                        items(response.data) { model ->
-                            ListItem(model = model)
-                        }
-                    }
+                    bibleVerses(response.data, scrollState)
                 }
 
                 is Result.Error -> {
@@ -86,54 +73,6 @@ fun HomeScreen(
             }
 
 
-
-
-
-
         }
     }
-}
-
-@Composable
-fun ListItem(model: Products.Data) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .wrapContentHeight()
-            .fillMaxWidth()
-    ) {
-        val paddingModifier = Modifier.padding(20.dp)
-        ElevatedCard(
-            elevation = CardDefaults.cardElevation(
-                defaultElevation = 2.dp
-            ), modifier = paddingModifier
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.more_24),
-                    contentDescription = "",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .size(100.dp)
-                        .padding(5.dp)
-                )
-                Text(
-                    text = "Ashok",
-                    fontSize = 100.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = Color.Black,
-                )
-            }
-        }
-    }
-}
-
-
-@Preview
-@Composable
-fun HomeScreenPreview() {
-    HomeScreen(navController = rememberNavController(), scrollState= rememberLazyListState())
 }

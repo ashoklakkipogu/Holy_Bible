@@ -16,11 +16,6 @@
         android:theme="@style/Theme.MySplash"
         tools:targetApi="31">
         <activity
-            android:name=".LoginActivity"
-            android:exported="false"
-            android:label="@string/title_activity_splash"
-            android:theme="@style/Theme.Bible" />
-        <activity
             android:name=".MainActivity"
             android:exported="false"
             android:label="@string/app_name"

@@ -1,5 +1,6 @@
 package com.ashok.myapplication.ui.navigation
 
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -10,21 +11,24 @@ import com.ashok.myapplication.ui.screens.HomeScreen
 import com.ashok.myapplication.ui.screens.LyricScreen
 import com.ashok.myapplication.ui.screens.ProfileScreen
 
-fun NavGraphBuilder.dashboardNavGraph(navController: NavController) {
+fun NavGraphBuilder.dashboardNavGraph(navController: NavController, scrollState: LazyListState) {
     navigation(
-        startDestination = Screens.Home.router,
+        startDestination = Screens.Bible.router,
         route = Screens.DashboardRoute.router
     ) {
-        composable(Screens.Home.router) {
-            HomeScreen(navController = navController)
+        composable(Screens.Bible.router) {
+            HomeScreen(navController = navController, scrollState = scrollState)
         }
-        composable(Screens.Lyric.router) {
+        composable(Screens.Bookmark.router) {
             LyricScreen(navController)
         }
-        composable(Screens.Fav.router) {
+        composable(Screens.Lyrics.router) {
             FavScreen(navController)
         }
-        composable(Screens.Profile.router) {
+        composable(Screens.Discovery.router) {
+            ProfileScreen(navController)
+        }
+        composable(Screens.More.router) {
             ProfileScreen(navController)
         }
     }

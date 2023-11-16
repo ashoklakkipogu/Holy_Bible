@@ -47,7 +47,7 @@ fun bibleVerses(response: List<Products.Data>, scrollState: LazyListState) {
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
-            .padding(2.dp),
+            .padding(10.dp),
         state = scrollState
     ) {
         items(response) { model ->
@@ -88,7 +88,7 @@ fun ListItem(model: Products.Data) {
                     textAlign = TextAlign.Start,
                     fontWeight = FontWeight.Bold
                 )
-                Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(5.dp))
             }
 
             Box(

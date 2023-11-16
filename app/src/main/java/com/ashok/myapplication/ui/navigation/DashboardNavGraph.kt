@@ -5,6 +5,9 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import com.ashok.myapplication.ui.component.bottomSheet
+import com.ashok.myapplication.ui.screens.BookmarkScreen
+import com.ashok.myapplication.ui.screens.DiscoveryScreen
 import com.ashok.myapplication.ui.screens.Screens
 import com.ashok.myapplication.ui.screens.FavScreen
 import com.ashok.myapplication.ui.screens.HomeScreen
@@ -17,16 +20,19 @@ fun NavGraphBuilder.dashboardNavGraph(navController: NavController, scrollState:
         route = Screens.DashboardRoute.router
     ) {
         composable(Screens.Bible.router) {
+
             HomeScreen(navController = navController, scrollState = scrollState)
+            bottomSheet()
+
         }
         composable(Screens.Bookmark.router) {
-            LyricScreen(navController)
+            BookmarkScreen(navController)
         }
         composable(Screens.Lyrics.router) {
-            FavScreen(navController)
+            LyricScreen(navController)
         }
         composable(Screens.Discovery.router) {
-            ProfileScreen(navController)
+            DiscoveryScreen(navController)
         }
         composable(Screens.More.router) {
             ProfileScreen(navController)

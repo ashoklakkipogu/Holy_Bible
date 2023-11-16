@@ -18,7 +18,6 @@ import androidx.compose.ui.res.vectorResource
 
 sealed class Screens(var router: String, var title: String, @DrawableRes val icon: Int) {
     object Bible : Screens("Bible", "Bible", R.drawable.menu_book)
-
     object Bookmark : Screens("Note", "Note", R.drawable.notes_24)
     object Lyrics : Screens("Lyrics", "Lyrics", R.drawable.lyrics_24)
     object Discovery : Screens("Discovery", "Discovery", R.drawable.search_24)

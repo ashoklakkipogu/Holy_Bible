@@ -5,8 +5,10 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.BottomAppBarScrollBehavior
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
@@ -28,8 +30,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.ashok.myapplication.ui.screens.Screens
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun bottomNavigation(navController: NavHostController, scorllState: LazyListState) {
+fun bottomNavigation(navController: NavHostController, scorllState: BottomAppBarScrollBehavior) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
     val items = listOf(
@@ -42,11 +45,10 @@ fun bottomNavigation(navController: NavHostController, scorllState: LazyListStat
     var navSelectedItem by remember {
         mutableIntStateOf(0)
     }
-    NavigationBar(
+    BottomAppBar(
         modifier = Modifier.shadow(elevation = 10.dp)
-            .background(color = Color.White)
-            .animateContentSize(animationSpec = tween(durationMillis = 300))
-            .height(height = if(!scorllState.isScrollingUp()) 0.dp else 80.dp)
+            .background(color = Color.White),
+        scrollBehavior = scorllState
     ) {
         items.forEachIndexed { index, item ->
             NavigationBarItem(

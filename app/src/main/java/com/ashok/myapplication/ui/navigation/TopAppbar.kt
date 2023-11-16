@@ -2,10 +2,13 @@ package com.ashok.myapplication.ui.navigation
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -50,15 +53,14 @@ import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 fun topAppBar(
     modifier: Modifier = Modifier,
     currentRoute: String,
-    leftArrowClick : () ->Unit,
-    rightArrowClick : () ->Unit,
-    verseClick : () ->Unit
+    leftArrowClick: () -> Unit,
+    rightArrowClick: () -> Unit,
+    verseClick: () -> Unit
 ) {
-    val scope = rememberCoroutineScope()
     Box(
         modifier
             .fillMaxWidth()
-            .padding(5.dp),
+            .padding(8.dp),
         contentAlignment = Alignment.Center
     ) {
 
@@ -66,7 +68,7 @@ fun topAppBar(
             elevation = CardDefaults.cardElevation(
                 defaultElevation = 2.dp
             ),
-            shape = RoundedCornerShape(8.dp),
+            shape = RoundedCornerShape(15.dp),
             colors = CardDefaults.cardColors(
                 containerColor = Color.White
             )
@@ -75,15 +77,25 @@ fun topAppBar(
                 modifier = modifier.padding(2.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                IconButton(onClick = {
-                    leftArrowClick.invoke()
-                }) {
-                    Icon(imageVector = Icons.Default.KeyboardArrowLeft, contentDescription = "Left Icon")
+                IconButton(
+                    onClick = {
+                        leftArrowClick.invoke()
+                    },
+                    modifier.height(35.dp),
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.KeyboardArrowLeft,
+                        contentDescription = "Left Icon"
+                    )
                 }
                 Spacer(modifier.width(20.dp))
-                TextButton(onClick = {
-                    verseClick.invoke()
-                }) {
+                TextButton(
+                    onClick = {
+                        verseClick.invoke()
+                    },
+                    modifier.height(35.dp),
+                    contentPadding = PaddingValues(),
+                ) {
                     Text(
                         text = "Bible",
                         textAlign = TextAlign.Center,
@@ -92,10 +104,16 @@ fun topAppBar(
                 }
 
                 Spacer(modifier.width(20.dp))
-                IconButton(onClick = {
-                    rightArrowClick.invoke()
-                }) {
-                    Icon(imageVector = Icons.Default.KeyboardArrowRight, contentDescription = "Right Icon")
+                IconButton(
+                    onClick = {
+                        rightArrowClick.invoke()
+                    },
+                    modifier.height(35.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.KeyboardArrowRight,
+                        contentDescription = "Right Icon"
+                    )
                 }
             }
 
@@ -116,5 +134,9 @@ fun topAppBar(
 @Preview
 @Composable
 fun topAppBarPreview() {
-    topAppBar(currentRoute = Screens.DashboardRoute.router, leftArrowClick = {  }, rightArrowClick = {  }, verseClick = {  })
+    topAppBar(
+        currentRoute = Screens.DashboardRoute.router,
+        leftArrowClick = { },
+        rightArrowClick = { },
+        verseClick = { })
 }

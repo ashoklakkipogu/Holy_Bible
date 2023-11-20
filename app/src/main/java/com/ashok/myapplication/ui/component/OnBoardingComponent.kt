@@ -44,7 +44,7 @@ fun OnBoardingComponent(
         mutableStateOf("")
     }
     var expanded by remember { mutableStateOf(false) }
-    val options = listOf("Option 1", "Option 2", "Option 3", "Option 4", "Option 5")
+    val options = listOf("Telugu", "Option 2", "Option 3", "Option 4", "Option 5")
     var selectedOptionText by remember { mutableStateOf(options[0]) }
 
 
@@ -86,7 +86,7 @@ fun OnBoardingComponent(
                         userName = it
                     },
                     colors = OutlinedTextFieldDefaults.colors(
-                        unfocusedBorderColor= Color.White,
+                        unfocusedBorderColor = Color.White,
                         unfocusedTextColor = Color.White
                     ),
                     label = { Text(text = "Name") },
@@ -100,7 +100,8 @@ fun OnBoardingComponent(
                         value = selectedOptionText,
                         onValueChange = {},
                         readOnly = true,
-                        modifier = Modifier.menuAnchor()
+                        modifier = Modifier
+                            .menuAnchor()
                             .fillMaxWidth(),
                         trailingIcon = {
                             ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)

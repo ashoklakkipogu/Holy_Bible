@@ -1,5 +1,6 @@
 package com.ashok.myapplication.ui.navigation
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -33,6 +34,8 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -44,6 +47,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ashok.myapplication.R
+import com.ashok.myapplication.data.local.entry.BibleModelEntry
 import com.ashok.myapplication.ui.screens.Screens
 import kotlinx.coroutines.launch
 import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
@@ -53,6 +57,7 @@ import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 fun topAppBar(
     modifier: Modifier = Modifier,
     currentRoute: String,
+    headingData: MutableState<BibleModelEntry>,
     leftArrowClick: () -> Unit,
     rightArrowClick: () -> Unit,
     verseClick: () -> Unit
@@ -97,7 +102,7 @@ fun topAppBar(
                     contentPadding = PaddingValues(),
                 ) {
                     Text(
-                        text = "Bible",
+                        text = "${headingData.value.bibleIndex} ${headingData.value.Chapter}",
                         textAlign = TextAlign.Center,
                         fontSize = 20.sp,
                     )
@@ -131,6 +136,7 @@ fun topAppBar(
 
 }
 
+@SuppressLint("UnrememberedMutableState")
 @Preview
 @Composable
 fun topAppBarPreview() {
@@ -138,5 +144,6 @@ fun topAppBarPreview() {
         currentRoute = Screens.DashboardRoute.router,
         leftArrowClick = { },
         rightArrowClick = { },
+        headingData = mutableStateOf(BibleModelEntry()),
         verseClick = { })
 }

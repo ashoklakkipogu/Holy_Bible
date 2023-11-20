@@ -96,6 +96,27 @@ dependencies {
     implementation(Dependencies.splashscreen)
 
     implementation("io.coil-kt:coil-compose:2.5.0")
+    // Room SQLite for data persistence
+    val room_version = "2.6.0"
+
+    implementation("androidx.room:room-runtime:$room_version")
+    annotationProcessor("androidx.room:room-compiler:$room_version")
+
+    // To use Kotlin annotation processing tool (kapt)
+    kapt("androidx.room:room-compiler:$room_version")
+
+    // optional - Kotlin Extensions and Coroutines support for Room
+    implementation("androidx.room:room-ktx:$room_version")
+
+    // optional - Guava support for Room, including Optional and ListenableFuture
+    implementation("androidx.room:room-guava:$room_version")
+
+    // optional - Paging 3 Integration
+    implementation("androidx.room:room-paging:$room_version")
+    implementation("androidx.compose.runtime:runtime-livedata:1.5.4")
+
+
+
 
 }
  kapt {

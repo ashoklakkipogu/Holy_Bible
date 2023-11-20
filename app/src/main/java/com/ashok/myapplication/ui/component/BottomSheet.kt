@@ -23,10 +23,10 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun bottomSheet(){
+fun bottomSheet() {
     val sheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
-    var showBottomSheet by remember { mutableStateOf(true) }
+    var showBottomSheet by remember { mutableStateOf(false) }
 
     if (showBottomSheet) {
         ModalBottomSheet(
@@ -52,6 +52,6 @@ fun bottomSheet(){
 
 @Preview
 @Composable
-fun bottomSheetPreview(){
+fun bottomSheetPreview() {
     bottomSheet()
 }

@@ -1,29 +1,38 @@
 package com.ashok.myapplication.ui.navigation
 
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.runtime.MutableState
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import com.ashok.myapplication.data.local.entry.BibleModelEntry
 import com.ashok.myapplication.ui.component.bottomSheet
 import com.ashok.myapplication.ui.screens.BookmarkScreen
 import com.ashok.myapplication.ui.screens.DiscoveryScreen
 import com.ashok.myapplication.ui.screens.Screens
-import com.ashok.myapplication.ui.screens.FavScreen
 import com.ashok.myapplication.ui.screens.HomeScreen
 import com.ashok.myapplication.ui.screens.LyricScreen
 import com.ashok.myapplication.ui.screens.ProfileScreen
 
-fun NavGraphBuilder.dashboardNavGraph(navController: NavController, scrollState: LazyListState) {
+fun NavGraphBuilder.dashboardNavGraph(
+    navController: NavController,
+    scrollState: LazyListState,
+    headingData: MutableState<BibleModelEntry>,
+    clickAction: MutableState<String>
+) {
+
     navigation(
         startDestination = Screens.Bible.router,
         route = Screens.DashboardRoute.router
     ) {
         composable(Screens.Bible.router) {
-
-            HomeScreen(navController = navController, scrollState = scrollState)
+            HomeScreen(
+                navController = navController,
+                scrollState = scrollState,
+                headingData = headingData
+            )
             bottomSheet()
-
         }
         composable(Screens.Bookmark.router) {
             BookmarkScreen(navController)

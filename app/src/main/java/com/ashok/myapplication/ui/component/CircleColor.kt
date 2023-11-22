@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -25,6 +26,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -36,7 +39,7 @@ fun circleColor(
     onClick: (String) -> Unit
 ) {
     val items = arrayListOf(
-        "#FFCDD2", "#F8BBD0", "#E1BEE7", "#B39DDB",
+        "", "#FFCDD2", "#F8BBD0", "#E1BEE7", "#B39DDB",
         "#90CAF9", "#80DEEA", "#80CBC4", "#E6EE9C", "#FFB74D", "#FFEB3B", "#FF5722", "#8D6E63"
     )
 
@@ -52,22 +55,41 @@ fun circleColor(
 
 @Composable
 fun colorView(color: String, onClick: (String) -> Unit) {
-    Box(
-        modifier = Modifier
-            .clickable {
-                onClick.invoke(color)
-            }
-            .size(40.dp)
-            .padding(2.dp)
-            .clip(CircleShape)
-            .background(Color(color.toColorInt())),
-    )
+    if (color.isBlank()) {
+        Box(
+            modifier = Modifier
+                .size(40.dp)
+                .padding(2.dp)
+                .clip(CircleShape)
+                .background(Color.LightGray)
+                .clickable {
+                    onClick.invoke(color)
+                }
+        ) {
+            Text(
+                text = "U",
+                textAlign = TextAlign.Center,
+                modifier = Modifier.align(Alignment.Center),
+                fontSize = 13.sp,
+                fontWeight = FontWeight.Bold,
+                textDecoration = TextDecoration.Underline
+            )
+        }
+    } else
+        Box(
+            modifier = Modifier
+                .size(40.dp)
+                .padding(2.dp)
+                .clip(CircleShape)
+                .background(Color(color.toColorInt()))
+                .clickable {
+                    onClick.invoke(color)
+                },
+        )
 }
 
 @Preview
 @Composable
 fun circleColorPreview() {
-    circleColor {
-
-    }
+    circleColor() {}
 }

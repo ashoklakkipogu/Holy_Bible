@@ -32,7 +32,6 @@ fun NavGraphBuilder.dashboardNavGraph(
                 scrollState = scrollState,
                 headingData = headingData
             )
-            bottomSheet()
         }
         composable(Screens.Bookmark.router) {
             BookmarkScreen(navController)

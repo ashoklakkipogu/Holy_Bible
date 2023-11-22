@@ -8,7 +8,7 @@ import com.ashok.myapplication.data.local.entry.BibleModelEntry
 @Dao
 interface BibleDao {
     @Query("SELECT * FROM bible")
-    fun getAllBibleContent(): List<BibleModelEntry>
+    fun getAllBibleContent(): List<BibleModelEntry>?
 
     @Query("SELECT * FROM bible WHERE Book =:bookId")
     fun getAllBibleContentByBookId(bookId: Int): LiveData<List<BibleModelEntry>>

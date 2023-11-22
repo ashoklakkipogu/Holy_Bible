@@ -23,35 +23,31 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun bottomSheet() {
+fun bottomSheet(onDismiss: () -> Unit, onCircleColor: (String) -> Unit) {
     val sheetState = rememberModalBottomSheetState()
-    val scope = rememberCoroutineScope()
-    var showBottomSheet by remember { mutableStateOf(false) }
-
-    if (showBottomSheet) {
-        ModalBottomSheet(
-            onDismissRequest = {
-                showBottomSheet = false
-            },
-            sheetState = sheetState,
-            content = {
-                Column(
-                    Modifier
-                        .fillMaxSize()
-                        .padding(16.dp)
-                ) {
-                    circleColor {}
-                    ButtonComponent()
-                    GridImages()
-                }
-
+    ModalBottomSheet(
+        onDismissRequest = {
+            onDismiss()
+        },
+        sheetState = sheetState,
+        content = {
+            Column(
+                Modifier
+                    .fillMaxSize()
+                    .padding(16.dp)
+            ) {
+                circleColor { onCircleColor.invoke(it) }
+                ButtonComponent()
+                GridImages()
             }
-        )
-    }
+
+        }
+    )
+
 }
 
 @Preview
 @Composable
 fun bottomSheetPreview() {
-    bottomSheet()
+    bottomSheet(onDismiss = {  }, onCircleColor = {})
 }

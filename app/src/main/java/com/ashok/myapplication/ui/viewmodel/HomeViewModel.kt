@@ -1,17 +1,12 @@
 package com.ashok.myapplication.ui.viewmodel
 
 import android.util.Log
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ashok.myapplication.data.entity.Products
 import com.ashok.myapplication.data.local.entry.BibleModelEntry
-import com.ashok.myapplication.data.local.repositary.DbRepoImp
 import com.ashok.myapplication.data.local.repositary.DbRepository
 import com.ashok.myapplication.ui.repository.ProductRepository
 import com.ashok.myapplication.ui.utilities.Result
@@ -56,10 +51,15 @@ class HomeViewModel @Inject constructor(
 
     fun getBibleData() {
         viewModelScope.launch(Dispatchers.IO) {
-            val data = dbRepo.getBible()
-            Log.i("data", "data1........$data")
+            val bibleData = dbRepo.getBible()
+            var noteData = dbRepo.getAllNotes()
+
+
+            Log.i("data", "data1........$bibleData")
             withContext(Dispatchers.Main) {
-                _bibleData.value = Result.Success(data)
+               /* allModel.bible = bibleData!!
+                allModel.notes = noteData!!*/
+                _bibleData.value = Result.Success(bibleData!!)
             }
 
         }
@@ -88,6 +88,7 @@ class HomeViewModel @Inject constructor(
                     data = dbRepo.getBibleScrollPosition(bookId + 1, 1, 1)
                 }
             }
+
             withContext(Dispatchers.Main) {
                 data?.let {
                     _bibleScrollPos.value = it.bibleLangIndex.split("-")[1].toInt() - 1
@@ -96,6 +97,4 @@ class HomeViewModel @Inject constructor(
 
         }
     }
-
-
 }

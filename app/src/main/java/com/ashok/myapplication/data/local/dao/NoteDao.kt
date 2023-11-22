@@ -7,9 +7,10 @@ import com.ashok.myapplication.data.local.entry.NoteModelEntry
 @Dao
 interface NoteDao {
     @Query("SELECT * FROM note")
-    fun getAllNote(): LiveData<List<NoteModelEntry>>
+    fun getAllNote(): List<NoteModelEntry>?
 
-    @Query("SELECT * FROM note WHERE Book =:bookId")
+
+    /*@Query("SELECT * FROM note WHERE Book =:bookId")
     fun getAllNoteByBookId(bookId: Int): LiveData<List<NoteModelEntry>>
 
 
@@ -18,6 +19,7 @@ interface NoteDao {
 
     @Query("SELECT * FROM note WHERE Book =:bookId AND Chapter =:chapterId AND Versecount =:verseId")
     fun getAllNoteByBookIdAndChapterIdAndVerse(bookId: Int, chapterId: Int, verseId: Int): LiveData<List<NoteModelEntry>>
+*/
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertNote(note: List<NoteModelEntry>)

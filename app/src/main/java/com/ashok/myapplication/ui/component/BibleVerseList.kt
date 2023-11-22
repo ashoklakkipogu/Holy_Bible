@@ -18,19 +18,21 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.BaselineShift
@@ -40,19 +42,72 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.graphics.toColorInt
 import com.ashok.myapplication.R
 import com.ashok.myapplication.data.local.entry.BibleModelEntry
+import com.ashok.myapplication.data.local.entry.NoteModelEntry
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun bibleVerses(
-    response: List<BibleModelEntry>,
+    bibleDataList: List<BibleModelEntry>,
     scrollState: LazyListState,
     headingData: MutableState<BibleModelEntry>
 ) {
-    val selectedIndex by remember { mutableStateOf(response) }
-    val onItemClick =
-        { index: Int, model: BibleModelEntry -> selectedIndex.get(index).isSelected = model.isSelected }
+    var bibleData by remember { mutableStateOf(bibleDataList) }
+    var showSheet by remember { mutableStateOf(false) }
+    var selectedBible by remember { mutableStateOf(BibleModelEntry()) }
+    val scope = rememberCoroutineScope()
 
+    val onItemClick = { model: BibleModelEntry ->
+        showSheet = true
+        selectedBible = model
+
+
+        /*if (!isSelected) {
+            val noteObj = NoteModelEntry()
+            noteObj.createdDate = ""
+            noteObj.noteName = ""
+            noteObj.langauge = model.langauge
+            noteObj.bibleLangIndex = model.bibleLangIndex
+            noteObj.bibleId = model.id
+            notesList.add(noteObj)
+            allNotes.value += notesList
+        } else {
+            notesList.forEach {
+                if (it.bibleId == model.id) {
+                    notesList.remove(it)
+                }
+            }
+            allNotes.value = notesList
+        }*/
+
+
+    }
+
+
+    if (showSheet) {
+        bottomSheet(onDismiss = {
+            showSheet = false
+        }, onCircleColor = { color->
+            bibleData = if (color.isBlank()) {
+                bibleData.mapIndexed { j, item ->
+                    if (selectedBible.bibleID == item.bibleID) {
+                        item.copy(selectedBackground = !item.selectedBackground)
+                    } else item
+                }
+            } else {
+                bibleData.mapIndexed { j, item ->
+                    if (selectedBible.bibleID == item.bibleID) {
+                        var colorCode =color
+                        if (item.selectedBackground.isNotBlank() || item.selectedBackground == colorCode)
+                            colorCode = ""
+                        item.copy(selectedBackground = colorCode)
+                    } else item
+                }
+            }
+        })
+    }
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -61,9 +116,8 @@ fun bibleVerses(
         state = scrollState
     ) {
         val currentItemIndex = scrollState.firstVisibleItemIndex
-        Log.i("currentItemIndex", "currentItemIndex...........${currentItemIndex}")
-        headingData.value = response[currentItemIndex + 1]
-        itemsIndexed(response) { index, model ->
+        headingData.value = bibleData[currentItemIndex + 1]
+        itemsIndexed(bibleData) { index, model ->
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
@@ -77,10 +131,7 @@ fun bibleVerses(
                         BibleHeading(model)
                     }
                     BibleVerse(
-                        model,
-                        index = index,
-                        selected = selectedIndex[index].isSelected == model.isSelected,
-                        onClick = onItemClick
+                        model = model, onClick = onItemClick
                     )
                 }
 
@@ -120,13 +171,11 @@ fun BibleHeading(model: BibleModelEntry) {
 @Composable
 fun BibleVerse(
     model: BibleModelEntry,
-    index: Int,
-    selected: Boolean,
-    onClick: (Int, BibleModelEntry) -> Unit
+    onClick: (BibleModelEntry) -> Unit,
 ) {
     Box(modifier = Modifier
         .clickable {
-            onClick.invoke(index, model)
+            onClick.invoke(model)
         }
         .fillMaxWidth()) {
         Text(
@@ -143,7 +192,7 @@ fun BibleVerse(
                 }
                 withStyle(
                     style = SpanStyle(
-                        textDecoration = if (selected) TextDecoration.Underline else TextDecoration.None,
+                        textDecoration = if (model.isSelected) TextDecoration.Underline else TextDecoration.None,
                         fontSize = 16.sp
                     )
 
@@ -155,6 +204,7 @@ fun BibleVerse(
             fontSize = 16.sp,
             color = Color.Black,
             textAlign = TextAlign.Start,
+            style = if (model.selectedBackground.isNotBlank()) TextStyle(background = Color(model.selectedBackground.toColorInt())) else TextStyle.Default,
         )
     }
 
@@ -171,7 +221,7 @@ fun BibleVersesPreview() {
     data.Versecount = 1
     dataList.add(data)
     bibleVerses(
-        dataList,
+        bibleDataList = dataList,
         scrollState = rememberLazyListState(),
         headingData = mutableStateOf(BibleModelEntry())
     )

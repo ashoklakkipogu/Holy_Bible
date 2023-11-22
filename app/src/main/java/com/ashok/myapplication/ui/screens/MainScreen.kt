@@ -45,6 +45,7 @@ fun MainScreen(
     val clickAction = remember { mutableStateOf("") }
     val coroutineScope = rememberCoroutineScope()
 
+
     val bibleScrollPos by viewModel.bibleScrollPos.observeAsState(
         initial = null
     )

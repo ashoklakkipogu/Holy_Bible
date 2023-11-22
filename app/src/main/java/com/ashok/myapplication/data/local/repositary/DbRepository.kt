@@ -10,7 +10,7 @@ import com.ashok.myapplication.data.local.entry.HighlightModelEntry
 import com.ashok.myapplication.data.local.entry.NoteModelEntry
 
 interface DbRepository {
-    suspend fun getBible(): List<BibleModelEntry>
+    suspend fun getBible(): List<BibleModelEntry>?
     suspend fun getBibleScrollPosition(
         bookId: Int,
         chapterId: Int,
@@ -40,7 +40,7 @@ interface DbRepository {
 
     suspend fun getFavById(id: Int): LiveData<FavoriteModelEntry>
     suspend fun getAllHighlights(): LiveData<List<HighlightModelEntry>>
-    suspend fun getAllNotes(): LiveData<List<NoteModelEntry>>
+    suspend fun getAllNotes(): List<NoteModelEntry>?
     suspend fun getNotesById(id: Int): LiveData<NoteModelEntry>
     suspend fun insertAllFav(favList: ArrayList<FavoriteModelEntry>)
 

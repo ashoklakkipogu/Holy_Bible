@@ -4,6 +4,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -23,7 +25,16 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun bottomSheet(onDismiss: () -> Unit, onCircleColor: (String) -> Unit) {
+fun bottomSheet(
+    onDismiss: () -> Unit,
+    onCircleColor: (String) -> Unit,
+    onButtonClick: (String) -> Unit,
+    onGridImgClick: (Int) -> Unit
+) {
+    val colorList = arrayListOf(
+        "underline", "#FFCDD2", "#F8BBD0", "#E1BEE7", "#B39DDB",
+        "#90CAF9", "#80DEEA", "#80CBC4", "#E6EE9C", "#FFB74D", "#FFEB3B", "#FF5722", "#8D6E63"
+    )
     val sheetState = rememberModalBottomSheetState()
     ModalBottomSheet(
         onDismissRequest = {
@@ -36,9 +47,13 @@ fun bottomSheet(onDismiss: () -> Unit, onCircleColor: (String) -> Unit) {
                     .fillMaxSize()
                     .padding(16.dp)
             ) {
-                circleColor { onCircleColor.invoke(it) }
-                ButtonComponent()
-                GridImages()
+                circleColor(colors = colorList) { onCircleColor.invoke(it) }
+                ButtonComponent {
+                    onButtonClick.invoke(it)
+                }
+                GridImages {
+                    onGridImgClick.invoke(it)
+                }
             }
 
         }
@@ -46,8 +61,9 @@ fun bottomSheet(onDismiss: () -> Unit, onCircleColor: (String) -> Unit) {
 
 }
 
+
 @Preview
 @Composable
 fun bottomSheetPreview() {
-    bottomSheet(onDismiss = {  }, onCircleColor = {})
+    bottomSheet(onDismiss = { }, onCircleColor = {}, onButtonClick = {}, onGridImgClick = {})
 }

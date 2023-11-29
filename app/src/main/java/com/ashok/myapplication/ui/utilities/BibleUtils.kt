@@ -1,6 +1,9 @@
 package com.ashok.myapplication.ui.utilities
 
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
+import android.content.Intent
 import androidx.compose.ui.util.fastForEach
 import com.ashok.myapplication.R
 import com.ashok.myapplication.data.local.dao.BibleIndexDao
@@ -40,5 +43,21 @@ object BibleUtils {
             data.add(obj)
         }
         return data
+    }
+
+    fun shareText(context: Context?, str: String) {
+        val sendIntent = Intent()
+        sendIntent.action = Intent.ACTION_SEND
+        sendIntent.putExtra(Intent.EXTRA_TEXT, str)
+
+        sendIntent.type = "text/plain"
+        context?.startActivity(sendIntent)
+
+    }
+    fun copyText(context: Context?, str: String) {
+        val clipboard =
+            context?.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager?
+        val clip = ClipData.newPlainText("label", str)
+        clipboard!!.setPrimaryClip(clip)
     }
 }

@@ -1,7 +1,8 @@
 package com.ashok.myapplication.ui.component
 
 import android.annotation.SuppressLint
-import android.util.Log
+import android.content.Intent
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -30,6 +31,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
@@ -45,7 +47,10 @@ import androidx.compose.ui.unit.sp
 import androidx.core.graphics.toColorInt
 import com.ashok.myapplication.R
 import com.ashok.myapplication.data.local.entry.BibleModelEntry
-import com.ashok.myapplication.data.local.entry.NoteModelEntry
+import com.ashok.myapplication.ui.activity.ShareImageActivity
+import com.ashok.myapplication.ui.component.share.ImageShareView
+import com.ashok.myapplication.ui.utilities.BibleUtils.copyText
+import com.ashok.myapplication.ui.utilities.BibleUtils.shareText
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -56,8 +61,13 @@ fun bibleVerses(
 ) {
     var bibleData by remember { mutableStateOf(bibleDataList) }
     var showSheet by remember { mutableStateOf(false) }
+    //var showShareSheet by remember { mutableStateOf(false) }
+    var showNoteDialog by remember { mutableStateOf(false) }
     var selectedBible by remember { mutableStateOf(BibleModelEntry()) }
+    //var selectedImage by remember { mutableStateOf(0) }
     val scope = rememberCoroutineScope()
+    val context = LocalContext.current
+
 
     val onItemClick = { model: BibleModelEntry ->
         showSheet = true
@@ -89,25 +99,65 @@ fun bibleVerses(
     if (showSheet) {
         bottomSheet(onDismiss = {
             showSheet = false
-        }, onCircleColor = { color->
-            bibleData = if (color.isBlank()) {
-                bibleData.mapIndexed { j, item ->
-                    if (selectedBible.bibleID == item.bibleID) {
-                        item.copy(selectedBackground = !item.selectedBackground)
-                    } else item
+        }, onCircleColor = { color ->
+            bibleData = bibleData.mapIndexed { j, item ->
+                if (selectedBible.bibleID == item.bibleID) {
+                    var colorCode = color
+                    if (item.selectedBackground == "underline" || item.selectedBackground == colorCode)
+                        colorCode = ""
+                    item.copy(selectedBackground = colorCode)
+                } else item
+            }
+        }, onButtonClick = {
+            when (it) {
+                "Note" -> {
+                    showNoteDialog = true
                 }
-            } else {
-                bibleData.mapIndexed { j, item ->
-                    if (selectedBible.bibleID == item.bibleID) {
-                        var colorCode =color
-                        if (item.selectedBackground.isNotBlank() || item.selectedBackground == colorCode)
-                            colorCode = ""
-                        item.copy(selectedBackground = colorCode)
-                    } else item
+
+                "Bookmark" -> {
+                    Toast.makeText(context, "Bookmark", Toast.LENGTH_SHORT).show()
+                }
+
+                "Share" -> {
+                    val bibleIndex =
+                        "${selectedBible.bibleIndex} ${selectedBible.Chapter}:${selectedBible.Versecount}"
+                    val verse = selectedBible.verse
+                    val strBuilder = StringBuilder()
+                    strBuilder.append("$bibleIndex $verse")
+                    strBuilder.append("\n");
+                    strBuilder.append("http://play.google.com/store/apps/details?id=${context.packageName}");
+                    strBuilder.append("\n");
+                    shareText(context, strBuilder.toString())
+                }
+
+                "Copy" -> {
+                    val bibleIndex =
+                        "${selectedBible.bibleIndex} ${selectedBible.Chapter}:${selectedBible.Versecount}"
+                    val verse = selectedBible.verse
+                    val str = "$verse \n  $bibleIndex"
+                    copyText(context, str)
+                    Toast.makeText(context, "Copied", Toast.LENGTH_SHORT).show()
+
                 }
             }
-        })
+        }, onGridImgClick = {
+            val intent = Intent(context, ShareImageActivity::class.java)
+            intent.putExtra("selected_image", it)
+            context.startActivity(intent)
+        }
+        )
     }
+
+    if (showNoteDialog) {
+        InputDialogView(
+            title = "Bible Notes",
+            placeholder = "Note text",
+            onDismiss = { showNoteDialog = false },
+            onEnteredText = {
+                Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+            })
+    }
+
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -192,7 +242,7 @@ fun BibleVerse(
                 }
                 withStyle(
                     style = SpanStyle(
-                        textDecoration = if (model.isSelected) TextDecoration.Underline else TextDecoration.None,
+                        textDecoration = if (model.selectedBackground == "underline") TextDecoration.Underline else TextDecoration.None,
                         fontSize = 16.sp
                     )
 
@@ -204,9 +254,18 @@ fun BibleVerse(
             fontSize = 16.sp,
             color = Color.Black,
             textAlign = TextAlign.Start,
-            style = if (model.selectedBackground.isNotBlank()) TextStyle(background = Color(model.selectedBackground.toColorInt())) else TextStyle.Default,
+            style = if (model.selectedBackground.isNotBlank() && model.selectedBackground != "underline") TextStyle(
+                background = Color(model.selectedBackground.toColorInt())
+            ) else TextStyle.Default,
         )
     }
+
+}
+
+
+@Composable
+fun noteDialog() {
+
 
 }
 
@@ -226,3 +285,6 @@ fun BibleVersesPreview() {
         headingData = mutableStateOf(BibleModelEntry())
     )
 }
+
+
+

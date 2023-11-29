@@ -36,15 +36,11 @@ import androidx.core.graphics.toColorInt
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun circleColor(
+    colors: ArrayList<String>,
     onClick: (String) -> Unit
 ) {
-    val items = arrayListOf(
-        "", "#FFCDD2", "#F8BBD0", "#E1BEE7", "#B39DDB",
-        "#90CAF9", "#80DEEA", "#80CBC4", "#E6EE9C", "#FFB74D", "#FFEB3B", "#FF5722", "#8D6E63"
-    )
-
     LazyRow(contentPadding = PaddingValues(horizontal = 10.dp, vertical = 10.dp)) {
-        items(items) { item ->
+        items(colors) { item ->
             colorView(item) {
                 onClick.invoke(it)
             }
@@ -55,7 +51,7 @@ fun circleColor(
 
 @Composable
 fun colorView(color: String, onClick: (String) -> Unit) {
-    if (color.isBlank()) {
+    if (color == "underline") {
         Box(
             modifier = Modifier
                 .size(40.dp)
@@ -91,5 +87,10 @@ fun colorView(color: String, onClick: (String) -> Unit) {
 @Preview
 @Composable
 fun circleColorPreview() {
-    circleColor() {}
+    val colorList = arrayListOf(
+        "underline", "#FFCDD2", "#F8BBD0", "#E1BEE7", "#B39DDB",
+        "#90CAF9", "#80DEEA", "#80CBC4", "#E6EE9C", "#FFB74D", "#FFEB3B", "#FF5722", "#8D6E63"
+    )
+
+    circleColor(colorList) {}
 }

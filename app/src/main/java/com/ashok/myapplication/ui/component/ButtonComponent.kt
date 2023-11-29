@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -31,12 +32,12 @@ import androidx.core.graphics.toColorInt
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun ButtonComponent() {
+fun ButtonComponent(onClick: (String) -> Unit) {
     val items = arrayListOf("Share", "Copy", "Note", "Bookmark")
     LazyRow(contentPadding = PaddingValues(horizontal = 10.dp, vertical = 10.dp)) {
         items(items) { item ->
             ButtonView(title = item, onClick = {
-
+                onClick.invoke(item)
             })
             Spacer(modifier = Modifier.width(10.dp))
         }
@@ -59,5 +60,5 @@ fun ButtonView(title: String, onClick: (String) -> Unit) {
 @Preview
 @Composable
 fun ButtonSheetPreview() {
-    ButtonComponent()
+    ButtonComponent{}
 }

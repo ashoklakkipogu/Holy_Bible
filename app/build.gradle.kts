@@ -114,6 +114,7 @@ dependencies {
     // optional - Paging 3 Integration
     implementation("androidx.room:room-paging:$room_version")
     implementation("androidx.compose.runtime:runtime-livedata:1.5.4")
+    implementation("dev.shreyaspatil:capturable:1.0.3")
 
 
 

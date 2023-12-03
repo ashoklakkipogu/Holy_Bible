@@ -110,44 +110,9 @@ fun ImageShareView(
     ) {
         Column(
             modifier = Modifier
-                .padding(10.dp)
+                .padding(start = 10.dp, bottom = 10.dp, end = 10.dp)
                 .background(Color.White)
         ) {
-            /*Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(50.dp),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = CenterVertically
-            ) {
-
-                IconButton(onClick = {
-                    onDismissDialog.invoke()
-                }) {
-                    Icon(
-                        imageVector = Icons.Default.ArrowBack,
-                        contentDescription = "back arrow",
-
-                        )
-                }
-
-                Spacer(modifier = Modifier.width(5.dp))
-                Text(
-                    text = "Create image",
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.align(alignment = CenterVertically),
-                    fontSize = 16.sp
-                )
-                Spacer(Modifier.weight(1f))
-                ButtonView(title = "Download", onClick = {
-
-                })
-                Spacer(modifier = Modifier.width(5.dp))
-                ButtonView(title = "Share", onClick = {
-                    captureController.capture()
-                })
-            }*/
-
             Box(
                 Modifier
                     .fillMaxWidth()
@@ -217,13 +182,6 @@ fun ImageShareView(
 
         }
     }
-
-    /*viewBitmap?.let {
-        Log.i("bitmap......", "bitmap.............${it.asAndroidBitmap()}")
-        ShareUtils.shareBitmap(context, it.asAndroidBitmap())
-    }*/
-
-
 }
 
 @Composable

@@ -25,5 +25,7 @@ data class BibleModelEntry(
     @PrimaryKey(autoGenerate = true) @Expose var id: Int = 0,
 
     //var isSelected: Boolean = false,
-    var selectedBackground: String = ""
+    var selectedBackground: String = "",
+    var isNote: Boolean = false,
+    var isBookMark: Boolean = false
 )

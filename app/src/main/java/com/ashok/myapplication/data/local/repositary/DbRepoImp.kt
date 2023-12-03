@@ -65,13 +65,8 @@ class DbRepoImp @Inject constructor(
 
         for (obj in favData) {
             val favBookMark = FavBookMark()
-            favBookMark.book = obj.book
-            favBookMark.chapter = obj.chapter
-            favBookMark.verse = obj.verse
-            favBookMark.versecount = obj.versecount
             favBookMark.bibleId = obj.bibleId
             favBookMark.createdDate = obj.createdDate
-            favBookMark.bibleIndexName = obj.bibleIndexName
             //favBookMark.color = obj.col
             favBookMark.favId = obj.id
             favBookMark.isFav = true
@@ -79,14 +74,9 @@ class DbRepoImp @Inject constructor(
         }
         for (obj in highData) {
             val favBookMark = FavBookMark()
-            favBookMark.book = obj.book
-            favBookMark.chapter = obj.chapter
-            favBookMark.verse = obj.verse
-            favBookMark.versecount = obj.versecount
+
             favBookMark.bibleId = obj.bibleId
             favBookMark.createdDate = obj.createdDate
-            favBookMark.bibleIndexName = obj.bibleIndexName
-            favBookMark.color = obj.color
             favBookMark.highlightId = obj.id
             favBookMark.isFav = false
             list.add(favBookMark)
@@ -127,6 +117,7 @@ class DbRepoImp @Inject constructor(
 
     override suspend fun getHighlightById(id: Int) = highlightDao.getHighlightById(id)
     override suspend fun deleteHighlight(id: Int) = highlightDao.deleteHighlightById(id)
+    override suspend fun deleteHighlightByBibleLangIndex(bibleId: String) = highlightDao.deleteHighlightByBibleLangIndex(bibleId)
     override suspend fun deleteNote(id: Int) = noteDao.deleteNoteById(id)
     override suspend fun deleteFavorite(id: Int) = favoriteDao.deleteFavoriteById(id)
     override suspend fun getAllLyrics(id: Int) = lyricsDao.getAllLyricsList()

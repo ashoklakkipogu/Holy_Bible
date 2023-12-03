@@ -5,32 +5,15 @@ import com.google.gson.annotations.Expose
 import java.io.Serializable
 
 @Entity(tableName = "favorite")
-public class FavoriteModelEntry {
-    @Expose
-    var book: Int = 0
+public class FavoriteModelEntry(
 
-    @Expose
-    var chapter: Int = 0
+    @Expose var createdDate: String = "",
 
-    @Expose
-    var versecount: Int = 0
+    @Expose var langauge: String = "",
 
-    @Expose
-    var verse: String = ""
+    @Expose var bibleLangIndex: String = "",
 
-    @Expose
-    var bibleId: Int = 0
+    @PrimaryKey(autoGenerate = true) @Expose var id: Int = 0,
 
-    @Expose
-    var createdDate: String = ""
-
-    @Expose
-    var bibleIndexName: String = ""
-
-    @Expose
-    var langauge: String = ""
-
-    @PrimaryKey(autoGenerate = true)
-    @Expose
-    var id: Int = 0
-}
+    @Expose var bibleId: Int = 0
+)

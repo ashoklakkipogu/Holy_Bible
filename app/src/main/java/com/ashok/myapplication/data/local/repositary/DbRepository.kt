@@ -8,6 +8,9 @@ import com.ashok.myapplication.data.local.entry.BibleModelEntry
 import com.ashok.myapplication.data.local.entry.FavoriteModelEntry
 import com.ashok.myapplication.data.local.entry.HighlightModelEntry
 import com.ashok.myapplication.data.local.entry.NoteModelEntry
+import com.ashok.myapplication.data.local.model.FavModel
+import com.ashok.myapplication.data.local.model.HighlightModel
+import com.ashok.myapplication.data.local.model.NoteModel
 
 interface DbRepository {
     suspend fun getBible(): List<BibleModelEntry>?
@@ -34,13 +37,13 @@ interface DbRepository {
         verseId: Int
     ): LiveData<List<BibleModelEntry>>
 
-    suspend fun getAllFav(): LiveData<List<FavoriteModelEntry>>
+    suspend fun getAllFav(): List<FavModel>?
     suspend fun getAllFavHigh(): ArrayList<FavBookMark>
 
 
     suspend fun getFavById(id: Int): LiveData<FavoriteModelEntry>
-    suspend fun getAllHighlights(): LiveData<List<HighlightModelEntry>>
-    suspend fun getAllNotes(): List<NoteModelEntry>?
+    suspend fun getAllHighlights(): List<HighlightModel>?
+    suspend fun getAllNotes(): List<NoteModel>?
     suspend fun getNotesById(id: Int): LiveData<NoteModelEntry>
     suspend fun insertAllFav(favList: ArrayList<FavoriteModelEntry>)
 
@@ -48,6 +51,7 @@ interface DbRepository {
     suspend fun insertAllHighlight(highlights: ArrayList<HighlightModelEntry>)
     suspend fun getHighlightById(id: Int): LiveData<HighlightModelEntry>
     suspend fun deleteHighlight(id: Int)
+    suspend fun deleteHighlightByBibleLangIndex(bibleId: String)
     suspend fun deleteNote(id: Int)
     suspend fun deleteFavorite(id: Int)
     suspend fun getAllLyrics(id: Int): List<LyricsModel>

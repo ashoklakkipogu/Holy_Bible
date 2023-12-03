@@ -1,9 +1,9 @@
 object Versions {
     const val coreKtx = "1.7.0"
     const val lifecycle = "2.6.2"
-    const val activityCompose = "1.7.2"
+    const val activityCompose = "1.8.1"
     const val composeBom = "2023.03.00"
-    const val composeMaterial3 = "1.2.0-alpha10"
+    const val composeMaterial3 = "1.2.0-alpha09"
     const val navigationRuntimeKtx = "2.7.3"
     const val junit = "4.13.2"
     const val androidxJunit = "1.1.5"

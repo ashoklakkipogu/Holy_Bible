@@ -7,6 +7,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ashok.myapplication.data.entity.Products
 import com.ashok.myapplication.data.local.entry.BibleModelEntry
+import com.ashok.myapplication.data.local.entry.FavoriteModelEntry
+import com.ashok.myapplication.data.local.entry.HighlightModelEntry
+import com.ashok.myapplication.data.local.entry.NoteModelEntry
 import com.ashok.myapplication.data.local.repositary.DbRepository
 import com.ashok.myapplication.ui.repository.ProductRepository
 import com.ashok.myapplication.ui.utilities.Result
@@ -52,13 +55,33 @@ class HomeViewModel @Inject constructor(
     fun getBibleData() {
         viewModelScope.launch(Dispatchers.IO) {
             val bibleData = dbRepo.getBible()
-            var noteData = dbRepo.getAllNotes()
-
+            val highlightsData = dbRepo.getAllHighlights()
+            val favData = dbRepo.getAllFav()
+            val noteData = dbRepo.getAllNotes()
+            bibleData?.forEach {
+                it.apply {
+                    highlightsData?.forEach { highlightsData ->
+                        if (id == highlightsData.bibleId) {
+                            selectedBackground = highlightsData.colorCode
+                        }
+                    }
+                    favData?.forEach { fav ->
+                        if (id == fav.bibleId) {
+                            isBookMark = true
+                        }
+                    }
+                    noteData?.forEach { note ->
+                        if (id == note.bibleId) {
+                            isNote = true
+                        }
+                    }
+                }
+            }
 
             Log.i("data", "data1........$bibleData")
             withContext(Dispatchers.Main) {
-               /* allModel.bible = bibleData!!
-                allModel.notes = noteData!!*/
+                /* allModel.bible = bibleData!!
+                 allModel.notes = noteData!!*/
                 _bibleData.value = Result.Success(bibleData!!)
             }
 
@@ -97,4 +120,31 @@ class HomeViewModel @Inject constructor(
 
         }
     }
+
+
+    fun noteInsert(model: NoteModelEntry) {
+        viewModelScope.launch(Dispatchers.IO) {
+            dbRepo.insertAllNotes(arrayListOf(model))
+        }
+    }
+
+    fun bookmarkInsert(model: FavoriteModelEntry) {
+        viewModelScope.launch(Dispatchers.IO) {
+            dbRepo.insertAllFav(arrayListOf(model))
+        }
+    }
+
+    fun highlightInsert(model: HighlightModelEntry) {
+        viewModelScope.launch(Dispatchers.IO) {
+            dbRepo.insertAllHighlight(arrayListOf(model))
+        }
+    }
+
+    fun highlightDeleteByBibleId(bibleID: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            dbRepo.deleteHighlightByBibleLangIndex(bibleID)
+        }
+    }
+
+
 }

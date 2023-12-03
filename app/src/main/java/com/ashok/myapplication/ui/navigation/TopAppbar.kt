@@ -31,6 +31,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
@@ -62,68 +63,73 @@ fun topAppBar(
     rightArrowClick: () -> Unit,
     verseClick: () -> Unit
 ) {
-    Box(
-        modifier
-            .fillMaxWidth()
-            .padding(8.dp),
-        contentAlignment = Alignment.Center
-    ) {
-
-        ElevatedCard(
-            elevation = CardDefaults.cardElevation(
-                defaultElevation = 2.dp
-            ),
-            shape = RoundedCornerShape(15.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = Color.White
-            )
+    if (currentRoute == Screens.Bible.router)
+        Box(
+            modifier
+                .fillMaxWidth()
+                .padding(8.dp),
+            contentAlignment = Alignment.Center
         ) {
-            Row(
-                modifier = modifier.padding(2.dp),
-                verticalAlignment = Alignment.CenterVertically
+
+            ElevatedCard(
+                elevation = CardDefaults.cardElevation(
+                    defaultElevation = 2.dp
+                ),
+                shape = RoundedCornerShape(15.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = Color.White
+                )
             ) {
-                IconButton(
-                    onClick = {
-                        leftArrowClick.invoke()
-                    },
-                    modifier.height(35.dp),
+                Row(
+                    modifier = modifier.padding(2.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.KeyboardArrowLeft,
-                        contentDescription = "Left Icon"
-                    )
-                }
-                Spacer(modifier.width(20.dp))
-                TextButton(
-                    onClick = {
-                        verseClick.invoke()
-                    },
-                    modifier.height(35.dp),
-                    contentPadding = PaddingValues(),
-                ) {
-                    Text(
-                        text = "${headingData.value.bibleIndex} ${headingData.value.Chapter}",
-                        textAlign = TextAlign.Center,
-                        fontSize = 20.sp,
-                    )
+                    IconButton(
+                        onClick = {
+                            leftArrowClick.invoke()
+                        },
+                        modifier.height(35.dp),
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.KeyboardArrowLeft,
+                            contentDescription = "Left Icon"
+                        )
+                    }
+                    Spacer(modifier.width(20.dp))
+                    TextButton(
+                        onClick = {
+                            verseClick.invoke()
+                        },
+                        modifier.height(35.dp),
+                        contentPadding = PaddingValues(),
+                    ) {
+                        Text(
+                            text = "${headingData.value.bibleIndex} ${headingData.value.Chapter}",
+                            textAlign = TextAlign.Center,
+                            fontSize = 20.sp,
+                        )
+                    }
+
+                    Spacer(modifier.width(20.dp))
+                    IconButton(
+                        onClick = {
+                            rightArrowClick.invoke()
+                        },
+                        modifier.height(35.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.KeyboardArrowRight,
+                            contentDescription = "Right Icon"
+                        )
+                    }
                 }
 
-                Spacer(modifier.width(20.dp))
-                IconButton(
-                    onClick = {
-                        rightArrowClick.invoke()
-                    },
-                    modifier.height(35.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.KeyboardArrowRight,
-                        contentDescription = "Right Icon"
-                    )
-                }
             }
-
         }
-    }
+    else if(currentRoute == Screens.Lyrics.router)
+        TopAppBar(title = { Text(text = "Lyrics") })
+    else if(currentRoute == Screens.Discovery.router)
+        TopAppBar(title = { Text(text = "Discovery") })
     /*CenterAlignedTopAppBar(
         title = {
             Text(text = currentRoute)

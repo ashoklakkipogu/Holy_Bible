@@ -18,8 +18,10 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.text.InlineTextContent
+import androidx.compose.foundation.text.appendInlineContent
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -33,6 +35,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.Placeholder
+import androidx.compose.ui.text.PlaceholderVerticalAlign
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -45,12 +50,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.graphics.toColorInt
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.ashok.myapplication.R
 import com.ashok.myapplication.data.local.entry.BibleModelEntry
 import com.ashok.myapplication.ui.activity.ShareImageActivity
-import com.ashok.myapplication.ui.component.share.ImageShareView
 import com.ashok.myapplication.ui.utilities.BibleUtils.copyText
 import com.ashok.myapplication.ui.utilities.BibleUtils.shareText
+import com.ashok.myapplication.ui.utilities.bookmarkInsert
+import com.ashok.myapplication.ui.utilities.highlightDelete
+import com.ashok.myapplication.ui.utilities.highlightInsert
+import com.ashok.myapplication.ui.utilities.noteInsert
+import com.ashok.myapplication.ui.viewmodel.HomeViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -61,10 +71,10 @@ fun bibleVerses(
 ) {
     var bibleData by remember { mutableStateOf(bibleDataList) }
     var showSheet by remember { mutableStateOf(false) }
-    //var showShareSheet by remember { mutableStateOf(false) }
     var showNoteDialog by remember { mutableStateOf(false) }
     var selectedBible by remember { mutableStateOf(BibleModelEntry()) }
-    //var selectedImage by remember { mutableStateOf(0) }
+    val homeViewModel: HomeViewModel = hiltViewModel()
+
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
 
@@ -72,27 +82,6 @@ fun bibleVerses(
     val onItemClick = { model: BibleModelEntry ->
         showSheet = true
         selectedBible = model
-
-
-        /*if (!isSelected) {
-            val noteObj = NoteModelEntry()
-            noteObj.createdDate = ""
-            noteObj.noteName = ""
-            noteObj.langauge = model.langauge
-            noteObj.bibleLangIndex = model.bibleLangIndex
-            noteObj.bibleId = model.id
-            notesList.add(noteObj)
-            allNotes.value += notesList
-        } else {
-            notesList.forEach {
-                if (it.bibleId == model.id) {
-                    notesList.remove(it)
-                }
-            }
-            allNotes.value = notesList
-        }*/
-
-
     }
 
 
@@ -103,8 +92,17 @@ fun bibleVerses(
             bibleData = bibleData.mapIndexed { j, item ->
                 if (selectedBible.bibleID == item.bibleID) {
                     var colorCode = color
-                    if (item.selectedBackground == "underline" || item.selectedBackground == colorCode)
+                    if (item.selectedBackground == "underline" || item.selectedBackground == colorCode) {
                         colorCode = ""
+                        highlightDelete(bibleVerse = selectedBible, viewModel = homeViewModel)
+                    } else {
+                        colorCode = color
+                        highlightInsert(
+                            colorCode = colorCode,
+                            bibleVerse = selectedBible,
+                            viewModel = homeViewModel
+                        )
+                    }
                     item.copy(selectedBackground = colorCode)
                 } else item
             }
@@ -115,7 +113,14 @@ fun bibleVerses(
                 }
 
                 "Bookmark" -> {
-                    Toast.makeText(context, "Bookmark", Toast.LENGTH_SHORT).show()
+                    bibleData = bibleData.mapIndexed { j, item ->
+                        if (selectedBible.bibleID == item.bibleID) {
+                            bookmarkInsert(bibleVerse = selectedBible, viewModel = homeViewModel)
+                            Toast.makeText(context, "Bookmark", Toast.LENGTH_SHORT).show()
+                            item.copy(isBookMark = true)
+                        } else item
+                    }
+
                 }
 
                 "Share" -> {
@@ -154,7 +159,16 @@ fun bibleVerses(
             placeholder = "Note text",
             onDismiss = { showNoteDialog = false },
             onEnteredText = {
-                Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+
+                bibleData = bibleData.mapIndexed { j, item ->
+                    if (selectedBible.bibleID == item.bibleID) {
+                        noteInsert(title = it, bibleVerse = selectedBible, viewModel = homeViewModel)
+                        Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+                        item.copy(isNote = true)
+                    } else item
+                }
+
+
             })
     }
 
@@ -162,7 +176,7 @@ fun bibleVerses(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
-            .padding(10.dp),
+            .padding(16.dp),
         state = scrollState
     ) {
         val currentItemIndex = scrollState.firstVisibleItemIndex
@@ -183,6 +197,7 @@ fun bibleVerses(
                     BibleVerse(
                         model = model, onClick = onItemClick
                     )
+                    Spacer(modifier = Modifier.height(5.dp))
                 }
 
             }
@@ -200,7 +215,7 @@ fun BibleHeading(model: BibleModelEntry) {
 
         Text(
             text = model.bibleIndex,
-            fontSize = 20.sp,
+            fontSize = 28.sp,
             lineHeight = 10.sp,
             color = Color.Black,
             textAlign = TextAlign.Start,
@@ -227,14 +242,19 @@ fun BibleVerse(
         .clickable {
             onClick.invoke(model)
         }
-        .fillMaxWidth()) {
+        .fillMaxWidth(),
+        contentAlignment = Alignment.Center
+    ) {
+
         Text(
             text = buildAnnotatedString {
+                if (model.isBookMark || model.isNote)
+                    appendInlineContent("icon", "icon")
                 withStyle(
                     style = SpanStyle(
                         baselineShift = BaselineShift.Superscript,
                         color = colorResource(id = R.color.colorAccent),
-                        fontSize = 14.sp,
+                        fontSize = 16.sp,
 
                         )
                 ) {
@@ -243,7 +263,7 @@ fun BibleVerse(
                 withStyle(
                     style = SpanStyle(
                         textDecoration = if (model.selectedBackground == "underline") TextDecoration.Underline else TextDecoration.None,
-                        fontSize = 16.sp
+                        fontSize = 18.sp
                     )
 
                 ) {
@@ -251,21 +271,15 @@ fun BibleVerse(
                 }
 
             },
+            inlineContent = getInlineIcon("icon", model),
             fontSize = 16.sp,
             color = Color.Black,
             textAlign = TextAlign.Start,
             style = if (model.selectedBackground.isNotBlank() && model.selectedBackground != "underline") TextStyle(
                 background = Color(model.selectedBackground.toColorInt())
-            ) else TextStyle.Default,
+            ) else TextStyle.Default
         )
     }
-
-}
-
-
-@Composable
-fun noteDialog() {
-
 
 }
 
@@ -279,12 +293,41 @@ fun BibleVersesPreview() {
         "In the sweat of your face shall you eat bread, " + "till you return unto the ground; for out of it were you taken: " + "for dust you are, and unto dust shall you return."
     data.Versecount = 1
     dataList.add(data)
-    bibleVerses(
+    /*bibleVerses(
         bibleDataList = dataList,
         scrollState = rememberLazyListState(),
         headingData = mutableStateOf(BibleModelEntry())
-    )
+    )*/
+    BibleVerse(model = data, onClick = {})
 }
+
+fun getInlineIcon(myId: String, model: BibleModelEntry) = mapOf(
+    Pair(myId, InlineTextContent(
+        Placeholder(
+            width = 16.sp,
+            height = 16.sp,
+            placeholderVerticalAlign = PlaceholderVerticalAlign.TextTop
+        )
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            if (model.isBookMark)
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_bookmarks_24dp),
+                    contentDescription = null,
+                    tint = Color.Red
+                )
+            if (model.isNote)
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_notes_24dp),
+                    contentDescription = null,
+                    tint = Color.Red
+                )
+        }
+    }
+    ))
+
 
 
 

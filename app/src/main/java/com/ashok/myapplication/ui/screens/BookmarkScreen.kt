@@ -19,7 +19,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.ashok.myapplication.ui.component.BibleWordListView
 import com.ashok.myapplication.ui.theme.BibleTheme
 
 @Composable
@@ -29,42 +28,7 @@ fun BookmarkScreen(navController: NavController) {
             modifier = Modifier.fillMaxWidth(),
             color = MaterialTheme.colorScheme.background
         ) {
-            Column {
-                BibleWordListView(
-                    title = "ఆదియందు దేవుడు భూమ్యాకాశములను సృజించెను. భూమి నిరాకారముగాను శూన్యముగాను ఉండెను; చీకటి అగాధ జలము పైన కమ్మియుండెను",
-                    subTitle = "ఆదియందు 1:2",
-                    dividerColor = Color.Black,
-                    heading = "You added a Note",
-                    timings = "2 weeks ago",
-                    isVisibleHeading = true
-                ) {
-
-                }
-                BibleWordListView(
-                    title = "ఆదియందు దేవుడు భూమ్యాకాశములను సృజించెను. భూమి నిరాకారముగాను శూన్యముగాను ఉండెను; చీకటి అగాధ జలము పైన కమ్మియుండెను",
-                    subTitle = "ఆదియందు 1:2",
-                    dividerColor = Color.Black,
-                    heading = "You added a Note",
-                    timings = "2 weeks ago",
-                    isVisibleHeading = true
-                ) {
-
-                }
-                BibleWordListView(
-                    title = "ఆదియందు దేవుడు భూమ్యాకాశములను సృజించెను. భూమి నిరాకారముగాను శూన్యముగాను ఉండెను; చీకటి అగాధ జలము పైన కమ్మియుండెను",
-                    subTitle = "ఆదియందు 1:2",
-                    dividerColor = Color.Black,
-                    heading = "You added a Note",
-                    timings = "2 weeks ago",
-                    isVisibleHeading = true
-                ) {
-
-                }
-            }
-
-
-
-
+            TabScreen()
         }
     }
 }

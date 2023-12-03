@@ -6,10 +6,14 @@ import android.content.Context
 import android.content.Intent
 import androidx.compose.ui.util.fastForEach
 import com.ashok.myapplication.R
+import com.ashok.myapplication.data.AppConstants
 import com.ashok.myapplication.data.local.dao.BibleIndexDao
 import com.ashok.myapplication.data.local.entry.BibleIndexModelEntry
 import java.io.BufferedReader
 import java.io.IOException
+import java.text.ParseException
+import java.text.SimpleDateFormat
+import java.util.Calendar
 
 object BibleUtils {
     suspend fun getJsonDataFromAsset(context: Context, fileName: String): String? {
@@ -59,5 +63,29 @@ object BibleUtils {
             context?.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager?
         val clip = ClipData.newPlainText("label", str)
         clipboard!!.setPrimaryClip(clip)
+    }
+    fun getCurrentTime(): String {
+        val myCalendar = Calendar.getInstance()
+        val utcFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS")
+        return utcFormat.format(myCalendar.time)
+
+    }
+
+    public fun getUtcToDDMMYYYYHHMMA(utcDate: String): String {
+        var outputDate = ""
+        try {
+            if (utcDate.isNotEmpty()) {
+                val date =
+                    SimpleDateFormat(AppConstants.DATE_FORMAT_yyyy_MM_dd_HH_mm_ss_SSS_Z).parse(
+                        utcDate
+                    )
+                outputDate =
+                    SimpleDateFormat(AppConstants.DATE_FORMAT_dd_MM_yyyy_hh_mm_a).format(date)
+            }
+        } catch (e: ParseException) {
+            e.printStackTrace()
+        }
+
+        return outputDate
     }
 }

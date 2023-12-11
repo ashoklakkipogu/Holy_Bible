@@ -46,13 +46,6 @@ fun MainScreen(
     val coroutineScope = rememberCoroutineScope()
 
 
-    val bibleScrollPos by viewModel.bibleScrollPos.observeAsState(
-        initial = null
-    )
-    println("...............$bibleScrollPos")
-    LaunchedEffect(bibleScrollPos){
-        bibleScrollPos?.let { scorllState.animateScrollToItem(it) }
-    }
 
 
     Scaffold(modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection), topBar = {

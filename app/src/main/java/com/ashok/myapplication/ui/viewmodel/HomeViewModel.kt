@@ -1,6 +1,9 @@
 package com.ashok.myapplication.ui.viewmodel
 
 import android.util.Log
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,6 +13,7 @@ import com.ashok.myapplication.data.local.entry.BibleModelEntry
 import com.ashok.myapplication.data.local.entry.FavoriteModelEntry
 import com.ashok.myapplication.data.local.entry.HighlightModelEntry
 import com.ashok.myapplication.data.local.entry.NoteModelEntry
+import com.ashok.myapplication.data.local.model.NoteModel
 import com.ashok.myapplication.data.local.repositary.DbRepository
 import com.ashok.myapplication.ui.repository.ProductRepository
 import com.ashok.myapplication.ui.utilities.Result
@@ -44,6 +48,8 @@ class HomeViewModel @Inject constructor(
     private val _bibleScrollPos = MutableLiveData<Int>()
     val bibleScrollPos: LiveData<Int> get() = _bibleScrollPos
 
+    /*private val _bibleScrollPos = mutableIntStateOf(0)
+    val bibleScrollPos: State<Int> = _bibleScrollPos*/
     fun getAllProducts() {
         viewModelScope.launch(Dispatchers.IO) {
             productRepository.getAllProducts().collectLatest {
@@ -114,7 +120,8 @@ class HomeViewModel @Inject constructor(
 
             withContext(Dispatchers.Main) {
                 data?.let {
-                    _bibleScrollPos.value = it.bibleLangIndex.split("-")[1].toInt() - 1
+                    Log.i("data....", "data............."+(it.bibleLangIndex.split("-")[1].toInt() - 1))
+                    _bibleScrollPos.intValue = it.bibleLangIndex.split("-")[1].toInt() - 1
                 }
             }
 
@@ -146,5 +153,11 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    fun setScrollPos(scrollId: Int?) {
+        scrollId?.let {
+            if (scrollId != -1)
+                _bibleScrollPos.value = it
+        }
 
+    }
 }

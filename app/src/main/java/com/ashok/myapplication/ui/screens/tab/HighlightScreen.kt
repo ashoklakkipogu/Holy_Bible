@@ -1,5 +1,6 @@
 package com.ashok.myapplication.ui.screens.tab
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -38,34 +39,36 @@ import com.ashok.myapplication.ui.viewmodel.SplashViewModel
 
 @Composable
 fun HighlightScreenView(
-    viewModel: BookmarkViewModel = hiltViewModel()
+    viewModel: BookmarkViewModel = hiltViewModel(),
+    onClick: (HighlightModel) -> Unit
 ) {
     LaunchedEffect(Unit) {
         viewModel.getAllHighlightBibleData()
     }
-    val highlightData by viewModel.highlightData.observeAsState(
-        initial = Result.Loading()
-    )
-    when (highlightData) {
-        is Result.Error -> {
+    val highlightData = viewModel.highlightData.value
+    val highlightDelete = viewModel.highlightDelete.observeAsState().value
 
-        }
+    if (highlightDelete == true) {
+        Log.i("data...........", "data...........deleted")
 
-        is Result.Loading -> {
-
-        }
-
-        is Result.Success -> {
-            val result = (highlightData as Result.Success<List<HighlightModel>>).data
-            HighlightRow(
-                result
-            )
-        }
     }
+    HighlightRow(
+        highlightData,
+        onClick = {
+            onClick.invoke(it)
+        },
+        onClickDelete = { item ->
+            viewModel.deleteHighlightById(item)
+        }
+    )
 }
 
 @Composable
-fun HighlightRow(data: List<HighlightModel>) {
+fun HighlightRow(
+    data: List<HighlightModel>,
+    onClick: (HighlightModel) -> Unit,
+    onClickDelete: (HighlightModel) -> Unit
+) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -76,7 +79,6 @@ fun HighlightRow(data: List<HighlightModel>) {
         itemsIndexed(data) { index, model ->
             Column {
                 BibleWordListView(
-                    id=model.id,
                     title = model.verse,
                     heading = "${model.bibleIndex} ${model.Chapter}:${model.Versecount}",
                     subTitle = "${model.bibleIndex} ${model.Chapter}:${model.Versecount}",
@@ -85,10 +87,10 @@ fun HighlightRow(data: List<HighlightModel>) {
                     isVisibleBottom = false,
                     colorCode = model.colorCode,
                     onClick = {
-
+                        onClick.invoke(model)
                     },
                     onClickDelete = {
-
+                        onClickDelete.invoke(model)
                     }
                 )
             }
@@ -104,5 +106,5 @@ fun HighlightScreenViewPreview() {
     obj.createdDate = "2 weeks ago"
     obj.verse =
         "ఆదియందు దేవుడు భూమ్యాకాశములను సృజించెను. భూమి నిరాకారముగాను శూన్యముగాను ఉండెను; చీకటి అగాధ జలము పైన కమ్మియుండెను"
-    HighlightRow(data = listOf(obj))
+    HighlightRow(data = listOf(obj), {}, {})
 }

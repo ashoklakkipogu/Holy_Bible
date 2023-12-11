@@ -49,7 +49,8 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun NoteScreenView(
-    viewModel: BookmarkViewModel = hiltViewModel()
+    viewModel: BookmarkViewModel = hiltViewModel(),
+    onClick: (Int) -> Unit
 ) {
     LaunchedEffect(key1 = true) {
         viewModel.getAllNoteBibleData()
@@ -67,7 +68,7 @@ fun NoteScreenView(
     NoteRow(
         noteData,
         onClick = {
-
+            onClick.invoke(it.bibleLangIndex.split("-")[1].toInt())
         },
         onClickDelete = { item ->
             viewModel.deleteNoteById(item)
@@ -78,7 +79,7 @@ fun NoteScreenView(
 @Composable
 fun NoteRow(
     data: List<NoteModel>,
-    onClick: () -> Unit,
+    onClick: (NoteModel) -> Unit,
     onClickDelete: (NoteModel) -> Unit
 ) {
 
@@ -92,7 +93,6 @@ fun NoteRow(
         itemsIndexed(data) { index, model ->
             Column {
                 BibleWordListView(
-                    id = model.id,
                     title = model.verse,
                     subTitle = "${model.bibleIndex} ${model.Chapter}:${model.Versecount}",
                     dividerColor = Color.Black,
@@ -100,7 +100,7 @@ fun NoteRow(
                     timings = getUtcToDDMMYYYYHHMMA(model.createdDate),
                     isVisibleBottom = true,
                     onClick = {
-                        onClick.invoke()
+                        onClick.invoke(model)
                     },
                     onClickDelete = {
                         onClickDelete.invoke(model)

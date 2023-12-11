@@ -44,12 +44,17 @@ class BookmarkViewModel @Inject constructor(
     val noteDelete: LiveData<Boolean> get() = _noteDelete
 
 
-    private val _favData = MutableLiveData<Result<List<FavModel>>>()
-    val favData: LiveData<Result<List<FavModel>>> get() = _favData
+    private val _favData = mutableStateOf<List<FavModel>>(emptyList())
+    val favData: State<List<FavModel>> get() = _favData
 
-    private val _highlightData = MutableLiveData<Result<List<HighlightModel>>>()
-    val highlightData: LiveData<Result<List<HighlightModel>>> get() = _highlightData
+    private val _favDelete = MutableLiveData<Boolean>()
+    val favDelete: LiveData<Boolean> get() = _favDelete
 
+    private val _highlightData = mutableStateOf<List<HighlightModel>>(listOf())
+    val highlightData: State<List<HighlightModel>> get() = _highlightData
+
+    private val _highlightDelete = MutableLiveData<Boolean>()
+    val highlightDelete: LiveData<Boolean> get() = _highlightDelete
 
     fun getAllNoteBibleData() {
         viewModelScope.launch(Dispatchers.IO) {
@@ -69,7 +74,7 @@ class BookmarkViewModel @Inject constructor(
             noteData = noteData?.sortedBy { sort -> sort.createdDate }?.reversed()
 
             withContext(Dispatchers.Main) {
-                _favData.value = Result.Success(noteData!!)
+                _favData.value = noteData!!
             }
 
         }
@@ -81,7 +86,7 @@ class BookmarkViewModel @Inject constructor(
             noteData = noteData?.sortedBy { sort -> sort.createdDate }?.reversed()
 
             withContext(Dispatchers.Main) {
-                _highlightData.value = Result.Success(noteData!!)
+                _highlightData.value = noteData!!
             }
 
         }
@@ -99,4 +104,30 @@ class BookmarkViewModel @Inject constructor(
             }
         }
     }
+
+    fun deleteHighlightById(obj: HighlightModel) {
+        viewModelScope.launch(Dispatchers.IO) {
+            dbRepo.deleteHighlight(obj.id)
+            withContext(Dispatchers.Main) {
+                _highlightDelete.value = true
+                _highlightData.value = _highlightData.value.toMutableList().also { list ->
+                    list.remove(obj)
+                }
+            }
+        }
+    }
+
+    fun deleteFavById(obj: FavModel) {
+        viewModelScope.launch(Dispatchers.IO) {
+            dbRepo.deleteFavorite(obj.id)
+            withContext(Dispatchers.Main) {
+                _favDelete.value = true
+                _favData.value = _favData.value.toMutableList().also { list ->
+                    list.remove(obj)
+                }
+            }
+        }
+    }
+
+
 }

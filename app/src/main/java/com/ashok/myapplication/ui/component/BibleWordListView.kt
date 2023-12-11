@@ -44,7 +44,6 @@ import com.ashok.myapplication.R
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BibleWordListView(
-    id :Int,
     title: String,
     subTitle: String,
     dividerColor: Color = Color.Black,
@@ -53,7 +52,7 @@ fun BibleWordListView(
     isVisibleBottom: Boolean = false,
     colorCode: String = "",
     onClick: () -> Unit,
-    onClickDelete: (Int) -> Unit,
+    onClickDelete: () -> Unit,
 ) {
 
     val context = LocalContext.current
@@ -134,7 +133,7 @@ fun BibleWordListView(
                         )
                         IconButton(modifier = Modifier.size(24.dp), onClick = {
                             deleteRow(context = context){
-                                onClickDelete.invoke(id)
+                                onClickDelete.invoke()
                             }
                         }) {
                             Icon(
@@ -171,7 +170,6 @@ fun deleteRow(context: Context, onClickYes: () -> Unit) {
 @Composable
 fun BibleListViewPreview() {
     BibleWordListView(
-        id=1,
         title = "ఆదియందు దేవుడు భూమ్యాకాశములను సృజించెను. భూమి నిరాకారముగాను శూన్యముగాను ఉండెను; చీకటి అగాధ జలము పైన కమ్మియుండెను",
         subTitle = "ఆదియందు 1:2",
         dividerColor = Color.Black,

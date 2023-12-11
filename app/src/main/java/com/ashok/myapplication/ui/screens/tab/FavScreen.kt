@@ -24,6 +24,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.ashok.myapplication.data.local.entry.BibleModelEntry
 import com.ashok.myapplication.data.local.entry.NoteModelEntry
 import com.ashok.myapplication.data.local.model.FavModel
+import com.ashok.myapplication.data.local.model.HighlightModel
 import com.ashok.myapplication.data.local.model.NoteModel
 import com.ashok.myapplication.ui.component.BibleHeading
 import com.ashok.myapplication.ui.component.BibleVerse
@@ -37,35 +38,31 @@ import com.ashok.myapplication.ui.viewmodel.SplashViewModel
 
 @Composable
 fun FavScreenView(
-    viewModel: BookmarkViewModel = hiltViewModel()
+    viewModel: BookmarkViewModel = hiltViewModel(),
+    onClick: (FavModel) -> Unit,
 ) {
     LaunchedEffect(Unit) {
         viewModel.getAllFavBibleData()
     }
-    val favData by viewModel.favData.observeAsState(
-        initial = Result.Loading()
+    val favData = viewModel.favData.value
+    FavRow(
+        favData,
+        onClick = {
+            onClick.invoke(it)
+        },
+        onClickDelete = { item ->
+            viewModel.deleteFavById(item)
+        }
     )
-    
-    when (favData) {
-        is Result.Error -> {
 
-        }
-
-        is Result.Loading -> {
-
-        }
-
-        is Result.Success -> {
-            val result = (favData as Result.Success<List<FavModel>>).data
-            FavRow(
-                result
-            )
-        }
-    }
 }
 
 @Composable
-fun FavRow(data: List<FavModel>) {
+fun FavRow(
+    data: List<FavModel>,
+    onClick: (FavModel) -> Unit,
+    onClickDelete: (FavModel) -> Unit
+) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -76,7 +73,6 @@ fun FavRow(data: List<FavModel>) {
         itemsIndexed(data) { index, model ->
             Column {
                 BibleWordListView(
-                    id = model.id,
                     title = model.verse,
                     heading = "${model.bibleIndex} ${model.Chapter}:${model.Versecount}",
                     subTitle = "${model.bibleIndex} ${model.Chapter}:${model.Versecount}",
@@ -84,10 +80,10 @@ fun FavRow(data: List<FavModel>) {
                     timings = getUtcToDDMMYYYYHHMMA(model.createdDate),
                     isVisibleBottom = false,
                     onClick = {
-
+                        onClick.invoke(model)
                     },
                     onClickDelete = {
-
+                        onClickDelete.invoke(model)
                     }
                 )
             }
@@ -103,5 +99,5 @@ fun FavScreenViewPreview() {
     obj.createdDate = "2 weeks ago"
     obj.verse =
         "ఆదియందు దేవుడు భూమ్యాకాశములను సృజించెను. భూమి నిరాకారముగాను శూన్యముగాను ఉండెను; చీకటి అగాధ జలము పైన కమ్మియుండెను"
-    FavRow(data = listOf(obj))
+    FavRow(data = listOf(obj), {}, {})
 }

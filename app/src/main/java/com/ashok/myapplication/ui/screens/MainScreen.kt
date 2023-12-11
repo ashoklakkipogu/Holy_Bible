@@ -1,5 +1,6 @@
 package com.ashok.myapplication.ui.screens
 
+import android.util.Log
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.BottomAppBarDefaults
@@ -16,6 +17,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -44,9 +46,25 @@ fun MainScreen(
     val headingData = remember { mutableStateOf(BibleModelEntry()) }
     val clickAction = remember { mutableStateOf("") }
     val coroutineScope = rememberCoroutineScope()
+    val lifecycleOwner = LocalLifecycleOwner.current
 
+   /* viewModel.bibleScrollPos.observe(lifecycleOwner) {
+        coroutineScope.launch {
+            Log.i("scrollid", "scrollId......1.....$it")
+            //scrollState.scrollToItem(it)
+        }
+    }*/
 
-
+    val bibleScrollPos by viewModel.bibleScrollPos.observeAsState(
+        initial = null
+    )
+    LaunchedEffect(bibleScrollPos){
+        bibleScrollPos?.let { scorllState.scrollToItem(it) }
+    }
+    /*coroutineScope.launch {
+        Log.i("scrollid", "scrollId......1.....$it")
+        //scrollState.scrollToItem(it)
+    }*/
 
     Scaffold(modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection), topBar = {
         topAppBar(currentRoute = currentRoute, headingData = headingData, leftArrowClick = {

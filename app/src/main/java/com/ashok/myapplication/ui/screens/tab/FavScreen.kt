@@ -39,7 +39,7 @@ import com.ashok.myapplication.ui.viewmodel.SplashViewModel
 @Composable
 fun FavScreenView(
     viewModel: BookmarkViewModel = hiltViewModel(),
-    onClick: (FavModel) -> Unit,
+    onClick: (Int) -> Unit,
 ) {
     LaunchedEffect(Unit) {
         viewModel.getAllFavBibleData()
@@ -48,7 +48,7 @@ fun FavScreenView(
     FavRow(
         favData,
         onClick = {
-            onClick.invoke(it)
+            onClick.invoke(it.bibleLangIndex.split("-")[1].toInt())
         },
         onClickDelete = { item ->
             viewModel.deleteFavById(item)

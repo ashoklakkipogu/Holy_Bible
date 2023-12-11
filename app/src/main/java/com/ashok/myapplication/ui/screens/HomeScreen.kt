@@ -17,8 +17,10 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import com.ashok.myapplication.data.local.entry.BibleModelEntry
 import com.ashok.myapplication.ui.theme.BibleTheme
@@ -36,6 +38,8 @@ fun HomeScreen(
     headingData: MutableState<BibleModelEntry>
 ) {
     val coroutineScope = rememberCoroutineScope()
+    val context = LocalContext.current
+    val lifecycleOwner = LocalLifecycleOwner.current
 
     LaunchedEffect(Unit) {
         homeViewModel.getBibleData()
@@ -44,24 +48,6 @@ fun HomeScreen(
     val bibleData by homeViewModel.bibleData.observeAsState(
         initial = Result.Loading()
     )
-    val bibleScrollPos by homeViewModel.bibleScrollPos.observeAsState(
-        initial = null
-    )
-    bibleScrollPos?.let { scrollState.animateScrollToItem(it) }
-    //println("...............$bibleScrollPos")
-   /* LaunchedEffect(Unit) {
-        println("...............$bibleScrollPos")
-        bibleScrollPos?.let { scrollState.animateScrollToItem(it) }
-    }*/
-    //Log.i("scrollid", "scrollId......1.....$bibleScrollPos")
-    //coroutineScope.launch {
-    /*LaunchedEffect(bibleScrollPos) {
-        Log.i("scrollid", "scrollId......1.....$bibleScrollPos")
-        scrollState.scrollToItem(bibleScrollPos)
-    }*/
-   // }
-
-
 
     val secondScreenResult = navController.currentBackStackEntry
         ?.savedStateHandle
@@ -72,10 +58,6 @@ fun HomeScreen(
             scrollState.scrollToItem(it)
         }
     }
-
-
-
-
 
     BibleTheme {
         Surface(

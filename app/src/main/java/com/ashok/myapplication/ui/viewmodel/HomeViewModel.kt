@@ -121,7 +121,7 @@ class HomeViewModel @Inject constructor(
             withContext(Dispatchers.Main) {
                 data?.let {
                     Log.i("data....", "data............."+(it.bibleLangIndex.split("-")[1].toInt() - 1))
-                    _bibleScrollPos.intValue = it.bibleLangIndex.split("-")[1].toInt() - 1
+                    _bibleScrollPos.value = it.bibleLangIndex.split("-")[1].toInt() - 1
                 }
             }
 

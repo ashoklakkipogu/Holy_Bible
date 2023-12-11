@@ -79,34 +79,22 @@ fun TabScreen(navController: NavController) {
                 0 -> NoteScreenView {
                     navController.previousBackStackEntry
                         ?.savedStateHandle
-                        ?.set("scollId", it)
+                        ?.set("scollId", it-1)
                     navController.popBackStack()
-
-                    /*navController.navigate(Screens.Bible.router) {
-                        popUpTo(navController.graph.id){
-                            inclusive = true
-                        }
-
-                    }*/
                 }
 
                 1 -> FavScreenView {
-                    navController.navigate(Screens.Bible.router) {
-                        popUpTo(navController.graph.findStartDestination().id) {
-                            saveState = true
-                        }
-                        launchSingleTop = true
-                    }
+                    navController.previousBackStackEntry
+                        ?.savedStateHandle
+                        ?.set("scollId", it-1)
+                    navController.popBackStack()
                 }
 
                 2 -> HighlightScreenView {
-                    navController.navigate(Screens.Bible.router) {
-                        popUpTo(navController.graph.findStartDestination().id) {
-                            saveState = true
-                        }
-                        launchSingleTop = true
-                        restoreState = true
-                    }
+                    navController.previousBackStackEntry
+                        ?.savedStateHandle
+                        ?.set("scollId", it-1)
+                    navController.popBackStack()
                 }
             }
         }

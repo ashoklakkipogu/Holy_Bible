@@ -116,6 +116,12 @@ dependencies {
     implementation("androidx.compose.runtime:runtime-livedata:1.5.4")
     implementation("dev.shreyaspatil:capturable:1.0.3")
 
+    val paging_version = "3.2.1"
+
+    implementation("androidx.paging:paging-runtime:$paging_version")
+    // optional - Jetpack Compose integration
+    implementation("androidx.paging:paging-compose:3.3.0-alpha02")
+
 
 
 

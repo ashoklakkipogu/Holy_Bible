@@ -19,7 +19,7 @@ class DbRepoImp @Inject constructor(
     private val highlightDao: HighlightDao,
     private val lyricsDao: LyricsDao
 ) : DbRepository {
-    override suspend fun getBible() = bibleDao.getAllBibleContent()
+    override fun getBible() = bibleDao.getAllBibleData()
     override suspend fun getBibleScrollPosition(
         bookId: Int,
         chapterId: Int,

@@ -3,10 +3,14 @@ package com.ashok.myapplication.data.local.dao
 
 import androidx.room.*
 import androidx.lifecycle.LiveData
+import androidx.paging.PagingSource
 import com.ashok.myapplication.data.local.entry.BibleModelEntry
 
 @Dao
 interface BibleDao {
+
+    @Query("SELECT * FROM bible")
+    fun getAllBibleData(): PagingSource<Int, BibleModelEntry>
     @Query("SELECT * FROM bible")
     fun getAllBibleContent(): List<BibleModelEntry>?
 

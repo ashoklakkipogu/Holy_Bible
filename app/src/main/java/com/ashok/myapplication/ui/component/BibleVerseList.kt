@@ -2,6 +2,7 @@ package com.ashok.myapplication.ui.component
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -17,15 +18,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.InlineTextContent
 import androidx.compose.foundation.text.appendInlineContent
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -51,29 +54,35 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.graphics.toColorInt
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.paging.Pager
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemContentType
+import androidx.paging.compose.itemKey
 import com.ashok.myapplication.R
 import com.ashok.myapplication.data.local.entry.BibleModelEntry
 import com.ashok.myapplication.ui.activity.ShareImageActivity
 import com.ashok.myapplication.ui.utilities.BibleUtils.copyText
 import com.ashok.myapplication.ui.utilities.BibleUtils.shareText
 import com.ashok.myapplication.ui.utilities.bookmarkInsert
-import com.ashok.myapplication.ui.utilities.highlightDelete
-import com.ashok.myapplication.ui.utilities.highlightInsert
-import com.ashok.myapplication.ui.utilities.noteInsert
 import com.ashok.myapplication.ui.viewmodel.HomeViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun bibleVerses(
-    bibleDataList: List<BibleModelEntry>,
-    scrollState: LazyListState,
-    headingData: MutableState<BibleModelEntry>
+    headingData: MutableState<BibleModelEntry>,
+    scrollId: Int
 ) {
-    var bibleData by remember { mutableStateOf(bibleDataList) }
     var showSheet by remember { mutableStateOf(false) }
     var showNoteDialog by remember { mutableStateOf(false) }
     var selectedBible by remember { mutableStateOf(BibleModelEntry()) }
     val homeViewModel: HomeViewModel = hiltViewModel()
+
+
+
 
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
@@ -84,12 +93,15 @@ fun bibleVerses(
         selectedBible = model
     }
 
+    /*val bibleData: LazyPagingItems<BibleModelEntry> =
+        homeViewModel.biblePagingSource.collectAsLazyPagingItems()*/
+
 
     if (showSheet) {
         bottomSheet(onDismiss = {
             showSheet = false
         }, onCircleColor = { color ->
-            bibleData = bibleData.mapIndexed { j, item ->
+            /*bibleData = bibleData.mapIndexed { j, item ->
                 if (selectedBible.bibleID == item.bibleID) {
                     var colorCode = color
                     if (item.selectedBackground == "underline" || item.selectedBackground == colorCode) {
@@ -105,7 +117,7 @@ fun bibleVerses(
                     }
                     item.copy(selectedBackground = colorCode)
                 } else item
-            }
+            }*/
         }, onButtonClick = {
             when (it) {
                 "Note" -> {
@@ -113,13 +125,18 @@ fun bibleVerses(
                 }
 
                 "Bookmark" -> {
-                    bibleData = bibleData.mapIndexed { j, item ->
-                        if (selectedBible.bibleID == item.bibleID) {
-                            bookmarkInsert(bibleVerse = selectedBible, viewModel = homeViewModel)
-                            Toast.makeText(context, "Bookmark", Toast.LENGTH_SHORT).show()
-                            item.copy(isBookMark = true)
-                        } else item
-                    }
+                    /* bibleData = bibleData.mapIndexed { j, item ->
+                         if (selectedBible.bibleID == item.bibleID) {
+                             bookmarkInsert(bibleVerse = selectedBible, viewModel = homeViewModel)
+                             Toast.makeText(context, "Bookmark", Toast.LENGTH_SHORT).show()
+                             item.copy(isBookMark = true)
+                         } else item
+                     }*/
+
+                    selectedBible.isBookMark = true
+                    bookmarkInsert(bibleVerse = selectedBible, viewModel = homeViewModel)
+                    Toast.makeText(context, "Bookmark", Toast.LENGTH_SHORT).show()
+
 
                 }
 
@@ -160,26 +177,94 @@ fun bibleVerses(
             onDismiss = { showNoteDialog = false },
             onEnteredText = {
 
-                bibleData = bibleData.mapIndexed { j, item ->
+                /*bibleData = bibleData.mapIndexed { j, item ->
                     if (selectedBible.bibleID == item.bibleID) {
                         noteInsert(title = it, bibleVerse = selectedBible, viewModel = homeViewModel)
                         Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
                         item.copy(isNote = true)
                     } else item
-                }
+                }*/
 
 
             })
     }
+
+    BibleVerseList(
+        biblePager = homeViewModel.biblePagingSource,
+        headingData = headingData,
+        scrollItem = scrollId,
+        onItemClick = onItemClick
+    )
+}
+
+@Composable
+fun BibleVerseList(
+    biblePager: Pager<Int, BibleModelEntry>,
+    headingData: MutableState<BibleModelEntry>,
+    scrollItem: Int,
+    onItemClick: (BibleModelEntry) -> Unit
+) {
+    val pager = remember { biblePager }
+    val bibleData = pager.flow.collectAsLazyPagingItems()
+    val state = rememberLazyListState()
+
+    var scrollIndex by remember { mutableIntStateOf(-1) }
+    LaunchedEffect(scrollItem) {
+        Log.i("scrollId", "scrollId.....1......."+scrollItem)
+            scrollIndex = scrollItem
+    }
+
 
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
             .padding(16.dp),
-        state = scrollState
+        state
     ) {
-        val currentItemIndex = scrollState.firstVisibleItemIndex
+        //val currentItemIndex = scrollState.firstVisibleItemIndex
+//        if (bibleData !=null)
+//        bibleData[currentItemIndex]?.let {
+//            headingData.value = it
+//        }
+
+        /*   if (scrollId !=null && scrollId !=-1){
+               scope.launch {
+                   scrollState.scrollToItem(scrollId)
+               }
+           }*/
+
+        items(
+            count = bibleData.itemCount,
+            key = bibleData.itemKey(BibleModelEntry::id),
+            contentType = bibleData.itemContentType { "Articles" }
+        ) { index: Int ->
+            val model: BibleModelEntry = bibleData[index] ?: return@items
+
+            headingData.value = model
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .wrapContentHeight()
+                    .fillMaxWidth()
+            ) {
+                Column(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    if (model.Versecount == 1) {
+                        BibleHeading(model)
+                    }
+                    BibleVerse(
+                        model = model, onClick = onItemClick
+                    )
+                    Spacer(modifier = Modifier.height(5.dp))
+                }
+
+            }
+        }
+
+
+        /*val currentItemIndex = scrollState.firstVisibleItemIndex
         headingData.value = bibleData[currentItemIndex + 1]
         itemsIndexed(bibleData) { index, model ->
             Row(
@@ -201,7 +286,16 @@ fun bibleVerses(
                 }
 
             }
+        }*/
+
+        CoroutineScope(Dispatchers.Main).launch {
+            if (scrollIndex != -1){
+                Log.i("scrollId", "scrollId.....2......."+scrollIndex)
+                state.scrollToItem(scrollIndex)
+
+            }
         }
+
     }
 }
 

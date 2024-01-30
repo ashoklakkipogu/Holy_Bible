@@ -41,32 +41,25 @@ fun MainScreen(
     currentRoute: String,
     viewModel: HomeViewModel
 ) {
-    val scorllState = rememberLazyListState()
+    //val scorllState = rememberLazyListState()
     val scrollBehavior = BottomAppBarDefaults.exitAlwaysScrollBehavior()
     val headingData = remember { mutableStateOf(BibleModelEntry()) }
     val clickAction = remember { mutableStateOf("") }
     val coroutineScope = rememberCoroutineScope()
-    val lifecycleOwner = LocalLifecycleOwner.current
 
-   /* viewModel.bibleScrollPos.observe(lifecycleOwner) {
+    /*viewModel.bibleScrollPos.observeForever {pos->
+        Log.i("scrollid", "scrollId......1.....$pos")
         coroutineScope.launch {
-            Log.i("scrollid", "scrollId......1.....$it")
-            //scrollState.scrollToItem(it)
+            pos?.let { scorllState.scrollToItem(it) }
         }
+
+    }*/
+   /* LaunchedEffect(Unit){
+        Log.i("scrollid", "scrollId......1.....$bibleScrollPos")
+        bibleScrollPos?.let { scorllState.animateScrollToItem(it) }
     }*/
 
-    val bibleScrollPos by viewModel.bibleScrollPos.observeAsState(
-        initial = null
-    )
-    LaunchedEffect(bibleScrollPos){
-        bibleScrollPos?.let { scorllState.scrollToItem(it) }
-    }
-    /*coroutineScope.launch {
-        Log.i("scrollid", "scrollId......1.....$it")
-        //scrollState.scrollToItem(it)
-    }*/
-
-    Scaffold(modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection), topBar = {
+    Scaffold(topBar = {
         topAppBar(currentRoute = currentRoute, headingData = headingData, leftArrowClick = {
             clickAction.value = "LEFT"
             coroutineScope.launch {
@@ -94,15 +87,17 @@ fun MainScreen(
         bottomNavigation(navController, scrollBehavior)
 
     }) {
+        Log.i("test", "test.......padding")
+
 
         NavHost(
             navController = navController,
             startDestination = Screens.DashboardRoute.router,
             modifier = Modifier.padding(paddingValues = it)
         ) {
+            Log.i("test", "test.......NavHost")
             dashboardNavGraph(
                 navController = navController,
-                scrollState = scorllState,
                 headingData = headingData,
                 clickAction = clickAction
             )

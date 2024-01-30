@@ -1,5 +1,6 @@
 package com.ashok.myapplication.ui.screens.tab
 
+import android.text.style.TabStopSpan
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -77,17 +78,47 @@ fun TabScreen(navController: NavController) {
         ) { index ->
             when (index) {
                 0 -> NoteScreenView {
-                    navController.previousBackStackEntry
+                    navController.navigate(Screens.Bible.passId(10))
+
+                    /*navController.previousBackStackEntry
                         ?.savedStateHandle
                         ?.set("scollId", it-1)
-                    navController.popBackStack()
+                    navController.popBackStack()*/
                 }
 
                 1 -> FavScreenView {
-                    navController.previousBackStackEntry
+                    /*navController.previousBackStackEntry
                         ?.savedStateHandle
                         ?.set("scollId", it-1)
-                    navController.popBackStack()
+                    navController.popBackStack()*/
+                    /*NavigationIntent.NavigateBack(
+                        route = route,
+                        inclusive = inclusive
+                    )*/
+                    /*navController.navigate(Screens.Bible.passId(10)) {
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }*/
+
+                    navController.navigate(Screens.Bible.passId(it-1)) {
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = false
+                    }
+
+                    /*navController.navigate(Screens.Bible.passId(10)){
+                        launchSingleTop = true
+                        popUpTo(Screens.Bible.router){
+                            inclusive = true
+                        }
+                    }*/
+
+
                 }
 
                 2 -> HighlightScreenView {

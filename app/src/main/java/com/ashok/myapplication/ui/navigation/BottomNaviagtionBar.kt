@@ -66,10 +66,11 @@ fun bottomNavigation(navController: NavHostController, scorllState: BottomAppBar
                     //navController.navigate(item.router)
                     navController.navigate(item.router) {
                         popUpTo(navController.graph.findStartDestination().id) {
-                            saveState = true
+                            saveState = false
                         }
                         launchSingleTop = true
-                        restoreState = true
+                        restoreState = false
+
                     }
                 }
             )

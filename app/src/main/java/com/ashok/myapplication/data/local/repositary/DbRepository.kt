@@ -1,6 +1,7 @@
 package com.ashok.myapplication.data.local.repositary
 
 import androidx.lifecycle.LiveData
+import androidx.paging.PagingSource
 import com.ashok.myapplication.data.entity.FavBookMark
 import com.ashok.myapplication.data.entity.LyricsModel
 import com.ashok.myapplication.data.local.entry.BibleIndexModelEntry
@@ -13,7 +14,7 @@ import com.ashok.myapplication.data.local.model.HighlightModel
 import com.ashok.myapplication.data.local.model.NoteModel
 
 interface DbRepository {
-    suspend fun getBible(): List<BibleModelEntry>?
+    fun getBible(): PagingSource<Int, BibleModelEntry>
     suspend fun getBibleScrollPosition(
         bookId: Int,
         chapterId: Int,

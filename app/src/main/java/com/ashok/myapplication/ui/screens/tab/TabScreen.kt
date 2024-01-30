@@ -21,15 +21,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import com.ashok.myapplication.R
 import com.ashok.myapplication.ui.screens.Screens
+import com.ashok.myapplication.ui.viewmodel.HomeViewModel
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun TabScreen(navController: NavController) {
+fun TabScreen(navController: NavController, viewModel:HomeViewModel) {
     var selectedTabIndex by remember { mutableIntStateOf(0) }
+
+
 
     val tabs = listOf(
         "Notes" to R.drawable.ic_notes_24dp,
@@ -78,7 +82,7 @@ fun TabScreen(navController: NavController) {
         ) { index ->
             when (index) {
                 0 -> NoteScreenView {
-                    navController.navigate(Screens.Bible.passId(10))
+                    //navController.navigate(Screens.Bible.passId(10))
 
                     /*navController.previousBackStackEntry
                         ?.savedStateHandle
@@ -103,13 +107,15 @@ fun TabScreen(navController: NavController) {
                         restoreState = true
                     }*/
 
-                    navController.navigate(Screens.Bible.passId(it-1)) {
+                    viewModel.setScrollPos(it-1)
+                    navController.popBackStack()
+                    /*navController.navigate(Screens.Bible.passId(it-1)) {
                         popUpTo(navController.graph.findStartDestination().id) {
                             saveState = true
                         }
                         launchSingleTop = true
                         restoreState = false
-                    }
+                    }*/
 
                     /*navController.navigate(Screens.Bible.passId(10)){
                         launchSingleTop = true

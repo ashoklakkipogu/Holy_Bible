@@ -35,10 +35,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.ashok.myapplication.data.local.entry.BibleModelEntry
 import com.ashok.myapplication.data.local.entry.NoteModelEntry
 import com.ashok.myapplication.data.local.model.NoteModel
-import com.ashok.myapplication.ui.component.BibleHeading
-import com.ashok.myapplication.ui.component.BibleVerse
 import com.ashok.myapplication.ui.component.BibleWordListView
-import com.ashok.myapplication.ui.component.bibleVerses
 import com.ashok.myapplication.ui.utilities.BibleUtils.getUtcToDDMMYYYYHHMMA
 import com.ashok.myapplication.ui.utilities.Result
 import com.ashok.myapplication.ui.utilities.noteInsert

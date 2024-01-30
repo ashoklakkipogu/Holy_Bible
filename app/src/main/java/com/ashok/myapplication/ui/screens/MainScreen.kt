@@ -41,23 +41,10 @@ fun MainScreen(
     currentRoute: String,
     viewModel: HomeViewModel
 ) {
-    //val scorllState = rememberLazyListState()
     val scrollBehavior = BottomAppBarDefaults.exitAlwaysScrollBehavior()
     val headingData = remember { mutableStateOf(BibleModelEntry()) }
     val clickAction = remember { mutableStateOf("") }
     val coroutineScope = rememberCoroutineScope()
-
-    /*viewModel.bibleScrollPos.observeForever {pos->
-        Log.i("scrollid", "scrollId......1.....$pos")
-        coroutineScope.launch {
-            pos?.let { scorllState.scrollToItem(it) }
-        }
-
-    }*/
-   /* LaunchedEffect(Unit){
-        Log.i("scrollid", "scrollId......1.....$bibleScrollPos")
-        bibleScrollPos?.let { scorllState.animateScrollToItem(it) }
-    }*/
 
     Scaffold(topBar = {
         topAppBar(currentRoute = currentRoute, headingData = headingData, leftArrowClick = {
@@ -96,10 +83,12 @@ fun MainScreen(
             modifier = Modifier.padding(paddingValues = it)
         ) {
             Log.i("test", "test.......NavHost")
+
             dashboardNavGraph(
                 navController = navController,
                 headingData = headingData,
-                clickAction = clickAction
+                clickAction = clickAction,
+                viewModel = viewModel
             )
         }
     }

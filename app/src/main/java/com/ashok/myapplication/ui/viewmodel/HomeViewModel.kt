@@ -170,11 +170,12 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun setScrollPos(scrollId: Int?) {
-        scrollId?.let {
-            if (scrollId != -1)
-                _bibleScrollPos.value = it
-        }
+    private val _scrollIndex = mutableStateOf(-1)
+    val scrollIndex: State<Int> get() = _scrollIndex
 
+    fun setScrollPos(pos: Int) {
+        _scrollIndex.value = pos
     }
+
+
 }

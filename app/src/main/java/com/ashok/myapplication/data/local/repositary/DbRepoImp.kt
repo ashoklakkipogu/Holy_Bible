@@ -58,9 +58,10 @@ class DbRepoImp @Inject constructor(
     )
 
     override suspend fun getAllFav() = favoriteDao.getAllFavorites()
-    override suspend fun getAllFavHigh(): ArrayList<FavBookMark> {
+    override suspend fun getAllFavHighNote(): ArrayList<FavBookMark> {
         val favData = favoriteDao.getAllFavoritesList()
         val highData = highlightDao.getAllHighlightList()
+        val noteData = noteDao.getAllNoteList()
         val list: ArrayList<FavBookMark> = ArrayList()
 
         for (obj in favData) {
@@ -81,30 +82,26 @@ class DbRepoImp @Inject constructor(
             favBookMark.isFav = false
             list.add(favBookMark)
         }
-        if (list.isEmpty()) {
+
+        for (obj in noteData) {
             val favBookMark = FavBookMark()
-            favBookMark.noData = true
+
+            favBookMark.bibleId = obj.bibleId
+            favBookMark.createdDate = obj.createdDate
+            favBookMark.highlightId = obj.id
+            favBookMark.isFav = false
             list.add(favBookMark)
         }
 
-        var noData = false
-        val listFavBookMark: ArrayList<FavBookMark> = ArrayList()
-        if (list.size == 1) {
-            for (obj in list) {
-                noData = obj.noData
-            }
-        }
-        return if (noData) {
-            listFavBookMark
-        } else {
-            listFavBookMark
-        }
+
+        return list
     }
 
 
-    override suspend fun getFavById(id: Int) = favoriteDao.getFavoritesById(id)
+    override suspend fun deleteFavoriteByBibleLangIndex(bibleLangIndex: String) = favoriteDao.deleteFavoriteByBibleLangIndex(bibleLangIndex)
     override suspend fun getAllHighlights() = highlightDao.getAllHighlight()
     override suspend fun getAllNotes() = noteDao.getAllNote()
+    override suspend fun getAllNoteList() = noteDao.getAllNoteList()
     override suspend fun getNotesById(id: Int) = noteDao.getNotesById(id)
     override suspend fun insertAllFav(favList: ArrayList<FavoriteModelEntry>) =
         favoriteDao.insertFavorites(favList)

@@ -25,7 +25,7 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class MainActivity : androidx.activity.ComponentActivity() {
 
-    private val viewModel: HomeViewModel by viewModels()
+    //private val viewModel: HomeViewModel by viewModels()
     private val usersViewModel: UsersViewModel by viewModels()
 
     @OptIn(DelicateCoroutinesApi::class)
@@ -78,11 +78,11 @@ class MainActivity : androidx.activity.ComponentActivity() {
         setContent {
             BibleTheme {
                 Log.i("test", "test.......BibleTheme")
-                val navController = rememberNavController()
+                /*val navController = rememberNavController()
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
                 val currentDestination = navBackStackEntry?.destination
-                val currentRoute = currentDestination?.route ?: Screens.DashboardRoute.router
-                MainScreen(navController, currentRoute, viewModel)
+                val currentRoute = currentDestination?.route ?: Screens.DashboardRoute.router*/
+                MainScreen(/*viewModel = viewModel*/)
 
             }
         }

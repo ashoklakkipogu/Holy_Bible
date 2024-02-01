@@ -24,6 +24,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -32,7 +33,7 @@ import com.ashok.myapplication.ui.screens.Screens
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun bottomNavigation(navController: NavHostController, scorllState: BottomAppBarScrollBehavior) {
+fun bottomNavigation(navController: NavHostController) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
     val items = listOf(
@@ -48,7 +49,6 @@ fun bottomNavigation(navController: NavHostController, scorllState: BottomAppBar
     BottomAppBar(
         modifier = Modifier.shadow(elevation = 10.dp)
             .background(color = Color.White),
-        scrollBehavior = scorllState
     ) {
         items.forEachIndexed { index, item ->
             NavigationBarItem(
@@ -64,19 +64,43 @@ fun bottomNavigation(navController: NavHostController, scorllState: BottomAppBar
                 onClick = {
                     //navSelectedItem = index
                     //navController.navigate(item.router)
-                    navController.navigate(item.router) {
+                    /*navController.navigate(item.router) {
                         popUpTo(navController.graph.findStartDestination().id) {
-                            saveState = false
+                            saveState = true
                         }
                         launchSingleTop = true
-                        restoreState = false
+                        restoreState = true
 
+                    }*/
+
+                    navController.navigate(item.router) {
+                        // Pop up to the start destination of the graph to
+                        // avoid building up a large stack of destinations
+                        // on the back stack as users select items
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            saveState = true
+                        }
+                        // Avoid multiple copies of the same destination when
+                        // reselecting the same item
+                        launchSingleTop = true
+                        // Restore state when reselecting a previously selected item
+
+                        restoreState = true
                     }
+
                 }
             )
         }
     }
 }
+
+/*fun NavController.popUpTo(destination: String) = navigate(destination) {
+    popUpTo(graph.findStartDestination().id) {
+        saveState = true
+    }
+    // Restore state when reselecting a previously selected item
+    restoreState = true
+}*/
 
 @Composable
 private fun LazyListState.isScrollingUp(): Boolean {

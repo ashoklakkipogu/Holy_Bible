@@ -14,7 +14,7 @@ import com.ashok.myapplication.ui.theme.BibleTheme
 import com.ashok.myapplication.ui.viewmodel.HomeViewModel
 
 @Composable
-fun BookmarkScreen(navController: NavController, viewModel:HomeViewModel) {
+fun BookmarkScreen(navController: NavController, viewModel:HomeViewModel = hiltViewModel()) {
     BibleTheme {
         Surface(
             modifier = Modifier.fillMaxWidth(),

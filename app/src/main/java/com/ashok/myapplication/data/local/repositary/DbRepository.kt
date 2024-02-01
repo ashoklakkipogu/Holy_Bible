@@ -39,12 +39,13 @@ interface DbRepository {
     ): LiveData<List<BibleModelEntry>>
 
     suspend fun getAllFav(): List<FavModel>?
-    suspend fun getAllFavHigh(): ArrayList<FavBookMark>
+    suspend fun getAllFavHighNote(): ArrayList<FavBookMark>
 
 
-    suspend fun getFavById(id: Int): LiveData<FavoriteModelEntry>
+    suspend fun deleteFavoriteByBibleLangIndex(bibleLangIndex: String)
     suspend fun getAllHighlights(): List<HighlightModel>?
     suspend fun getAllNotes(): List<NoteModel>?
+    suspend fun getAllNoteList(): List<NoteModelEntry>
     suspend fun getNotesById(id: Int): LiveData<NoteModelEntry>
     suspend fun insertAllFav(favList: ArrayList<FavoriteModelEntry>)
 

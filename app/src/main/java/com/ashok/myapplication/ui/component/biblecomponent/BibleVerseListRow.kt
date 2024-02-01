@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.appendInlineContent
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -45,9 +46,9 @@ import com.ashok.myapplication.ui.utilities.BibleUtils.getInlineIcon
 @Composable
 fun BibleVerseList(
     biblePager: Pager<Int, BibleModelEntry>,
-    headingData: MutableState<BibleModelEntry>,
-    state: LazyListState,
-    onItemClick: (BibleModelEntry) -> Unit
+    state: LazyListState = rememberLazyListState(),
+    onItemClick: (BibleModelEntry) -> Unit,
+    onHeadingTitle: (BibleModelEntry) -> Unit
 ) {
     val pager = remember { biblePager }
     val bibleData = pager.flow.collectAsLazyPagingItems()
@@ -66,7 +67,7 @@ fun BibleVerseList(
         ) { index: Int ->
             val model: BibleModelEntry = bibleData[index] ?: return@items
 
-            headingData.value = model
+            onHeadingTitle.invoke(model)
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier

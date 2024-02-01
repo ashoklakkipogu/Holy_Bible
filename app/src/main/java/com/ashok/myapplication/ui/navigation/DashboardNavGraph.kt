@@ -2,15 +2,19 @@ package com.ashok.myapplication.ui.navigation
 
 import android.util.Log
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavHostController
 import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
@@ -24,26 +28,51 @@ import com.ashok.myapplication.ui.screens.ProfileScreen
 import com.ashok.myapplication.ui.screens.SCROLL_ID
 import com.ashok.myapplication.ui.viewmodel.HomeViewModel
 
-fun NavGraphBuilder.dashboardNavGraph(
+
+@Composable
+fun dashboardNavGraph(
+    navController: NavHostController,
+    clickAction: MutableState<String>
+) {
+    NavHost(
+        navController = navController, startDestination = Screens.DashboardRoute.router
+    ) {
+        Log.i("test", "test.......NavHost")
+
+        dahboardNavGraphBuilder(
+            navController = navController,
+            clickAction = clickAction,
+           // viewModel = viewModel
+        )
+    }
+}
+
+
+fun NavGraphBuilder.dahboardNavGraphBuilder(
     navController: NavController,
-    headingData: MutableState<BibleModelEntry>,
     clickAction: MutableState<String>,
-    viewModel: HomeViewModel
+   // viewModel :HomeViewModel
 ) {
 
     navigation(
         startDestination = Screens.Bible.router, route = Screens.DashboardRoute.router
     ) {
+
+        Log.i("allFavBookNote", "allFavBookNote...test1............")
+
         composable(
             route = Screens.Bible.router
 
         ) {
+
+            Log.i("allFavBookNote", "allFavBookNote...test2............")
+
             BibleViewScreen(
-                navController = navController, headingData = headingData, viewModel = viewModel
+                navController = navController
             )
         }
         composable(Screens.Bookmark.router) {
-            BookmarkScreen(navController, viewModel)
+            BookmarkScreen(navController)
         }
         composable(Screens.Lyrics.router) {
             LyricScreen(navController)
@@ -52,6 +81,8 @@ fun NavGraphBuilder.dashboardNavGraph(
             DiscoveryScreen(navController)
         }
         composable(Screens.More.router) {
+            Log.i("allFavBookNote", "allFavBookNote...test3............")
+
             ProfileScreen(navController)
         }
     }

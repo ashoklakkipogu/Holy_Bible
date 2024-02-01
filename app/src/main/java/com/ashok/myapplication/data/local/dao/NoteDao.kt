@@ -2,6 +2,7 @@ package com.ashok.myapplication.data.local.dao
 
 import androidx.room.*
 import androidx.lifecycle.LiveData
+import com.ashok.myapplication.data.local.entry.HighlightModelEntry
 import com.ashok.myapplication.data.local.entry.NoteModelEntry
 import com.ashok.myapplication.data.local.model.NoteModel
 
@@ -9,6 +10,9 @@ import com.ashok.myapplication.data.local.model.NoteModel
 interface NoteDao {
     @Query("SELECT bible.Book, bible.Chapter, bible.Versecount, bible.verse,bible.langauge,bible.bibleIndex, note.createdDate, note.noteName, note.bibleId, note.bibleLangIndex, note.id FROM note LEFT JOIN bible ON bible.id = note.bibleId")
     fun getAllNote(): List<NoteModel>?
+
+    @Query("SELECT * FROM note")
+    fun  getAllNoteList(): List<NoteModelEntry>
 
 
     /*@Query("SELECT * FROM note WHERE Book =:bookId")

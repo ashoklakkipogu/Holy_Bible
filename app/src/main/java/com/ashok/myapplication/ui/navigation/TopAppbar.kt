@@ -126,9 +126,9 @@ fun topAppBar(
 
             }
         }
-    else if(currentRoute == Screens.Lyrics.router)
+    else if (currentRoute == Screens.Lyrics.router)
         TopAppBar(title = { Text(text = "Lyrics") })
-    else if(currentRoute == Screens.Discovery.router)
+    else if (currentRoute == Screens.Discovery.router)
         TopAppBar(title = { Text(text = "Discovery") })
     /*CenterAlignedTopAppBar(
         title = {
@@ -142,6 +142,7 @@ fun topAppBar(
 
 }
 
+/*
 @SuppressLint("UnrememberedMutableState")
 @Preview
 @Composable
@@ -151,5 +152,87 @@ fun topAppBarPreview() {
         leftArrowClick = { },
         rightArrowClick = { },
         headingData = mutableStateOf(BibleModelEntry()),
+        verseClick = { })
+}*/
+
+@Composable
+fun HomeTopView(
+    modifier: Modifier = Modifier,
+    headingData: BibleModelEntry,
+    leftArrowClick: () -> Unit,
+    rightArrowClick: () -> Unit,
+    verseClick: () -> Unit
+) {
+    Box(
+        modifier
+            .fillMaxWidth()
+            .padding(8.dp),
+        contentAlignment = Alignment.Center
+    ) {
+
+        ElevatedCard(
+            elevation = CardDefaults.cardElevation(
+                defaultElevation = 2.dp
+            ),
+            shape = RoundedCornerShape(15.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = Color.White
+            )
+        ) {
+            Row(
+                modifier = modifier.padding(2.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                IconButton(
+                    onClick = {
+                        leftArrowClick.invoke()
+                    },
+                    modifier.height(35.dp),
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.KeyboardArrowLeft,
+                        contentDescription = "Left Icon"
+                    )
+                }
+                Spacer(modifier.width(20.dp))
+                TextButton(
+                    onClick = {
+                        verseClick.invoke()
+                    },
+                    modifier.height(35.dp),
+                    contentPadding = PaddingValues(),
+                ) {
+                    Text(
+                        text = "${headingData.bibleIndex} ${headingData.Chapter}",
+                        textAlign = TextAlign.Center,
+                        fontSize = 20.sp,
+                    )
+                }
+
+                Spacer(modifier.width(20.dp))
+                IconButton(
+                    onClick = {
+                        rightArrowClick.invoke()
+                    },
+                    modifier.height(35.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.KeyboardArrowRight,
+                        contentDescription = "Right Icon"
+                    )
+                }
+            }
+
+        }
+    }
+}
+
+@Preview
+@Composable
+fun topAppBarPreview() {
+    HomeTopView(
+        leftArrowClick = { },
+        rightArrowClick = { },
+        headingData = BibleModelEntry(),
         verseClick = { })
 }

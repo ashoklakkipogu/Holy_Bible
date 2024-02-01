@@ -33,7 +33,7 @@ interface FavoriteDao {
     @Query("DELETE FROM favorite WHERE id = :id")
     fun deleteFavoriteById(id: Int)
 
-    @Query("SELECT * FROM favorite WHERE bibleId =:bibleId")
-    fun getFavoritesById(bibleId: Int): LiveData<FavoriteModelEntry>
+    @Query("DELETE FROM favorite WHERE bibleLangIndex = :bibleLangIndex")
+    fun deleteFavoriteByBibleLangIndex(bibleLangIndex: String)
 
 }

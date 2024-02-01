@@ -8,7 +8,7 @@ object Versions {
     const val junit = "4.13.2"
     const val androidxJunit = "1.1.5"
     const val espresso = "3.5.1"
-    const val navigationCompose = "2.6.0"
+    const val navigationCompose = "2.7.6"
     const val dagger = "2.44"
     const val hiltViewModel = "1.0.0-alpha02"
     const val constraintlayout = "2.1.4"

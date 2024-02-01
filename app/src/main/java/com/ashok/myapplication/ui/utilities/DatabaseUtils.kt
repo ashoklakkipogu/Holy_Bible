@@ -17,6 +17,13 @@ fun noteInsert(title: String, bibleVerse: BibleModelEntry, viewModel: HomeViewMo
     viewModel.noteInsert(noteObj)
 }
 
+fun bookmarkInsertOrDelete(bibleVerse: BibleModelEntry, viewModel: HomeViewModel) {
+    if (bibleVerse.isBookMark){
+        bookmarkInsert(bibleVerse, viewModel)
+    }else{
+        favDelete(bibleVerse.bibleLangIndex, viewModel)
+    }
+}
 fun bookmarkInsert(bibleVerse: BibleModelEntry, viewModel: HomeViewModel) {
     val obj = FavoriteModelEntry()
     obj.createdDate = getCurrentTime()
@@ -34,6 +41,11 @@ fun highlightInsert(colorCode:String, bibleVerse: BibleModelEntry, viewModel: Ho
     obj.colorCode = colorCode
     obj.bibleId = bibleVerse.id
     viewModel.highlightInsert(obj)
+}
+
+fun favDelete(bibleLangIndex: String, viewModel: HomeViewModel) {
+    viewModel.deleteFavById(bibleLangIndex)
+
 }
 
 fun highlightDelete(bibleVerse: BibleModelEntry, viewModel: HomeViewModel) {

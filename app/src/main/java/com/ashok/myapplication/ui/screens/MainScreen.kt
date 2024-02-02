@@ -40,11 +40,11 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen() {
+fun MainScreen(viewModel: HomeViewModel) {
     //val scrollBehavior = BottomAppBarDefaults.exitAlwaysScrollBehavior()
-    val clickAction = remember { mutableStateOf("") }
     val coroutineScope = rememberCoroutineScope()
     val navController = rememberNavController()
+
 
     Scaffold(/*topBar = {
         topAppBar(currentRoute = currentRoute, headingData = headingData, leftArrowClick = {
@@ -77,7 +77,7 @@ fun MainScreen() {
         Log.i("test", "test.......padding")
 
         Box(modifier = Modifier.padding(it)) {
-            dashboardNavGraph(navController, clickAction)
+            dashboardNavGraph(navController, viewModel)
         }
     }
 }
@@ -88,7 +88,7 @@ fun MainScreen() {
 fun MainPreview() {
     BibleTheme {
         MainScreen(
-            //viewModel = viewModel()
+            viewModel = viewModel()
         )
     }
 }

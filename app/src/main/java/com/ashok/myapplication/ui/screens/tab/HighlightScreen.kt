@@ -22,6 +22,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.ashok.myapplication.common.EmptyScreen
 import com.ashok.myapplication.data.local.entry.BibleModelEntry
 import com.ashok.myapplication.data.local.entry.NoteModelEntry
 import com.ashok.myapplication.data.local.model.FavModel
@@ -44,9 +45,8 @@ fun HighlightScreenView(
     val highlightData = viewModel.highlightData.value
     val highlightDelete = viewModel.highlightDelete.observeAsState().value
 
-    if (highlightDelete == true) {
-        Log.i("data...........", "data...........deleted")
-
+    if (highlightData.isEmpty()){
+        EmptyScreen()
     }
     HighlightRow(
         highlightData,

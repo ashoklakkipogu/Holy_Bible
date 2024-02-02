@@ -21,7 +21,7 @@ class GetBiblePagedUseCase(
             initialLoadSize = 100,
             enablePlaceholders = true
         )
-        ){
-            dbRepo.getBible()
-        }
+    ) {
+        dbRepo.getBible()
+    }
 }

@@ -37,4 +37,7 @@ interface NoteDao {
 
     @Query("SELECT * FROM note WHERE bibleId =:bibleId")
     fun getNotesById(bibleId: Int): LiveData<NoteModelEntry>
+
+    @Query("DELETE FROM note WHERE bibleLangIndex = :bibleLangIndex")
+    fun deleteNotesByBibleLangIndex(bibleLangIndex: String)
 }

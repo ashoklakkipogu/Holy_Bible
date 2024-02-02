@@ -40,13 +40,14 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemContentType
 import androidx.paging.compose.itemKey
 import com.ashok.myapplication.R
+import com.ashok.myapplication.data.entity.FavBookMark
 import com.ashok.myapplication.data.local.entry.BibleModelEntry
 import com.ashok.myapplication.ui.utilities.BibleUtils.getInlineIcon
 
 @Composable
 fun BibleVerseList(
     biblePager: Pager<Int, BibleModelEntry>,
-    state: LazyListState = rememberLazyListState(),
+    state: LazyListState,
     onItemClick: (BibleModelEntry) -> Unit,
     onHeadingTitle: (BibleModelEntry) -> Unit
 ) {
@@ -65,6 +66,7 @@ fun BibleVerseList(
             key = bibleData.itemKey(BibleModelEntry::id),
             contentType = bibleData.itemContentType { "Articles" }
         ) { index: Int ->
+
             val model: BibleModelEntry = bibleData[index] ?: return@items
 
             onHeadingTitle.invoke(model)

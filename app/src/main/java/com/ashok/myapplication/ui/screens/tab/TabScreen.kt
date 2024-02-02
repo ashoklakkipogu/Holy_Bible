@@ -25,6 +25,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import com.ashok.myapplication.R
+import com.ashok.myapplication.ui.screens.SCROLL_ID
 import com.ashok.myapplication.ui.screens.Screens
 import com.ashok.myapplication.ui.viewmodel.HomeViewModel
 
@@ -49,13 +50,12 @@ fun TabScreen(navController: NavController, viewModel:HomeViewModel) {
         pagerState.animateScrollToPage(selectedTabIndex)
     }
 
-    LaunchedEffect(pagerState.currentPage, pagerState.isScrollInProgress) {
-        if (!pagerState.isScrollInProgress) {
-            selectedTabIndex = pagerState.currentPage
-        }
+    LaunchedEffect(pagerState.currentPage) {
+        selectedTabIndex = pagerState.currentPage
     }
 
     Column(modifier = Modifier.fillMaxWidth()) {
+
         TabRow(selectedTabIndex = selectedTabIndex) {
             tabs.forEachIndexed { index, (title, icon) ->
                 Tab(
@@ -82,55 +82,17 @@ fun TabScreen(navController: NavController, viewModel:HomeViewModel) {
         ) { index ->
             when (index) {
                 0 -> NoteScreenView {
-                    //navController.navigate(Screens.Bible.passId(10))
-
-                    /*navController.previousBackStackEntry
-                        ?.savedStateHandle
-                        ?.set("scollId", it-1)
-                    navController.popBackStack()*/
+                    viewModel.setOrResetBibleScrollPos(it-1)
+                    navController.popBackStack()
                 }
 
                 1 -> FavScreenView {
-                    /*navController.previousBackStackEntry
-                        ?.savedStateHandle
-                        ?.set("scollId", it-1)
-                    navController.popBackStack()*/
-                    /*NavigationIntent.NavigateBack(
-                        route = route,
-                        inclusive = inclusive
-                    )*/
-                    /*navController.navigate(Screens.Bible.passId(10)) {
-                        popUpTo(navController.graph.findStartDestination().id) {
-                            saveState = true
-                        }
-                        launchSingleTop = true
-                        restoreState = true
-                    }*/
-
-                    viewModel.setScrollPos(it-1)
+                    viewModel.setOrResetBibleScrollPos(it-1)
                     navController.popBackStack()
-                    /*navController.navigate(Screens.Bible.passId(it-1)) {
-                        popUpTo(navController.graph.findStartDestination().id) {
-                            saveState = true
-                        }
-                        launchSingleTop = true
-                        restoreState = false
-                    }*/
-
-                    /*navController.navigate(Screens.Bible.passId(10)){
-                        launchSingleTop = true
-                        popUpTo(Screens.Bible.router){
-                            inclusive = true
-                        }
-                    }*/
-
-
                 }
 
                 2 -> HighlightScreenView {
-                    navController.previousBackStackEntry
-                        ?.savedStateHandle
-                        ?.set("scollId", it-1)
+                    viewModel.setOrResetBibleScrollPos(it-1)
                     navController.popBackStack()
                 }
             }

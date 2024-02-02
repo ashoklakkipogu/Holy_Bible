@@ -36,6 +36,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import com.ashok.myapplication.ui.utilities.favDelete
+
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     val productRepository: ProductRepository,
@@ -44,10 +47,10 @@ class HomeViewModel @Inject constructor(
     ViewModel() {
 
     val useCase = GetBiblePagedUseCase(dbRepo)
+
     //stateflow
     private val _products: MutableStateFlow<Result<Products>> = MutableStateFlow(Result.Loading())
     val products: StateFlow<Result<Products>> = _products
-
 
 
     //Livedata
@@ -58,8 +61,8 @@ class HomeViewModel @Inject constructor(
     private val _bibleData = MutableLiveData<Result<List<BibleModelEntry>>>()
     val bibleData: LiveData<Result<List<BibleModelEntry>>> get() = _bibleData
 
-    private val _bibleScrollPos = MutableLiveData<Int>()
-    val bibleScrollPos: LiveData<Int> get() = _bibleScrollPos
+    var bibleScrollPos by mutableIntStateOf(0)
+        private set
 
 
     /*private val _bibleScrollPos = mutableIntStateOf(0)
@@ -112,23 +115,8 @@ class HomeViewModel @Inject constructor(
     }
 */
     val biblePagingSource: Pager<Int, BibleModelEntry> = useCase.call()
-        /*.cachedIn(viewModelScope)*/
+    /*.cachedIn(viewModelScope)*/
 
-
-
-    private val _allFavBookNote = mutableStateOf<List<FavBookMark>>(listOf())
-    val allFavBookNote: State<List<FavBookMark>> = _allFavBookNote
-
-
-    fun getAllFavBookNoteData() {
-        viewModelScope.launch(Dispatchers.IO) {
-            var noteData = dbRepo.getAllFavHighNote()
-            withContext(Dispatchers.Main) {
-                _allFavBookNote.value = noteData
-            }
-
-        }
-    }
 
     fun getBibleScrollPosition(
         clickAction: String,
@@ -160,7 +148,7 @@ class HomeViewModel @Inject constructor(
                         "data....",
                         "data............." + (it.bibleLangIndex.split("-")[1].toInt() - 1)
                     )
-                    _bibleScrollPos.value = it.bibleLangIndex.split("-")[1].toInt() - 1
+                    bibleScrollPos = it.bibleLangIndex.split("-")[1].toInt() - 1
                 }
             }
 
@@ -171,25 +159,28 @@ class HomeViewModel @Inject constructor(
 
     fun noteInsert(model: NoteModelEntry) {
         viewModelScope.launch(Dispatchers.IO) {
+            dbRepo.deleteNotesByBibleLangIndex(model.bibleLangIndex)
             dbRepo.insertAllNotes(arrayListOf(model))
         }
     }
 
     fun bookmarkInsert(model: FavoriteModelEntry) {
         viewModelScope.launch(Dispatchers.IO) {
+            dbRepo.deleteFavoriteByBibleLangIndex(model.bibleLangIndex)
             dbRepo.insertAllFav(arrayListOf(model))
         }
     }
 
     fun highlightInsert(model: HighlightModelEntry) {
         viewModelScope.launch(Dispatchers.IO) {
+            dbRepo.deleteHighlightByBibleLangIndex(model.bibleLangIndex)
             dbRepo.insertAllHighlight(arrayListOf(model))
         }
     }
 
-    fun highlightDeleteByBibleId(bibleID: String) {
+    fun highlightDeleteByBibleId(bibleLangIndex: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            dbRepo.deleteHighlightByBibleLangIndex(bibleID)
+            dbRepo.deleteHighlightByBibleLangIndex(bibleLangIndex)
         }
     }
 
@@ -199,12 +190,8 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private val _scrollIndex = mutableStateOf(-1)
-    val scrollIndex: State<Int> get() = _scrollIndex
-
-    fun setScrollPos(pos: Int) {
-        _scrollIndex.value = pos
+    fun setOrResetBibleScrollPos(pos: Int) {
+        bibleScrollPos = pos
     }
-
 
 }

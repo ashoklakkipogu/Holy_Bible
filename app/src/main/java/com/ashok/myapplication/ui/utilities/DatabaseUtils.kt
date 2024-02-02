@@ -7,6 +7,15 @@ import com.ashok.myapplication.data.local.entry.NoteModelEntry
 import com.ashok.myapplication.ui.utilities.BibleUtils.getCurrentTime
 import com.ashok.myapplication.ui.viewmodel.HomeViewModel
 
+fun highlightInsertOrDelete(bibleVerse: BibleModelEntry, viewModel: HomeViewModel){
+    if (bibleVerse.selectedBackground == ""){
+        highlightDelete(bibleVerse.bibleLangIndex, viewModel)
+    }else{
+        highlightInsert(bibleVerse, viewModel)
+    }
+}
+
+
 fun noteInsert(title: String, bibleVerse: BibleModelEntry, viewModel: HomeViewModel) {
     val noteObj = NoteModelEntry()
     noteObj.createdDate = getCurrentTime()
@@ -33,13 +42,13 @@ fun bookmarkInsert(bibleVerse: BibleModelEntry, viewModel: HomeViewModel) {
     viewModel.bookmarkInsert(obj)
 }
 
-fun highlightInsert(colorCode:String, bibleVerse: BibleModelEntry, viewModel: HomeViewModel) {
+fun highlightInsert(bibleVerse: BibleModelEntry, viewModel: HomeViewModel) {
     val obj = HighlightModelEntry()
     obj.createdDate = getCurrentTime()
     obj.langauge = bibleVerse.langauge
     obj.bibleLangIndex = bibleVerse.bibleLangIndex
-    obj.colorCode = colorCode
     obj.bibleId = bibleVerse.id
+    obj.colorCode = bibleVerse.selectedBackground
     viewModel.highlightInsert(obj)
 }
 
@@ -48,6 +57,6 @@ fun favDelete(bibleLangIndex: String, viewModel: HomeViewModel) {
 
 }
 
-fun highlightDelete(bibleVerse: BibleModelEntry, viewModel: HomeViewModel) {
-    viewModel.highlightDeleteByBibleId(bibleVerse.bibleID)
+fun highlightDelete(bibleLangIndex: String, viewModel: HomeViewModel) {
+    viewModel.highlightDeleteByBibleId(bibleLangIndex)
 }

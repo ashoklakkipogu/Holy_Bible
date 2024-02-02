@@ -21,6 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.ashok.myapplication.common.EmptyScreen
 import com.ashok.myapplication.data.local.entry.BibleModelEntry
 import com.ashok.myapplication.data.local.entry.NoteModelEntry
 import com.ashok.myapplication.data.local.model.FavModel
@@ -40,6 +41,9 @@ fun FavScreenView(
         viewModel.getAllFavBibleData()
     }
     val favData = viewModel.favData.value
+    if (favData.isEmpty()){
+        EmptyScreen()
+    }
     FavRow(
         favData,
         onClick = {

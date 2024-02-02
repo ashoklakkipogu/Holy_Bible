@@ -29,8 +29,8 @@ interface HighlightDao {
     @Delete
     fun deleteHighlight(highlight: HighlightModelEntry)
 
-    @Query("DELETE FROM highlights WHERE bibleId = :bibleId")
-    fun deleteHighlightByBibleLangIndex(bibleId: String)
+    @Query("DELETE FROM highlights WHERE bibleLangIndex = :bibleLangIndex")
+    fun deleteHighlightByBibleLangIndex(bibleLangIndex: String)
 
     @Query("SELECT * FROM highlights WHERE bibleId =:bibleId")
     fun getHighlightById(bibleId: Int): LiveData<HighlightModelEntry>

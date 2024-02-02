@@ -58,44 +58,6 @@ class DbRepoImp @Inject constructor(
     )
 
     override suspend fun getAllFav() = favoriteDao.getAllFavorites()
-    override suspend fun getAllFavHighNote(): ArrayList<FavBookMark> {
-        val favData = favoriteDao.getAllFavoritesList()
-        val highData = highlightDao.getAllHighlightList()
-        val noteData = noteDao.getAllNoteList()
-        val list: ArrayList<FavBookMark> = ArrayList()
-
-        for (obj in favData) {
-            val favBookMark = FavBookMark()
-            favBookMark.bibleId = obj.bibleId
-            favBookMark.createdDate = obj.createdDate
-            //favBookMark.color = obj.col
-            favBookMark.favId = obj.id
-            favBookMark.isFav = true
-            list.add(favBookMark)
-        }
-        for (obj in highData) {
-            val favBookMark = FavBookMark()
-
-            favBookMark.bibleId = obj.bibleId
-            favBookMark.createdDate = obj.createdDate
-            favBookMark.highlightId = obj.id
-            favBookMark.isFav = false
-            list.add(favBookMark)
-        }
-
-        for (obj in noteData) {
-            val favBookMark = FavBookMark()
-
-            favBookMark.bibleId = obj.bibleId
-            favBookMark.createdDate = obj.createdDate
-            favBookMark.highlightId = obj.id
-            favBookMark.isFav = false
-            list.add(favBookMark)
-        }
-
-
-        return list
-    }
 
 
     override suspend fun deleteFavoriteByBibleLangIndex(bibleLangIndex: String) = favoriteDao.deleteFavoriteByBibleLangIndex(bibleLangIndex)
@@ -114,7 +76,8 @@ class DbRepoImp @Inject constructor(
 
     override suspend fun getHighlightById(id: Int) = highlightDao.getHighlightById(id)
     override suspend fun deleteHighlight(id: Int) = highlightDao.deleteHighlightById(id)
-    override suspend fun deleteHighlightByBibleLangIndex(bibleId: String) = highlightDao.deleteHighlightByBibleLangIndex(bibleId)
+    override suspend fun deleteHighlightByBibleLangIndex(bibleLangIndex: String) = highlightDao.deleteHighlightByBibleLangIndex(bibleLangIndex)
+    override suspend fun deleteNotesByBibleLangIndex(bibleLangIndex: String) = noteDao.deleteNotesByBibleLangIndex(bibleLangIndex)
     override suspend fun deleteNote(id: Int) = noteDao.deleteNoteById(id)
     override suspend fun deleteFavorite(id: Int) = favoriteDao.deleteFavoriteById(id)
     override suspend fun getAllLyrics(id: Int) = lyricsDao.getAllLyricsList()

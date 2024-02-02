@@ -25,7 +25,7 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class MainActivity : androidx.activity.ComponentActivity() {
 
-    //private val viewModel: HomeViewModel by viewModels()
+    private val viewModel: HomeViewModel by viewModels()
     private val usersViewModel: UsersViewModel by viewModels()
 
     @OptIn(DelicateCoroutinesApi::class)
@@ -82,7 +82,7 @@ class MainActivity : androidx.activity.ComponentActivity() {
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
                 val currentDestination = navBackStackEntry?.destination
                 val currentRoute = currentDestination?.route ?: Screens.DashboardRoute.router*/
-                MainScreen(/*viewModel = viewModel*/)
+                MainScreen(viewModel = viewModel)
 
             }
         }

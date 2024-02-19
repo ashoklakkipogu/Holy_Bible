@@ -21,4 +21,6 @@ public class BibleIndexModelEntry {
 
     @Expose
     var bibleLangIndex: String = ""
+
+    var isExpand: Boolean = true
 }

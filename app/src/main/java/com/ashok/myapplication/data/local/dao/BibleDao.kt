@@ -5,6 +5,7 @@ import androidx.room.*
 import androidx.lifecycle.LiveData
 import androidx.paging.PagingSource
 import com.ashok.myapplication.data.local.entry.BibleModelEntry
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface BibleDao {
@@ -15,8 +16,8 @@ interface BibleDao {
     @Query("SELECT * FROM bible")
     fun getAllBibleContent(): List<BibleModelEntry>?
 
-    @Query("SELECT * FROM bible WHERE Book =:bookId")
-    fun getAllBibleContentByBookId(bookId: Int): LiveData<List<BibleModelEntry>>
+    @Query("SELECT * FROM bible WHERE Book =:bookId AND langauge =:langauge")
+    suspend fun getBibleChaptersByBookIdAndLangauge(bookId: Int, langauge:String): List<BibleModelEntry>
 
     @Query("SELECT * FROM bible WHERE Book = :bookId AND Chapter =:chapterId AND Versecount = :verseId")
     fun getBibleScrollPosition(
@@ -31,11 +32,12 @@ interface BibleDao {
     ): BibleModelEntry?
 
 
-    @Query("SELECT * FROM bible WHERE Book =:bookId AND Chapter =:chapterId")
-    fun getAllBibleContentByBookIdAndChapterId(
+    @Query("SELECT * FROM bible WHERE Book =:bookId AND Chapter =:chapterId AND langauge =:langauge")
+    fun getBibleVerseByBookIdAndChapterId(
         bookId: Int,
-        chapterId: Int
-    ): LiveData<List<BibleModelEntry>>
+        chapterId: Int,
+        langauge:String
+    ): List<BibleModelEntry>
 
     @Query("SELECT * FROM bible WHERE Book =:bookId AND Chapter =:chapterId AND Versecount =:verseId")
     fun getAllBibleContentByBookIdAndChapterIdAndVerse(
@@ -52,5 +54,12 @@ interface BibleDao {
 
     @Delete
     fun deleteBibleContent(bible: BibleModelEntry)
+
+    @Query("SELECT * FROM bible WHERE Book =:bookId AND Chapter =:chapterId AND langauge =:langauge")
+    fun getBibleListByBookIdAndChapterId(
+        bookId: Int,
+        chapterId: Int,
+        langauge: String
+    ): LiveData<List<BibleModelEntry>>
 
 }

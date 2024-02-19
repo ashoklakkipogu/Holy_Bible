@@ -12,6 +12,8 @@ import com.ashok.myapplication.data.local.entry.NoteModelEntry
 import com.ashok.myapplication.data.local.model.FavModel
 import com.ashok.myapplication.data.local.model.HighlightModel
 import com.ashok.myapplication.data.local.model.NoteModel
+import kotlinx.coroutines.flow.Flow
+import org.intellij.lang.annotations.Language
 
 interface DbRepository {
     fun getBible(): PagingSource<Int, BibleModelEntry>
@@ -24,13 +26,19 @@ interface DbRepository {
     suspend fun getBibleScrollLastPosition(bible: Int): BibleModelEntry?
     suspend fun insertBible(bible: List<BibleModelEntry>): List<Long>
     suspend fun insertBibleIndex(bible: ArrayList<BibleIndexModelEntry>): List<Long>
-
-    suspend fun getBibleIndex(): LiveData<List<BibleIndexModelEntry>>
-    suspend fun getBibleByBookId(id: Int): LiveData<List<BibleModelEntry>>
-    suspend fun getBibleByBookIdAndChapterId(
+    fun getBibleListByBookIdAndChapterId(
         bookId: Int,
-        chapterID: Int
+        chapterId: Int,
+        language: String
     ): LiveData<List<BibleModelEntry>>
+
+    suspend fun getBibleIndex(): List<BibleIndexModelEntry>
+    suspend fun getBibleChaptersByBookIdAndLangauge(id: Int, language: String): List<BibleModelEntry>
+    suspend fun getBibleVerseByBookIdAndChapterId(
+        bookId: Int,
+        chapterID: Int,
+        language: String
+    ): List<BibleModelEntry>
 
     suspend fun getBibleByBookIdAndChapterIdAndVerse(
         bookId: Int,

@@ -1,6 +1,6 @@
-package com.ashok.myapplication.ui.screens.tab
+package com.ashok.myapplication.ui.Route.tab
 
-import android.text.style.TabStopSpan
+import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,12 +21,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import com.ashok.myapplication.R
-import com.ashok.myapplication.ui.screens.SCROLL_ID
-import com.ashok.myapplication.ui.screens.Screens
 import com.ashok.myapplication.ui.viewmodel.HomeViewModel
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -87,6 +83,7 @@ fun TabScreen(navController: NavController, viewModel:HomeViewModel) {
                 }
 
                 1 -> FavScreenView {
+                    Log.i("scrollId", "scrollId................${it-1}")
                     viewModel.setOrResetBibleScrollPos(it-1)
                     navController.popBackStack()
                 }

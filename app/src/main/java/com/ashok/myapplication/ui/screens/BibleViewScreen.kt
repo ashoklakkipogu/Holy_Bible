@@ -10,21 +10,20 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.ashok.myapplication.data.local.entry.BibleModelEntry
 import com.ashok.myapplication.ui.activity.ShareImageActivity
 import com.ashok.myapplication.ui.component.InputDialogView
 import com.ashok.myapplication.ui.component.biblecomponent.BibleVerseList
 import com.ashok.myapplication.ui.component.bottomSheet
-import com.ashok.myapplication.ui.navigation.HomeTopView
+import com.ashok.myapplication.ui.navgraph.HomeTopView
+import com.ashok.myapplication.ui.navgraph.Route
 import com.ashok.myapplication.ui.utilities.BibleUtils.copyBibleVerse
 import com.ashok.myapplication.ui.utilities.BibleUtils.shareBibleUrl
 import com.ashok.myapplication.ui.utilities.bookmarkInsertOrDelete
 import com.ashok.myapplication.ui.utilities.highlightInsertOrDelete
 import com.ashok.myapplication.ui.utilities.noteInsert
 import com.ashok.myapplication.ui.viewmodel.HomeViewModel
-import com.google.gson.Gson
 
 
 @Composable
@@ -122,7 +121,7 @@ fun BibleViewScreen(
                 val chapter = obj.Chapter + 1
                 viewModel.getBibleScrollPosition("RIGHT", book, chapter, 1)
             }, verseClick = {
-                //clickAction.value = "CENTER"
+                navController.navigate(Route.BibleIndex.router)
             }
         )
 

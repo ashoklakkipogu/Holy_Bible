@@ -1,5 +1,6 @@
 package com.ashok.myapplication.ui.viewmodel
 
+import android.content.SharedPreferences
 import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.remember
@@ -37,12 +38,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import com.ashok.myapplication.ui.utilities.SharedPrefUtils
 import com.ashok.myapplication.ui.utilities.favDelete
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     val productRepository: ProductRepository,
-    val dbRepo: DbRepository
+    val dbRepo: DbRepository,
+    val pref: SharedPreferences
 ) :
     ViewModel() {
 
@@ -116,6 +119,14 @@ class HomeViewModel @Inject constructor(
 */
     val biblePagingSource: Pager<Int, BibleModelEntry> = useCase.call()
     /*.cachedIn(viewModelScope)*/
+
+    fun getBibleListByBookIdAndChapterId(
+        bookId: Int,
+        chapterId: Int,
+    ) {
+        val language = SharedPrefUtils.getLanguage(pref)!!
+        dbRepo.getBibleListByBookIdAndChapterId(bookId, chapterId, language)
+    }
 
 
     fun getBibleScrollPosition(
@@ -193,5 +204,6 @@ class HomeViewModel @Inject constructor(
     fun setOrResetBibleScrollPos(pos: Int) {
         bibleScrollPos = pos
     }
+
 
 }

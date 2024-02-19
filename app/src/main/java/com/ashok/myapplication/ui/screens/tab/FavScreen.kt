@@ -1,4 +1,4 @@
-package com.ashok.myapplication.ui.screens.tab
+package com.ashok.myapplication.ui.Route.tab
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column

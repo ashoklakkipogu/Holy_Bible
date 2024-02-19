@@ -9,6 +9,7 @@ import com.ashok.myapplication.data.local.entry.FavoriteModelEntry
 import com.ashok.myapplication.data.local.entry.HighlightModelEntry
 import com.ashok.myapplication.data.local.entry.NoteModelEntry
 import kotlinx.coroutines.Deferred
+import org.intellij.lang.annotations.Language
 import javax.inject.Inject
 
 class DbRepoImp @Inject constructor(
@@ -42,10 +43,20 @@ class DbRepoImp @Inject constructor(
     override suspend fun insertBibleIndex(bible: ArrayList<BibleIndexModelEntry>) =
         bibleIndexDao.insertBibleIndex(bible)
 
+    override suspend fun getBibleListByBookIdAndChapterId(
+        bookId: Int,
+        chapterId: Int,
+        language: String
+    ) = bibleDao.getBibleListByBookIdAndChapterId(
+        bookId,
+        chapterId,
+        language
+    )
+
     override suspend fun getBibleIndex() = bibleIndexDao.getAllBibleIndexContent()
-    override suspend fun getBibleByBookId(id: Int) = bibleDao.getAllBibleContentByBookId(id)
-    override suspend fun getBibleByBookIdAndChapterId(bookId: Int, chapterID: Int) =
-        bibleDao.getAllBibleContentByBookIdAndChapterId(bookId, chapterID)
+    override suspend fun getBibleChaptersByBookIdAndLangauge(id: Int, language: String) = bibleDao.getBibleChaptersByBookIdAndLangauge(id, language)
+    override suspend fun getBibleVerseByBookIdAndChapterId(bookId: Int, chapterID: Int, language: String) =
+        bibleDao.getBibleVerseByBookIdAndChapterId(bookId, chapterID, language)
 
     override suspend fun getBibleByBookIdAndChapterIdAndVerse(
         bookId: Int,

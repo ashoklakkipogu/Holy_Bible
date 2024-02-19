@@ -4,23 +4,13 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
-import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
 import com.ashok.myapplication.ui.screens.MainScreen
-import com.ashok.myapplication.ui.screens.Screens
 import com.ashok.myapplication.ui.theme.BibleTheme
-import com.ashok.myapplication.ui.utilities.Result
 import com.ashok.myapplication.ui.viewmodel.HomeViewModel
 import com.ashok.myapplication.ui.viewmodel.UsersViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : androidx.activity.ComponentActivity() {
@@ -81,7 +71,7 @@ class MainActivity : androidx.activity.ComponentActivity() {
                 /*val navController = rememberNavController()
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
                 val currentDestination = navBackStackEntry?.destination
-                val currentRoute = currentDestination?.route ?: Screens.DashboardRoute.router*/
+                val currentRoute = currentDestination?.route ?: Route.DashboardRoute.router*/
                 MainScreen(viewModel = viewModel)
 
             }

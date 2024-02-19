@@ -9,7 +9,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.ashok.myapplication.ui.screens.tab.TabScreen
+import com.ashok.myapplication.ui.Route.tab.TabScreen
 import com.ashok.myapplication.ui.theme.BibleTheme
 import com.ashok.myapplication.ui.viewmodel.HomeViewModel
 

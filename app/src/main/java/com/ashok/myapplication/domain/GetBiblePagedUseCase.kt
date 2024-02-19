@@ -17,8 +17,8 @@ class GetBiblePagedUseCase(
 ) {
     fun call(): Pager<Int, BibleModelEntry> = Pager(
         PagingConfig(
-            pageSize = 100,
-            initialLoadSize = 100,
+            pageSize = 4000,
+            initialLoadSize = 4000,
             enablePlaceholders = true
         )
     ) {

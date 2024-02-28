@@ -24,6 +24,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
@@ -32,11 +33,15 @@ import androidx.core.graphics.toColorInt
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun ButtonComponent(onClick: (String) -> Unit) {
+fun ButtonComponent(
+    isBookMark: Boolean = false,
+    isNote: Boolean = false,
+    onClick: (String) -> Unit
+) {
     val items = arrayListOf("Share", "Copy", "Note", "Bookmark")
     LazyRow(contentPadding = PaddingValues(horizontal = 10.dp, vertical = 10.dp)) {
         items(items) { item ->
-            ButtonView(title = item, onClick = {
+            ButtonView(title = item, isBookMark = isBookMark, isNote = isNote, onClick = {
                 onClick.invoke(item)
             })
             Spacer(modifier = Modifier.width(10.dp))
@@ -45,10 +50,26 @@ fun ButtonComponent(onClick: (String) -> Unit) {
 }
 
 @Composable
-fun ButtonView(title: String, onClick: (String) -> Unit) {
+fun ButtonView(
+    title: String,
+    isBookMark: Boolean,
+    isNote: Boolean,
+    onClick: (String) -> Unit
+) {
+    var color = Color.LightGray
+    if (title == "Bookmark"){
+        if (isBookMark){
+            color = Color.Red
+        }
+    }
+    if (title == "Note"){
+        if (isNote){
+            color = Color.Red
+        }
+    }
     Button(
         onClick = { onClick.invoke(title) },
-        colors = ButtonDefaults.buttonColors(containerColor = Color.LightGray)
+        colors = ButtonDefaults.buttonColors(containerColor = color),
     ) {
         Text(
             text = title,
@@ -60,5 +81,5 @@ fun ButtonView(title: String, onClick: (String) -> Unit) {
 @Preview
 @Composable
 fun ButtonSheetPreview() {
-    ButtonComponent{}
+    ButtonComponent {}
 }

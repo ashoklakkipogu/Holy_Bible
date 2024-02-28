@@ -66,7 +66,7 @@ import okhttp3.internal.wait
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DiscoveryScreen(navController: NavController) {
+fun DiscoveryScreen( bnavController: NavController) {
     var layout by remember { mutableStateOf<TextLayoutResult?>(null) }
 
     BibleTheme {

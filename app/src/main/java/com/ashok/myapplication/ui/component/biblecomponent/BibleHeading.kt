@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ashok.myapplication.data.local.entry.BibleModelEntry
@@ -28,7 +29,7 @@ fun BibleHeading(model: BibleModelEntry) {
             text = model.bibleIndex,
             fontSize = 28.sp,
             lineHeight = 10.sp,
-            color = Color.Black,
+            color = Color.Gray,
             textAlign = TextAlign.Start,
             fontWeight = FontWeight.Bold
         )
@@ -42,4 +43,11 @@ fun BibleHeading(model: BibleModelEntry) {
         )
         Spacer(modifier = Modifier.height(5.dp))
     }
+}
+
+
+@Preview
+@Composable
+fun BibleHeadingPreiew(){
+    BibleHeading(BibleModelEntry(bibleIndex = "asasasas", Chapter = 1))
 }

@@ -26,13 +26,13 @@ interface DbRepository {
     suspend fun getBibleScrollLastPosition(bible: Int): BibleModelEntry?
     suspend fun insertBible(bible: List<BibleModelEntry>): List<Long>
     suspend fun insertBibleIndex(bible: ArrayList<BibleIndexModelEntry>): List<Long>
-    fun getBibleListByBookIdAndChapterId(
+    suspend fun getBibleListByBookIdAndChapterId(
         bookId: Int,
         chapterId: Int,
         language: String
-    ): LiveData<List<BibleModelEntry>>
+    ): List<BibleModelEntry>?
 
-    suspend fun getBibleIndex(): List<BibleIndexModelEntry>
+    suspend fun getBibleIndex(language:String): List<BibleIndexModelEntry>
     suspend fun getBibleChaptersByBookIdAndLangauge(id: Int, language: String): List<BibleModelEntry>
     suspend fun getBibleVerseByBookIdAndChapterId(
         bookId: Int,

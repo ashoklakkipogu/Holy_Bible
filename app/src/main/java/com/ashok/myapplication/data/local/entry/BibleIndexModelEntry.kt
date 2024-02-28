@@ -23,4 +23,6 @@ public class BibleIndexModelEntry {
     var bibleLangIndex: String = ""
 
     var isExpand: Boolean = true
+
+    var bibleChapterCount: Int = 0
 }

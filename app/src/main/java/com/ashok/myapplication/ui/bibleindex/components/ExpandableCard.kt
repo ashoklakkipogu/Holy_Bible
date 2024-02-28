@@ -1,13 +1,17 @@
 package com.ashok.myapplication.ui.bibleindex.components
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.TweenSpec
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -56,81 +60,69 @@ import com.ashok.myapplication.ui.bibleindex.BibleIndexViewModel
 import com.ashok.myapplication.ui.viewmodel.HomeViewModel
 
 
+@SuppressLint("SuspiciousIndentation")
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun ExpandableCard(
     data: BibleIndexModelEntry,
-    viewModel: BibleIndexViewModel,
     onClick: (BibleIndexModelEntry) -> Unit,
-    onClickIndex: (Int) -> Unit
+    onClickIndex: (Int, Int) -> Unit
 ) {
     val expandedState = data.isExpand
     val rotationState by animateFloatAsState(
         targetValue = if (expandedState) 180f else 0f, label = ""
     )
 
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(2.dp)
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.clickable {
-                onClick.invoke(data)
-            }
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(2.dp)
         ) {
-            Text(
-                modifier = Modifier.weight(6f),
-                text = data.chapter,
-                fontSize = 16.sp,
-                fontWeight = if (expandedState) FontWeight.Bold else FontWeight.Normal
-            )
-            IconButton(
-                modifier = Modifier
-                    .size(35.dp)
-                    .alpha(0.5f)
-                    .weight(1f)
-                    .rotate(rotationState),
-                onClick = {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.clickable {
                     onClick.invoke(data)
-                },
+                }
             ) {
-                Icon(
-                    imageVector = Icons.Default.ArrowDropDown,
-                    contentDescription = "Drop Down Arrow"
+                Text(
+                    modifier = Modifier.weight(6f),
+                    text = data.chapter,
+                    fontSize = 16.sp,
+                    fontWeight = if (expandedState) FontWeight.Bold else FontWeight.Normal
                 )
-            }
-        }
-        if (expandedState) {
-            var chaptersList = viewModel.chaptersList
-            if (chaptersList.isEmpty()) {
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
+                IconButton(
+                    modifier = Modifier
+                        .size(35.dp)
+                        .alpha(0.5f)
+                        .weight(1f)
+                        .rotate(rotationState),
+                    onClick = {
+                        onClick.invoke(data)
+                    },
                 ) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.size(32.dp),
-                        color = Color.LightGray,
+                    Icon(
+                        imageVector = Icons.Default.ArrowDropDown,
+                        contentDescription = "Drop Down Arrow"
                     )
                 }
-
-            } else
+            }
+            if (expandedState) {
+                val list: ArrayList<Int> = arrayListOf()
+                for (i in 1..data.bibleChapterCount) {
+                    list.add(i)
+                }
                 NonLazyVerticalGrid(
                     columns = 6,
-                    data = chaptersList
+                    data = list
                 ) { item ->
-                    /*chaptersList.map {
-                        {*/
                     IndexView(title = item) {
-                        onClickIndex.invoke(it)
+                        onClickIndex.invoke(data.chapter_id, it)
                     }
-                    /* }
-                 }*/
-
                 }
+
+            }
         }
-    }
+
 }
 
 @Preview
@@ -140,9 +132,9 @@ fun ExpandableCardPreview() {
     model.chapter = "Test"
     ExpandableCard(
         data = model,
-        viewModel = hiltViewModel(),
         onClick = {},
-        onClickIndex = {}
+        onClickIndex = { _, _ ->
+        }
     )
 }
 

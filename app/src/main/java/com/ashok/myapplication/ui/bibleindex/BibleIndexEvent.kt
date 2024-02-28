@@ -19,6 +19,5 @@ import com.ashok.myapplication.ui.bibleindex.components.ExpandableCard
 
 
 sealed class BibleIndexEvent{
-    data class ChaptersByBookIdAndLangauge(val id: Int) : BibleIndexEvent()
-    data class VerseByBookIdAndLangauge(val bookId:Int, val chapterID:Int) : BibleIndexEvent()
+    //data class ChaptersByBookIdAndLangauge(val id: Int) : BibleIndexEvent()
 }

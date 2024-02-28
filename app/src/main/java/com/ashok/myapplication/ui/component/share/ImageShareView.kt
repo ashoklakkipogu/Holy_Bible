@@ -70,7 +70,10 @@ import dev.shreyaspatil.capturable.*
 
 @Composable
 fun ImageShareView(
-    image: Int, captureController: CaptureController, onCaptured: (ImageBitmap?, Throwable?) -> Unit
+    bibleVerse: String?,
+    image: Int,
+    captureController: CaptureController,
+    onCaptured: (ImageBitmap?, Throwable?) -> Unit
 ) {
     val context = LocalContext.current
     var textAlign by remember {
@@ -116,9 +119,10 @@ fun ImageShareView(
             Box(
                 Modifier
                     .fillMaxWidth()
-                    .weight(0.7f)
+                    .weight(0.6f)
             ) {
                 DraggableTextLowLevel(
+                    bibleVerse= bibleVerse,
                     image = image,
                     textAlign = textAlign,
                     textPos = textPos,
@@ -133,13 +137,12 @@ fun ImageShareView(
                     captureController = captureController,
                     onCaptured = { bitmap, error ->
                         onCaptured.invoke(bitmap, error)
-                    }
-                )
+                    })
             }
             Box(
                 Modifier
                     .fillMaxWidth()
-                    .weight(0.3f),
+                    .weight(0.4f),
 
 
                 ) {
@@ -200,6 +203,7 @@ fun BottomView(
     val colorList = arrayListOf(
         "underline",
         "#FFCDD2",
+        "#000000",
         "#F8BBD0",
         "#E1BEE7",
         "#B39DDB",
@@ -210,7 +214,9 @@ fun BottomView(
         "#FFB74D",
         "#FFEB3B",
         "#FF5722",
-        "#8D6E63"
+        "#8D6E63",
+        "#FFFFFF",
+        "#FF0000"
     )
     val state = rememberScrollState()
     //LaunchedEffect(Unit) { state.animateScrollTo(100) }
@@ -291,7 +297,7 @@ fun BottomView(
                 onTextSize.invoke(it)
             })
             Spacer(modifier = Modifier.height(8.dp))
-            circleColor(colors = colorList) {
+            circleColor(colors = colorList, selectedBible = "") {
                 onTextColor.invoke(it)
             }
 
@@ -317,6 +323,7 @@ fun BottomView(
 
 @Composable
 private fun DraggableTextLowLevel(
+    bibleVerse:String?,
     image: Int,
     textAlign: TextAlign,
     textPos: Alignment,
@@ -336,11 +343,9 @@ private fun DraggableTextLowLevel(
     val context = LocalContext.current
 
     Log.i("textAlpha", "textAlpha...........$textAlpha")
-    Capturable(
-        controller = captureController,
-        onCaptured = { bitmap, error ->
-            onCaptured.invoke(bitmap, error)
-        }
+    Capturable(controller = captureController, onCaptured = { bitmap, error ->
+        onCaptured.invoke(bitmap, error)
+    }
 
     ) {
         Box(
@@ -348,11 +353,11 @@ private fun DraggableTextLowLevel(
 
         ) {
             Image(
-
                 painter = painterResource(id = image),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
+                    .fillMaxWidth()
                     .blur(bgBlur.dp)
                     .alpha(bgAlpha)
 
@@ -367,7 +372,7 @@ private fun DraggableTextLowLevel(
                 fontWeight = FontWeight.Bold,
                 fontSize = 12.sp
             )
-            Text(text = "In the sweat of your face shall you eat bread,till " + "you return unto the ground; for out of it were you taken: " + "for dust you are, and unto dust shall you return.",
+            Text(text = bibleVerse?:"",
                 fontSize = textSize.sp,
                 lineHeight = textLineHeight.sp,
                 textDecoration = if (textUnder.isNotBlank() && textUnder == "underline") TextDecoration.Underline else TextDecoration.None,
@@ -398,7 +403,8 @@ private fun DraggableTextLowLevel(
 @Composable
 fun ImageShareViewPreview() {
     ImageShareView(
-        image = R.drawable.banner_1,
+        bibleVerse = "Test",
+        image = R.drawable.image_4,
         captureController = rememberCaptureController(),
         onCaptured = { bitmap, error ->
 

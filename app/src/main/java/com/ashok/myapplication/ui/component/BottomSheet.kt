@@ -26,6 +26,9 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun bottomSheet(
+    selectedBible: String = "",
+    isBookMark: Boolean = false,
+    isNote: Boolean = false,
     onDismiss: () -> Unit,
     onCircleColor: (String) -> Unit,
     onButtonClick: (String) -> Unit,
@@ -33,7 +36,7 @@ fun bottomSheet(
 ) {
     val colorList = arrayListOf(
         "underline", "#FFCDD2", "#F8BBD0", "#E1BEE7", "#B39DDB",
-        "#90CAF9", "#80DEEA", "#80CBC4", "#E6EE9C", "#FFB74D", "#FFEB3B", "#FF5722", "#8D6E63"
+        "#90CAF9", "#80DEEA", "#80CBC4", "#E6EE9C", "#FFB74D", "#FFEB3B", "#FF5722", "#8D6E63,", "#FFFFFF",
     )
     val sheetState = rememberModalBottomSheetState()
     ModalBottomSheet(
@@ -47,8 +50,8 @@ fun bottomSheet(
                     .fillMaxSize()
                     .padding(16.dp)
             ) {
-                circleColor(colors = colorList) { onCircleColor.invoke(it) }
-                ButtonComponent {
+                circleColor(colors = colorList, selectedBible) { onCircleColor.invoke(it) }
+                ButtonComponent(isBookMark = isBookMark, isNote = isNote) {
                     onButtonClick.invoke(it)
                 }
                 GridImages {

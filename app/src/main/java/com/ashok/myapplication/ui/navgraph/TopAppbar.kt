@@ -26,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -39,10 +40,10 @@ fun topAppBar(
     headingData: MutableState<BibleModelEntry>,
     leftArrowClick: () -> Unit,
     rightArrowClick: () -> Unit,
-    verseClick: () -> Unit
+    verseClick: (BibleModelEntry) -> Unit
 ) {
-    if (currentRoute == Route.Bible.router)
-        Box(
+    when (currentRoute) {
+        Route.Bible.router -> Box(
             modifier
                 .fillMaxWidth()
                 .padding(8.dp),
@@ -76,7 +77,7 @@ fun topAppBar(
                     Spacer(modifier.width(20.dp))
                     TextButton(
                         onClick = {
-                            verseClick.invoke()
+                            verseClick.invoke(headingData.value)
                         },
                         modifier.height(35.dp),
                         contentPadding = PaddingValues(),
@@ -104,10 +105,9 @@ fun topAppBar(
 
             }
         }
-    else if (currentRoute == Route.Lyrics.router)
-        TopAppBar(title = { Text(text = "Lyrics") })
-    else if (currentRoute == Route.Discovery.router)
-        TopAppBar(title = { Text(text = "Discovery") })
+        Route.Lyrics.router -> TopAppBar(title = { Text(text = "Lyrics") })
+        Route.Discovery.router -> TopAppBar(title = { Text(text = "Discovery") })
+    }
     /*CenterAlignedTopAppBar(
         title = {
             Text(text = currentRoute)
@@ -139,12 +139,12 @@ fun HomeTopView(
     headingData: BibleModelEntry,
     leftArrowClick: () -> Unit,
     rightArrowClick: () -> Unit,
-    verseClick: () -> Unit
+    verseClick: (BibleModelEntry) -> Unit
 ) {
     Box(
         modifier
             .fillMaxWidth()
-            .padding(8.dp),
+            .padding(start = 50.dp, top = 6.dp, end = 50.dp, bottom = 6.dp),
         contentAlignment = Alignment.Center
     ) {
 
@@ -160,34 +160,40 @@ fun HomeTopView(
             Row(
                 modifier = modifier.padding(2.dp),
                 verticalAlignment = Alignment.CenterVertically
+
             ) {
                 IconButton(
                     onClick = {
                         leftArrowClick.invoke()
                     },
-                    modifier.height(35.dp),
+                    modifier.height(35.dp)
+
                 ) {
                     Icon(
                         imageVector = Icons.Default.KeyboardArrowLeft,
                         contentDescription = "Left Icon"
                     )
                 }
-                Spacer(modifier.width(20.dp))
+                Spacer(modifier.width(10.dp))
                 TextButton(
                     onClick = {
-                        verseClick.invoke()
+                        verseClick.invoke(headingData)
                     },
-                    modifier.height(35.dp),
+                    modifier.height(35.dp)
+                            .weight(1f),
                     contentPadding = PaddingValues(),
                 ) {
                     Text(
                         text = "${headingData.bibleIndex} ${headingData.Chapter}",
                         textAlign = TextAlign.Center,
-                        fontSize = 20.sp,
+                        fontSize = 16.sp,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+
                     )
                 }
 
-                Spacer(modifier.width(20.dp))
+                Spacer(modifier.width(10.dp))
                 IconButton(
                     onClick = {
                         rightArrowClick.invoke()
@@ -211,6 +217,6 @@ fun topAppBarPreview() {
     HomeTopView(
         leftArrowClick = { },
         rightArrowClick = { },
-        headingData = BibleModelEntry(),
+        headingData = BibleModelEntry(bibleIndex = "Test Test Test Test Test Test Test Test", Chapter = 1),
         verseClick = { })
 }

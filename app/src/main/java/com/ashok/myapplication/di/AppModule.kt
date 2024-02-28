@@ -1,11 +1,15 @@
 package com.ashok.myapplication.di
 
+import com.ashok.myapplication.data.AppConstants
+import com.ashok.myapplication.data.AppConstants.CONNECT_TIMEOUT
+import com.ashok.myapplication.data.AppConstants.READ_TIMEOUT
+import com.ashok.myapplication.data.AppConstants.WRITE_TIMEOUT
 import com.ashok.myapplication.data.api.ApiService
-import com.ashok.myapplication.data.datasource.ProductDataSource
-import com.ashok.myapplication.data.datasource.ProductDataSourceImpl
+import com.ashok.myapplication.data.datasource.DataSource
+import com.ashok.myapplication.data.datasource.DataSourceImpl
 import com.ashok.myapplication.data.datasource.UserDataSource
 import com.ashok.myapplication.data.datasource.UserDataSourceImpl
-import com.ashok.myapplication.ui.repository.ProductRepository
+import com.ashok.myapplication.ui.repository.LyricRepository
 import com.ashok.myapplication.ui.repository.UsersRepository
 import dagger.Module
 import dagger.Provides
@@ -25,24 +29,25 @@ class AppModule {
 
     @Singleton
     @Provides
-    fun provideRetrofit(): Retrofit {
-        val httpLoggingInterceptor = HttpLoggingInterceptor().apply {
-            level = HttpLoggingInterceptor.Level.BODY
-        }
-
-        val httpClient = OkHttpClient().newBuilder().apply {
-            addInterceptor(httpLoggingInterceptor)
-        }
-        httpClient.apply {
-            readTimeout(60, TimeUnit.SECONDS)
-        }
-
-
-        return Retrofit.Builder().baseUrl("https://reqres.in/api/")
-            .client(httpClient.build())
+    fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl(AppConstants.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
+            .client(okHttpClient)
             .build()
     }
+
+    @Provides
+    @Singleton
+    fun provideOkHttpClient(): OkHttpClient {
+        val okHttpClient = OkHttpClient.Builder()
+        okHttpClient.connectTimeout(CONNECT_TIMEOUT, TimeUnit.MILLISECONDS)
+        okHttpClient.readTimeout(READ_TIMEOUT, TimeUnit.MILLISECONDS)
+        okHttpClient.writeTimeout(WRITE_TIMEOUT, TimeUnit.MILLISECONDS)
+        okHttpClient.addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
+        return okHttpClient.build()
+    }
+
 
     @Singleton
     @Provides
@@ -53,14 +58,14 @@ class AppModule {
 
     @Singleton
     @Provides
-    fun provideProductDataSource(apiService: ApiService): ProductDataSource{
-        return ProductDataSourceImpl(apiService)
+    fun provideProductDataSource(apiService: ApiService): DataSource{
+        return DataSourceImpl(apiService)
     }
 
     @Singleton
     @Provides
-    fun provideProductRepository(productDataSource: ProductDataSource): ProductRepository{
-        return ProductRepository(productDataSource)
+    fun provideLyricRepository(dateSource: DataSource): LyricRepository{
+        return LyricRepository(dateSource)
     }
 
 

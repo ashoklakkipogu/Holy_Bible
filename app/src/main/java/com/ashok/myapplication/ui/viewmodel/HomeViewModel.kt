@@ -2,52 +2,40 @@ package com.ashok.myapplication.ui.viewmodel
 
 import android.content.SharedPreferences
 import android.util.Log
-import androidx.compose.runtime.State
-import androidx.compose.runtime.remember
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
-import androidx.paging.PagingConfig
-import androidx.paging.PagingData
-import androidx.paging.cachedIn
-import com.ashok.myapplication.data.entity.FavBookMark
 import com.ashok.myapplication.data.entity.Products
 import com.ashok.myapplication.data.local.entry.BibleModelEntry
 import com.ashok.myapplication.data.local.entry.FavoriteModelEntry
 import com.ashok.myapplication.data.local.entry.HighlightModelEntry
 import com.ashok.myapplication.data.local.entry.NoteModelEntry
-import com.ashok.myapplication.data.local.model.FavModel
-import com.ashok.myapplication.data.local.model.NoteModel
 import com.ashok.myapplication.data.local.repositary.DbRepository
 import com.ashok.myapplication.domain.GetBiblePagedUseCase
-import com.ashok.myapplication.ui.repository.ProductRepository
 import com.ashok.myapplication.ui.utilities.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import com.ashok.myapplication.data.local.entry.BibleIndexModelEntry
 import com.ashok.myapplication.ui.utilities.SharedPrefUtils
-import com.ashok.myapplication.ui.utilities.favDelete
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    val productRepository: ProductRepository,
     val dbRepo: DbRepository,
     val pref: SharedPreferences
 ) :
     ViewModel() {
+
 
     val useCase = GetBiblePagedUseCase(dbRepo)
 
@@ -67,15 +55,11 @@ class HomeViewModel @Inject constructor(
     var bibleScrollPos by mutableIntStateOf(0)
         private set
 
+    var bibleListData by mutableStateOf<List<BibleModelEntry>>(emptyList())
+        private set
 
-    /*private val _bibleScrollPos = mutableIntStateOf(0)
-    val bibleScrollPos: State<Int> = _bibleScrollPos*/
-    fun getAllProducts() {
-        viewModelScope.launch(Dispatchers.IO) {
-            productRepository.getAllProducts().collectLatest {
-                _products.value = it
-            }
-        }
+    init {
+        getBibleActionForLeftRight()
     }
 
     /*fun getBibleData() {
@@ -120,12 +104,37 @@ class HomeViewModel @Inject constructor(
     val biblePagingSource: Pager<Int, BibleModelEntry> = useCase.call()
     /*.cachedIn(viewModelScope)*/
 
-    fun getBibleListByBookIdAndChapterId(
-        bookId: Int,
-        chapterId: Int,
+    /*fun getBibleListByBookIdAndChapterId(
+        bookId: Int = 1,
+        chapterId: Int = 1,
     ) {
         val language = SharedPrefUtils.getLanguage(pref)!!
-        dbRepo.getBibleListByBookIdAndChapterId(bookId, chapterId, language)
+        bibleListData = dbRepo.getBibleListByBookIdAndChapterId(bookId, chapterId, language)!!
+    }*/
+    fun getBibleActionForLeftRight(
+        clickAction: String = "",
+        bookId: Int = 1,
+        chapterId: Int = 1,
+        isScrollTop: Int = 0
+    ) = viewModelScope.launch(Dispatchers.IO) {
+        val language = SharedPrefUtils.getLanguage(pref)!!
+        val data = dbRepo.getBibleListByBookIdAndChapterId(bookId, chapterId, language)
+        if (data.isNullOrEmpty()) {
+            if (clickAction == "LEFT" && bookId != 1 && chapterId != 1) {
+                val lastPos = dbRepo.getBibleScrollLastPosition(bookId - 1)
+                if (lastPos != null)
+                    bibleListData = dbRepo.getBibleListByBookIdAndChapterId(
+                        lastPos.Book,
+                        lastPos.Chapter,
+                        language
+                    )!!
+            } else if (clickAction == "RIGHT" && bookId != 66 && chapterId != 22) {
+                bibleListData = dbRepo.getBibleListByBookIdAndChapterId(bookId + 1, 1, language)!!
+            }
+        } else {
+            bibleListData = data
+        }
+        setOrResetBibleScrollPos(isScrollTop)
     }
 
 
@@ -205,5 +214,23 @@ class HomeViewModel @Inject constructor(
         bibleScrollPos = pos
     }
 
+
+    init {
+        getBibleIndex()
+    }
+
+    var bibileIndex by mutableStateOf<List<BibleIndexModelEntry>>(listOf())
+        private set
+
+    fun getBibleIndex() = viewModelScope.launch(Dispatchers.IO) {
+        val language = SharedPrefUtils.getLanguage(pref)!!
+        val result = dbRepo.getBibleIndex(language = language)
+        withContext(Dispatchers.Main) {
+            Log.i("test", "test........${result.toString()}")
+            bibileIndex = result
+        }
+    }
+
+    var expandedState by mutableStateOf("")
 
 }

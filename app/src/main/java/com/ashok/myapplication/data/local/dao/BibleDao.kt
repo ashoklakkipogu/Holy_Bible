@@ -55,11 +55,11 @@ interface BibleDao {
     @Delete
     fun deleteBibleContent(bible: BibleModelEntry)
 
-    @Query("SELECT * FROM bible WHERE Book =:bookId AND Chapter =:chapterId AND langauge =:langauge")
+    @Query("SELECT b.Book, b.chapter, b.Versecount, b.verse, b.langauge, b.bibleId, b.bibleLangIndex, b.bibleIndex, b.id, case when favorite.bibleId is null then 0 else 1 end as isBookMark, case when note.bibleId is null then 0 else 1 end as isNote, case when highlights.colorCode is null then \"\" else highlights.colorCode end as selectedBackground FROM bible as b LEFT JOIN favorite ON favorite.bibleId = b.id LEFT JOIN highlights ON highlights.bibleId = b.id LEFT JOIN note ON note.bibleId = b.id WHERE b.Book =:bookId AND b.Chapter =:chapterId AND b.langauge =:langauge")
     fun getBibleListByBookIdAndChapterId(
         bookId: Int,
         chapterId: Int,
         langauge: String
-    ): LiveData<List<BibleModelEntry>>
+    ): List<BibleModelEntry>?
 
 }

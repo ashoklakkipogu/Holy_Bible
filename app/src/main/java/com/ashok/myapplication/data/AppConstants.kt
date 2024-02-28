@@ -1,7 +1,13 @@
 package com.ashok.myapplication.data
 
 object AppConstants {
-    const val BASE_URL = "https://reqres.in/api/"
+    const val BASE_URL = "https://bible-8bdba.firebaseio.com/bible/"
+    const val BASE_URL_NOTIFICATION = "https://fcm.googleapis.com/fcm/"
+    const val FIRE_BASE_AUTH_KEY = "key=AAAAYtHj-wg:APA91bE7Cf4H4rT1GfUa6hjm6oLlZ20x7QfJltzpB06x0gXAzdzhJLe0VAZq2POc-9Kv1_ZX4OtGj3fYX4DmRdM1bUrpIlDm3Sw__NiDELD_o0GOpn4Ra2UE-FcN_mwsBcCCa5OEw2S_"
+    const val CONNECT_TIMEOUT: Long = 60000
+    const val READ_TIMEOUT: Long = 60000
+    const val WRITE_TIMEOUT: Long = 60000
+
     const val SHARED_PREF: String = "BiblePref"
 
     const val DATE_FORMAT_dd_MM_YYYY = "dd-MM-YYYY"

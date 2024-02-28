@@ -37,7 +37,7 @@ import com.ashok.myapplication.ui.viewmodel.SplashViewModel
 @Composable
 fun HighlightScreenView(
     viewModel: BookmarkViewModel = hiltViewModel(),
-    onClick: (Int) -> Unit
+    onClick: (HighlightModel) -> Unit
 ) {
     LaunchedEffect(Unit) {
         viewModel.getAllHighlightBibleData()
@@ -51,7 +51,8 @@ fun HighlightScreenView(
     HighlightRow(
         highlightData,
         onClick = {
-            onClick.invoke(it.bibleLangIndex.split("-")[1].toInt())
+            onClick.invoke(it)
+            //onClick.invoke(it.bibleLangIndex.split("-")[1].toInt())
         },
         onClickDelete = { item ->
             viewModel.deleteHighlightById(item)

@@ -47,6 +47,7 @@ class ShareImageActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val selectedImg = intent.getIntExtra("selected_image", R.drawable.place_holder)
+        val selectedBibleVerse = intent.getStringExtra("selected_title")
 
 
 
@@ -102,6 +103,7 @@ class ShareImageActivity : ComponentActivity() {
                                 .padding(it)
                         ) {
                             ImageShareView(
+                                bibleVerse = selectedBibleVerse,
                                 image = selectedImg,
                                 captureController = captureController
                             ) { bitmap, error ->

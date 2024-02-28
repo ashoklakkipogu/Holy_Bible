@@ -26,33 +26,48 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.ashok.myapplication.data.local.entry.BibleIndexModelEntry
 import com.ashok.myapplication.ui.bibleindex.components.ExpandableCard
 import com.ashok.myapplication.ui.bibleindex.components.IndexView
+import com.ashok.myapplication.ui.bibleindex.components.TopAppBarView
 import com.ashok.myapplication.ui.navgraph.Route
 import kotlinx.coroutines.launch
 import kotlin.reflect.KFunction1
 
 @Composable
 fun BibleIndexDetailsScreen(
-    viewModel: BibleIndexViewModel,
-    event: (BibleIndexEvent) -> Unit,
+    viewModel: BibleIndexDetailsViewModel,
+    navController: NavController,
+    bookId: Int,
+    chapterId: Int,
+    event: (BibleIndexDetailsEvent) -> Unit,
     onClickIndex: (Int) -> Unit
 ) {
-    event(BibleIndexEvent.VerseByBookIdAndLangauge(1, 1))
+    event(BibleIndexDetailsEvent.VerseByBookIdAndLangauge(bookId, chapterId))
     val verseListData = viewModel.verseList
-    Box(
+    Column(
         modifier = Modifier
             .background(color = Color.White)
             .fillMaxSize()
-            .padding(16.dp)
+
     ) {
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(6)
+        TopAppBarView("Select Verse") {
+            navController.popBackStack()
+        }
+        Box(
+            modifier = Modifier
+                .background(color = Color.White)
+                .fillMaxSize()
+                .padding(16.dp)
         ) {
-            itemsIndexed(verseListData) { index, model ->
-                IndexView(title = model){
-                    onClickIndex.invoke(it)
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(6)
+            ) {
+                itemsIndexed(verseListData) { index, model ->
+                    IndexView(title = model) {
+                        onClickIndex.invoke(it)
+                    }
                 }
             }
         }

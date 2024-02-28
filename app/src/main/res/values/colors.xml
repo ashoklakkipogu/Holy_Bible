@@ -51,4 +51,7 @@
     <color name="placeholder">#A0A3BD</color>
     <color name="input_background">#fff</color>
 
+    <color name="shimmer">#414243</color>
+
+
 </resources>

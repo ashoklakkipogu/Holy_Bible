@@ -121,6 +121,8 @@ dependencies {
     implementation("androidx.paging:paging-runtime:$paging_version")
     // optional - Jetpack Compose integration
     implementation("androidx.paging:paging-compose:3.3.0-alpha02")
+    implementation( "com.pierfrancescosoffritti.androidyoutubeplayer:chromecast-sender:0.28")
+
 
 
 

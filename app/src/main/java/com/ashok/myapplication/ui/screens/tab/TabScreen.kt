@@ -23,6 +23,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.ashok.myapplication.R
+import com.ashok.myapplication.ui.screens.tab.NoteScreenView
 import com.ashok.myapplication.ui.viewmodel.HomeViewModel
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -78,18 +79,17 @@ fun TabScreen(navController: NavController, viewModel:HomeViewModel) {
         ) { index ->
             when (index) {
                 0 -> NoteScreenView {
-                    viewModel.setOrResetBibleScrollPos(it-1)
+                    viewModel.getBibleActionForLeftRight(bookId = it.Book, chapterId = it.Chapter, isScrollTop = it.Versecount-1)
                     navController.popBackStack()
                 }
 
                 1 -> FavScreenView {
-                    Log.i("scrollId", "scrollId................${it-1}")
-                    viewModel.setOrResetBibleScrollPos(it-1)
+                    viewModel.getBibleActionForLeftRight(bookId = it.Book, chapterId = it.Chapter, isScrollTop = it.Versecount-1)
                     navController.popBackStack()
                 }
 
                 2 -> HighlightScreenView {
-                    viewModel.setOrResetBibleScrollPos(it-1)
+                    viewModel.getBibleActionForLeftRight(bookId = it.Book, chapterId = it.Chapter, isScrollTop = it.Versecount-1)
                     navController.popBackStack()
                 }
             }

@@ -2,36 +2,23 @@ package com.ashok.myapplication.ui.viewmodel
 
 import android.util.Log
 import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ashok.myapplication.data.entity.Products
-import com.ashok.myapplication.data.local.entry.BibleModelEntry
-import com.ashok.myapplication.data.local.entry.FavoriteModelEntry
-import com.ashok.myapplication.data.local.entry.HighlightModelEntry
-import com.ashok.myapplication.data.local.entry.NoteModelEntry
 import com.ashok.myapplication.data.local.model.FavModel
 import com.ashok.myapplication.data.local.model.HighlightModel
 import com.ashok.myapplication.data.local.model.NoteModel
 import com.ashok.myapplication.data.local.repositary.DbRepository
-import com.ashok.myapplication.ui.repository.ProductRepository
-import com.ashok.myapplication.ui.utilities.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
 class BookmarkViewModel @Inject constructor(
-    val productRepository: ProductRepository,
     val dbRepo: DbRepository
 ) :
     ViewModel() {

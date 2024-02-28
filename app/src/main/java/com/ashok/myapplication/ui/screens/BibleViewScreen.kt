@@ -6,6 +6,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -55,44 +56,52 @@ fun BibleViewScreen(
     }
 
     if (showSheet) {
-        bottomSheet(onDismiss = {
-            showSheet = false
-        }, onCircleColor = { color ->
-            showSheet = false
-            val colorCode =
-                if (/*selectedBible.selectedBackground == "underline" || */selectedBible.selectedBackground == color) {
-                    ""
-                } else {
-                    color
-                }
-            selectedBible.selectedBackground = colorCode
-            highlightInsertOrDelete(bibleVerse = selectedBible, viewModel = viewModel)
-        }, onButtonClick = {
-            when (it) {
-                "Note" -> {
-                    showNoteDialog = true
-                }
+        bottomSheet(
+            selectedBible = selectedBible.selectedBackground,
+            isBookMark = selectedBible.isBookMark,
+            isNote = selectedBible.isNote,
+            onDismiss = {
+                showSheet = false
+            },
+            onCircleColor = { color ->
+                showSheet = false
+                val colorCode =
+                    if (/*selectedBible.selectedBackground == "underline" || */selectedBible.selectedBackground == color) {
+                        ""
+                    } else {
+                        color
+                    }
+                selectedBible.selectedBackground = colorCode
+                highlightInsertOrDelete(bibleVerse = selectedBible, viewModel = viewModel)
+            },
+            onButtonClick = {
+                when (it) {
+                    "Note" -> {
+                        showNoteDialog = true
+                    }
 
-                "Bookmark" -> {
-                    selectedBible.isBookMark = !selectedBible.isBookMark
-                    showSheet = false
-                    bookmarkInsertOrDelete(bibleVerse = selectedBible, viewModel = viewModel)
-                }
+                    "Bookmark" -> {
+                        selectedBible.isBookMark = !selectedBible.isBookMark
+                        showSheet = false
+                        bookmarkInsertOrDelete(bibleVerse = selectedBible, viewModel = viewModel)
+                    }
 
-                "Share" -> {
-                    shareBibleUrl(selectedBible, context)
-                }
+                    "Share" -> {
+                        shareBibleUrl(selectedBible, context)
+                    }
 
-                "Copy" -> {
-                    copyBibleVerse(selectedBible, context)
+                    "Copy" -> {
+                        copyBibleVerse(selectedBible, context)
 
+                    }
                 }
-            }
-        }, onGridImgClick = {
-            val intent = Intent(context, ShareImageActivity::class.java)
-            intent.putExtra("selected_image", it)
-            context.startActivity(intent)
-        })
+            },
+            onGridImgClick = {
+                val intent = Intent(context, ShareImageActivity::class.java)
+                intent.putExtra("selected_image", it)
+                intent.putExtra("selected_title", selectedBible.verse)
+                context.startActivity(intent)
+            })
     }
 
     if (showNoteDialog) {
@@ -106,7 +115,6 @@ fun BibleViewScreen(
             })
     }
 
-
     Column {
         HomeTopView(
             headingData = headingData,
@@ -114,26 +122,26 @@ fun BibleViewScreen(
                 val obj = headingData
                 val book = obj.Book
                 val chapter = obj.Chapter - 1
-                viewModel.getBibleScrollPosition("LEFT", book, chapter, 1)
+                viewModel.getBibleActionForLeftRight("LEFT", book, chapter)
             }, rightArrowClick = {
                 val obj = headingData
                 val book = obj.Book
                 val chapter = obj.Chapter + 1
-                viewModel.getBibleScrollPosition("RIGHT", book, chapter, 1)
+                viewModel.getBibleActionForLeftRight("RIGHT", book, chapter)
             }, verseClick = {
+                viewModel.expandedState = it.bibleIndex
                 navController.navigate(Route.BibleIndex.router)
             }
         )
 
 
         BibleVerseList(
-            biblePager = viewModel.biblePagingSource,
+            bibleData = viewModel.bibleListData,
             state = listState,
-            onItemClick = onItemClick,
-            onHeadingTitle = {
-                headingData = it
-            }
-        )
+            onItemClick = onItemClick
+        ) {
+            headingData = it
+        }
     }
 
 

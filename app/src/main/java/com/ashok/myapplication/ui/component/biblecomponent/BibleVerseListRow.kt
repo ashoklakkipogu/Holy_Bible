@@ -14,11 +14,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.appendInlineContent
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,24 +33,20 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.graphics.toColorInt
-import androidx.paging.Pager
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemContentType
 import androidx.paging.compose.itemKey
 import com.ashok.myapplication.R
-import com.ashok.myapplication.data.entity.FavBookMark
 import com.ashok.myapplication.data.local.entry.BibleModelEntry
 import com.ashok.myapplication.ui.utilities.BibleUtils.getInlineIcon
 
 @Composable
 fun BibleVerseList(
-    biblePager: Pager<Int, BibleModelEntry>,
+    bibleData: List<BibleModelEntry>,
     state: LazyListState,
     onItemClick: (BibleModelEntry) -> Unit,
     onHeadingTitle: (BibleModelEntry) -> Unit
 ) {
-    val pager = remember { biblePager }
-    val bibleData = pager.flow.collectAsLazyPagingItems()
 
     LazyColumn(
         modifier = Modifier
@@ -62,12 +56,10 @@ fun BibleVerseList(
         state
     ) {
         items(
-            count = bibleData.itemCount,
-            key = bibleData.itemKey(BibleModelEntry::id),
-            contentType = bibleData.itemContentType { "Articles" }
+            count = bibleData.size,
         ) { index: Int ->
 
-            val model: BibleModelEntry = bibleData[index] ?: return@items
+            val model: BibleModelEntry = bibleData[index]
 
             onHeadingTitle.invoke(model)
             Row(
@@ -112,7 +104,7 @@ fun BibleVerse(
                     style = SpanStyle(
                         baselineShift = BaselineShift.Superscript,
                         color = colorResource(id = R.color.colorAccent),
-                        fontSize = 16.sp,
+                        fontSize = 20.sp,
 
                         )
                 ) {

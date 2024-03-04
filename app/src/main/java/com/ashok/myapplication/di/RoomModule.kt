@@ -1,6 +1,7 @@
 package com.ashok.myapplication.di
 
 import android.app.Application
+import android.content.SharedPreferences
 import androidx.room.Room
 import com.ashok.myapplication.data.local.BibleDatabase
 import com.ashok.myapplication.data.local.dao.BibleDao
@@ -9,8 +10,8 @@ import com.ashok.myapplication.data.local.dao.LyricsDao
 import com.ashok.myapplication.data.local.dao.FavoriteDao
 import com.ashok.myapplication.data.local.dao.HighlightDao
 import com.ashok.myapplication.data.local.dao.NoteDao
-import com.ashok.myapplication.data.local.repositary.DbRepoImp
-import com.ashok.myapplication.data.local.repositary.DbRepository
+import com.ashok.myapplication.data.repository.DbRepoImp
+import com.ashok.myapplication.domain.repository.DbRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -59,8 +60,8 @@ class RoomModule {
 
 
     @Provides
-    fun provideDbRepository(bibleDao: BibleDao, bibleIndexDao: BibleIndexDao, favoriteDao: FavoriteDao, noteDao: NoteDao, highlightDao: HighlightDao, lyricsDao: LyricsDao): DbRepository {
-        return DbRepoImp(bibleDao, bibleIndexDao, favoriteDao, noteDao, highlightDao, lyricsDao)
+    fun provideDbRepository(bibleDao: BibleDao, bibleIndexDao: BibleIndexDao, favoriteDao: FavoriteDao, noteDao: NoteDao, highlightDao: HighlightDao, lyricsDao: LyricsDao, pref: SharedPreferences): DbRepository {
+        return DbRepoImp(bibleDao, bibleIndexDao, favoriteDao, noteDao, highlightDao, lyricsDao, pref)
     }
 
 

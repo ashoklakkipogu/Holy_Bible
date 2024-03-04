@@ -55,7 +55,7 @@ fun DetailView(
                         lifecycleOwner = LocalLifecycleOwner.current
                     )
                 Column(
-                    modifier = Modifier.padding(10.dp)
+                    modifier = Modifier.padding(16.dp)
                         .verticalScroll(rememberScrollState())
                         .weight(weight = 1f, fill = false)
                 ) {

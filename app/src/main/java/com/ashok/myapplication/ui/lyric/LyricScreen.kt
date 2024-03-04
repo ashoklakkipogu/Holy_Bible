@@ -10,8 +10,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
-import com.ashok.myapplication.common.EmptyScreen
-import com.ashok.myapplication.data.entity.LyricsModel
+import com.ashok.myapplication.ui.common.EmptyScreen
+import com.ashok.myapplication.data.local.entity.LyricsModel
 import com.ashok.myapplication.ui.bibleindex.components.TopAppBarView
 import com.ashok.myapplication.ui.lyric.component.AnimatedShimmer
 import com.ashok.myapplication.ui.lyric.component.LyricCardView
@@ -25,8 +25,8 @@ import com.ashok.myapplication.ui.utilities.Result
 fun LyricScreen(
     state: LyricState,
     event: (LyricEvent) -> Unit,
-    onClick:(LyricsModel) -> Unit,
-    onBackPress:() -> Unit
+    onClick: (LyricsModel) -> Unit,
+    onBackPress: () -> Unit
 ) {
 
     BibleTheme {
@@ -40,22 +40,17 @@ fun LyricScreen(
                     onBackPress.invoke()
                 }
                 SearchAppBar()
-                when (val data = state.lyrics) {
-                    is Result.Error -> {
-                        EmptyScreen(errorMessage = data.error.toString())
-                    }
-
-                    is Result.Loading -> {
-                        ShimmerEffect()
-                    }
-
-                    is Result.Success -> {
-                        LyricList(data.data){
-                            onClick.invoke(it)
-                        }
+                if (state.isLoading) {
+                    ShimmerEffect()
+                }
+                if (state.error != null) {
+                    EmptyScreen(errorMessage = state.error)
+                }
+                if (state.lyric.isNotEmpty()) {
+                    LyricList(state.lyric) {
+                        onClick.invoke(it)
                     }
                 }
-
             }
 
         }
@@ -63,7 +58,7 @@ fun LyricScreen(
 }
 
 @Composable
-fun LyricList(data: List<LyricsModel>, onClick:(LyricsModel) -> Unit) {
+fun LyricList(data: List<LyricsModel>, onClick: (LyricsModel) -> Unit) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -76,7 +71,7 @@ fun LyricList(data: List<LyricsModel>, onClick:(LyricsModel) -> Unit) {
             val title = if (model.isSecondLan) model.titleEn else model.title
             LyricCardView(
                 title = title
-            ){
+            ) {
                 onClick.invoke(model)
             }
         }
@@ -96,5 +91,9 @@ fun ShimmerEffect() {
 @Preview
 @Composable
 fun LyricScreenPreview() {
-    LyricScreen(LyricState().copy(lyrics = Result.Loading()), event = {}, onClick = {}, onBackPress = {})
+    LyricScreen(
+        LyricState().copy(isLoading = true),
+        event = {},
+        onClick = {},
+        onBackPress = {})
 }

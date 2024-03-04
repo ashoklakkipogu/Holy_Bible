@@ -7,8 +7,7 @@ import androidx.activity.viewModels
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.ashok.myapplication.ui.screens.MainScreen
 import com.ashok.myapplication.ui.theme.BibleTheme
-import com.ashok.myapplication.ui.viewmodel.HomeViewModel
-import com.ashok.myapplication.ui.viewmodel.UsersViewModel
+import com.ashok.myapplication.ui.dashboard.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.DelicateCoroutinesApi
 
@@ -16,7 +15,7 @@ import kotlinx.coroutines.DelicateCoroutinesApi
 class MainActivity : androidx.activity.ComponentActivity() {
 
     private val viewModel: HomeViewModel by viewModels()
-    private val usersViewModel: UsersViewModel by viewModels()
+    //private val usersViewModel: UsersViewModel by viewModels()
 
     @OptIn(DelicateCoroutinesApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {

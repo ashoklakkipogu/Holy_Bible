@@ -4,13 +4,7 @@ import com.ashok.myapplication.data.AppConstants
 import com.ashok.myapplication.data.AppConstants.CONNECT_TIMEOUT
 import com.ashok.myapplication.data.AppConstants.READ_TIMEOUT
 import com.ashok.myapplication.data.AppConstants.WRITE_TIMEOUT
-import com.ashok.myapplication.data.api.ApiService
-import com.ashok.myapplication.data.datasource.DataSource
-import com.ashok.myapplication.data.datasource.DataSourceImpl
-import com.ashok.myapplication.data.datasource.UserDataSource
-import com.ashok.myapplication.data.datasource.UserDataSourceImpl
-import com.ashok.myapplication.ui.repository.LyricRepository
-import com.ashok.myapplication.ui.repository.UsersRepository
+import com.ashok.myapplication.data.remote.ApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -53,32 +47,6 @@ class AppModule {
     @Provides
     fun provideProductsApi(retrofit: Retrofit): ApiService {
         return retrofit.create(ApiService::class.java)
-    }
-
-
-    @Singleton
-    @Provides
-    fun provideProductDataSource(apiService: ApiService): DataSource{
-        return DataSourceImpl(apiService)
-    }
-
-    @Singleton
-    @Provides
-    fun provideLyricRepository(dateSource: DataSource): LyricRepository{
-        return LyricRepository(dateSource)
-    }
-
-
-    @Singleton
-    @Provides
-    fun provideUserDataSource(apiService: ApiService): UserDataSource{
-        return UserDataSourceImpl(apiService)
-    }
-
-    @Singleton
-    @Provides
-    fun provideUserRepository(userDataSource: UserDataSource): UsersRepository{
-        return UsersRepository(userDataSource)
     }
 
 }

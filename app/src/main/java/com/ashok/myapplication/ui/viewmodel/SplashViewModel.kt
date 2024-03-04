@@ -7,12 +7,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ashok.myapplication.data.entity.BibleJson
-import com.ashok.myapplication.data.entity.Products
-import com.ashok.myapplication.data.entity.Users
+import com.ashok.myapplication.data.local.entity.BibleJson
 import com.ashok.myapplication.data.local.entry.BibleIndexModelEntry
 import com.ashok.myapplication.data.local.entry.BibleModelEntry
-import com.ashok.myapplication.data.local.repositary.DbRepoImp
+import com.ashok.myapplication.data.repository.DbRepoImp
 import com.ashok.myapplication.ui.utilities.BibleUtils.getBibleIndex
 import com.ashok.myapplication.ui.utilities.BibleUtils.getJsonDataFromAsset
 import com.ashok.myapplication.ui.utilities.Result
@@ -21,9 +19,6 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 

@@ -14,7 +14,7 @@ import androidx.navigation.compose.rememberNavController
 import com.ashok.myapplication.ui.navgraph.NavGraph
 import com.ashok.myapplication.ui.navgraph.bottomNavigation
 import com.ashok.myapplication.ui.theme.BibleTheme
-import com.ashok.myapplication.ui.viewmodel.HomeViewModel
+import com.ashok.myapplication.ui.dashboard.HomeViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)

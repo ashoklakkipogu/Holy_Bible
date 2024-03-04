@@ -5,7 +5,7 @@ import com.ashok.myapplication.data.local.entry.FavoriteModelEntry
 import com.ashok.myapplication.data.local.entry.HighlightModelEntry
 import com.ashok.myapplication.data.local.entry.NoteModelEntry
 import com.ashok.myapplication.ui.utilities.BibleUtils.getCurrentTime
-import com.ashok.myapplication.ui.viewmodel.HomeViewModel
+import com.ashok.myapplication.ui.dashboard.HomeViewModel
 
 fun highlightInsertOrDelete(bibleVerse: BibleModelEntry, viewModel: HomeViewModel){
     if (bibleVerse.selectedBackground == ""){

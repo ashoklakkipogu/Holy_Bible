@@ -83,7 +83,7 @@ fun ShimmerGridItem(brush: Brush) {
                     modifier = Modifier
                         .height(15.dp)
                         .clip(RoundedCornerShape(10.dp))
-                        .fillMaxWidth(fraction = 0.7f)
+                        .fillMaxWidth(fraction = 1f)
                         .background(brush)
                 )
                 /*Spacer(modifier = Modifier.padding(5.dp))

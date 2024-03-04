@@ -9,7 +9,7 @@ import com.ashok.myapplication.data.local.dao.LyricsDao
 import com.ashok.myapplication.data.local.dao.FavoriteDao
 import com.ashok.myapplication.data.local.dao.HighlightDao
 import com.ashok.myapplication.data.local.dao.NoteDao
-import com.ashok.myapplication.data.entity.LyricsModel
+import com.ashok.myapplication.data.local.entity.LyricsModel
 import com.ashok.myapplication.data.local.entry.BibleIndexModelEntry
 import com.ashok.myapplication.data.local.entry.BibleModelEntry
 import com.ashok.myapplication.data.local.entry.FavoriteModelEntry

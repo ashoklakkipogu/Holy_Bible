@@ -2,7 +2,7 @@ package com.ashok.myapplication.ui.bibleindex
 
 import android.content.SharedPreferences
 import androidx.lifecycle.ViewModel
-import com.ashok.myapplication.data.local.repositary.DbRepository
+import com.ashok.myapplication.domain.repository.DbRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 

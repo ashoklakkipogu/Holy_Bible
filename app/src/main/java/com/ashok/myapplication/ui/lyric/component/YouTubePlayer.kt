@@ -21,9 +21,9 @@ fun YouTubePlayer(
 
     AndroidView(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(5.dp)
-            .clip(RoundedCornerShape(16.dp)),
+            .fillMaxWidth(),
+            //.padding(5.dp)
+            //.clip(RoundedCornerShape(16.dp)),
         factory = { context->
             YouTubePlayerView(context = context).apply {
                 lifecycleOwner.lifecycle.addObserver(this)

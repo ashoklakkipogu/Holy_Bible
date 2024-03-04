@@ -2,7 +2,7 @@ package com.ashok.myapplication.ui.navgraph
 
 import androidx.annotation.DrawableRes
 import com.ashok.myapplication.R
-import com.ashok.myapplication.data.entity.LyricsModel
+import com.ashok.myapplication.data.local.entity.LyricsModel
 
 
 const val BOOK_ID = "BOOK_ID"

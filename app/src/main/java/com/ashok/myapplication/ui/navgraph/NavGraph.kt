@@ -8,18 +8,22 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
-import com.ashok.myapplication.data.entity.LyricsModel
+import com.ashok.myapplication.data.local.entity.LyricsModel
 import com.ashok.myapplication.ui.bibleindex.BibleIndexDetailsScreen
 import com.ashok.myapplication.ui.bibleindex.BibleIndexDetailsViewModel
 import com.ashok.myapplication.ui.bibleindex.BibleIndexScreen
+import com.ashok.myapplication.ui.dashboard.DashboardUiState
 import com.ashok.myapplication.ui.lyric.LyricDetails
 import com.ashok.myapplication.ui.screens.BibleViewScreen
-import com.ashok.myapplication.ui.screens.BookmarkScreen
-import com.ashok.myapplication.ui.screens.DiscoveryScreen
+import com.ashok.myapplication.ui.bookmark.BookmarkScreen
+import com.ashok.myapplication.ui.bookmark.BookmarkViewModel
+import com.ashok.myapplication.ui.discovery.DiscoveryScreen
+import com.ashok.myapplication.ui.discovery.DiscoveryUIState
+import com.ashok.myapplication.ui.discovery.DiscoveryViewModel
 import com.ashok.myapplication.ui.lyric.LyricScreen
 import com.ashok.myapplication.ui.lyric.LyricViewModel
 import com.ashok.myapplication.ui.screens.ProfileScreen
-import com.ashok.myapplication.ui.viewmodel.HomeViewModel
+import com.ashok.myapplication.ui.dashboard.HomeViewModel
 
 
 @Composable
@@ -34,14 +38,18 @@ fun NavGraph(
             startDestination = Route.Bible.router, route = Route.DashboardRoute.router
         ) {
             composable(route = Route.Bible.router) {
-                BibleViewScreen(navController = navController, viewModel = homeViewModel)
+                val state:DashboardUiState = homeViewModel.state
+                BibleViewScreen(navController = navController, state = state, event = homeViewModel::onEvent)
             }
             composable(Route.Bookmark.router) {
-                BookmarkScreen(navController, viewModel = homeViewModel)
+                val viewModel: BookmarkViewModel = hiltViewModel()
+                val homeViewModelState = homeViewModel.state
+                val state = viewModel.state
+                BookmarkScreen(navController, state = state, event= viewModel::onEvent, dashboardEvent = homeViewModel::onEvent, )
             }
             composable(Route.Lyrics.router) {
                 val viewModel: LyricViewModel = hiltViewModel()
-                val state = viewModel.lyrics
+                val state = viewModel.state
                 LyricScreen(
                     state = state,
                     event = viewModel::onEvent,
@@ -64,13 +72,18 @@ fun NavGraph(
                 }
             }
             composable(Route.Discovery.router) {
-                DiscoveryScreen(navController)
+                val viewModel: DiscoveryViewModel = hiltViewModel()
+                val state: DiscoveryUIState = viewModel.state
+                DiscoveryScreen(state){
+                    navController.popBackStack()
+                }
             }
             composable(Route.More.router) {
                 ProfileScreen(navController)
             }
             composable(Route.BibleIndex.router) {
-                BibleIndexScreen(homeViewModel, navController = navController)
+                val state: DashboardUiState = homeViewModel.state
+                BibleIndexScreen(navController = navController, state = state, event = homeViewModel::onEvent)
             }
             composable(Route.BibleIndexDetails.router,
                 arguments = listOf(

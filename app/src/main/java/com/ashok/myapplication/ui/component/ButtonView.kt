@@ -21,24 +21,33 @@ import androidx.constraintlayout.motion.widget.MotionScene.Transition.Transition
 
 @Composable
 fun ButtonView(
+    title: String? = null,
     color: Color = Color.Blue,
     onClick: () -> Unit
 ) {
     TextButton(
         onClick = { onClick.invoke() },
-        modifier = Modifier.background(
-            color = color,
-            shape = RoundedCornerShape(3.dp)
-        )
-            .size(120.dp, 45.dp)
+        modifier = Modifier
+            .background(
+                color = color,
+                shape = RoundedCornerShape(3.dp)
+            )
+
     ) {
-        Text(
-            modifier = Modifier.fillMaxWidth(),
-            text = "Love",
-            color = Color.White,
-            textAlign = TextAlign.Left,
-            fontWeight = FontWeight.Bold
-        )
+        title?.let {
+            Text(
+                modifier = Modifier.padding(
+                    start = 10.dp,
+                    top = 10.dp,
+                    end = 30.dp,
+                    bottom = 10.dp
+                ),
+                text = it,
+                color = Color.White,
+                textAlign = TextAlign.Left,
+                fontWeight = FontWeight.Bold
+            )
+        }
     }
 
 }
@@ -46,7 +55,7 @@ fun ButtonView(
 @Preview
 @Composable
 fun ButtonViewPreview() {
-    ButtonView(onClick = {
+    ButtonView("Test", onClick = {
 
     })
 }

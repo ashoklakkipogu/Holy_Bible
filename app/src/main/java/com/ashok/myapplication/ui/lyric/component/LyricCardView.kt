@@ -23,7 +23,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.ashok.myapplication.data.entity.LyricsModel
+import com.ashok.myapplication.data.local.entity.LyricsModel
 import com.ashok.myapplication.ui.utilities.RandomColors
 
 @Composable

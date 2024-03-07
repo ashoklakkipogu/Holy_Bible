@@ -17,7 +17,6 @@ import com.ashok.myapplication.ui.lyric.component.AnimatedShimmer
 import com.ashok.myapplication.ui.lyric.component.LyricCardView
 import com.ashok.myapplication.ui.lyric.component.SearchAppBar
 import com.ashok.myapplication.ui.theme.BibleTheme
-import com.ashok.myapplication.ui.utilities.Result
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -68,9 +67,8 @@ fun LyricList(data: List<LyricsModel>, onClick: (LyricsModel) -> Unit) {
             count = data.size,
         ) { index: Int ->
             val model: LyricsModel = data[index]
-            val title = if (model.isSecondLan) model.titleEn else model.title
             LyricCardView(
-                title = title
+                data = model
             ) {
                 onClick.invoke(model)
             }

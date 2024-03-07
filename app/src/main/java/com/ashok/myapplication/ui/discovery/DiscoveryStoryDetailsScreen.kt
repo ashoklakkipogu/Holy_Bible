@@ -1,21 +1,20 @@
-package com.ashok.myapplication.ui.lyric
+package com.ashok.myapplication.ui.discovery
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
-import com.ashok.myapplication.data.local.entity.LyricsModel
 import com.ashok.myapplication.ui.bibleindex.components.TopAppBarView
 import com.ashok.myapplication.ui.component.DetailView
-import com.ashok.myapplication.ui.navgraph.Route
+import com.ashok.myapplication.ui.discovery.model.ImageGrid
 
 @Composable
-fun LyricDetails(model: LyricsModel?, onBackPress:()->Unit) {
+fun DiscoveryStoryDetailsScreen(title: String?, model: ImageGrid?, onBackPress: () -> Unit) {
     Column {
-        TopAppBarView(model?.title?:"Lyric") {
+        TopAppBarView(title ?: "Discovery Details") {
             onBackPress.invoke()
         }
         DetailView(
-            youtubeId = model?.youtubeId,
-            description = model?.content,
+            image = model?.image,
+            description = model?.des,
             title = model?.title
         )
     }

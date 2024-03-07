@@ -17,7 +17,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -28,9 +27,10 @@ import com.ashok.myapplication.ui.utilities.RandomColors
 
 @Composable
 fun LyricCardView(
-    title: String,
+    data: LyricsModel,
     onClick:() ->Unit
 ) {
+    val title = if (data.isSecondLan) data.titleEn else data.title
     Column {
         ListItem(
             modifier = Modifier.clickable {
@@ -45,7 +45,7 @@ fun LyricCardView(
                     modifier = Modifier
                         .size(35.dp)
                         .clip(CircleShape)
-                        .background(Color(RandomColors().color)),
+                        .background(Color(data.color)),
                     contentAlignment = Alignment.Center,
                 ) {
                     Text(
@@ -71,6 +71,6 @@ fun LyricCardView(
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 fun LyricCardViewPreview() {
     LyricCardView(
-        title = "Title"
+        data = LyricsModel()
     ){}
 }

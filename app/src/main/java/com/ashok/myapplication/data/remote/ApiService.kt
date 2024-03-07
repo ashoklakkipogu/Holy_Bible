@@ -4,6 +4,7 @@ import com.ashok.myapplication.data.local.entity.CarouselModel
 import com.ashok.myapplication.data.local.entity.LyricsModel
 import com.ashok.myapplication.data.local.entity.Products
 import com.ashok.myapplication.data.local.entity.QuotesModel
+import com.ashok.myapplication.data.local.entity.StatusImagesModel
 import com.ashok.myapplication.data.local.entity.StoryModel
 import com.ashok.myapplication.data.local.entity.Users
 import retrofit2.Response
@@ -28,4 +29,7 @@ interface ApiService {
 
     @GET("quotes/{lang}.json")
     suspend fun getQuotes(@Path("lang") lang:String): Response<Map<String, List<QuotesModel>>>
+
+    @GET("statusimages.json")
+    suspend fun getStatus(): Response<Map<String, StatusImagesModel>>
 }

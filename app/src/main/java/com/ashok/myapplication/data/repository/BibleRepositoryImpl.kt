@@ -5,6 +5,7 @@ import androidx.compose.ui.text.toLowerCase
 import com.ashok.myapplication.data.remote.ApiService
 import com.ashok.myapplication.data.local.entity.LyricsModel
 import com.ashok.myapplication.data.local.entity.QuotesModel
+import com.ashok.myapplication.data.local.entity.StatusImagesModel
 import com.ashok.myapplication.data.local.entity.StoryModel
 import com.ashok.myapplication.domain.repository.BibleRepository
 import com.ashok.myapplication.ui.utilities.Result
@@ -34,6 +35,10 @@ class BibleRepositoryImpl @Inject constructor(
 
     override suspend fun getStory(): Flow<Result<Map<String, StoryModel>?>> = wrap {
         api.getStories()
+    }.flowOn(Dispatchers.IO)
+
+    override suspend fun getStatusImages(): Flow<Result<Map<String, StatusImagesModel>?>> = wrap {
+        api.getStatus()
     }.flowOn(Dispatchers.IO)
     /* {
         return try {

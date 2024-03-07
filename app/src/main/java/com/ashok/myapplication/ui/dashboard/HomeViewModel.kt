@@ -167,20 +167,18 @@ class HomeViewModel @Inject constructor(
         isScrollTop: Int = 0
     ) = viewModelScope.launch {
         dbRepo.getBiblePageActionLeftOrRight(clickAction, bookId, chapterId).collect { result ->
-            state = when (result) {
+            when (result) {
                 is Result.Error -> {
-                    Log.i("bibleData", "bibleData......e"+result.message)
-                    state.copy(isLoading = false, error = result.message)
+                    state = state.copy(isLoading = false, error = result.message)
                 }
 
                 is Result.Loading -> {
-                    Log.i("bibleData", "bibleData......loading")
-                    state.copy(isLoading = true)
+                    state = state.copy(isLoading = true)
                 }
 
                 is Result.Success -> {
-                    Log.i("bibleData", "bibleData......s"+result.data)
-                    state.copy(isLoading = false, bibleData = result.data)
+                    if (result.data?.isNotEmpty() == true)
+                        state = state.copy(isLoading = false, bibleData = result.data)
                 }
             }
         }

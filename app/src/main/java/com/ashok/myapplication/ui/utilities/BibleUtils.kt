@@ -4,6 +4,10 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
+import android.os.Build
+import android.text.Html
+import android.text.Spanned
+import android.view.View
 import android.widget.Toast
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.text.InlineTextContent
@@ -18,6 +22,7 @@ import androidx.compose.ui.util.fastForEach
 import com.ashok.myapplication.R
 import com.ashok.myapplication.data.AppConstants
 import com.ashok.myapplication.data.local.dao.BibleIndexDao
+import com.ashok.myapplication.data.local.entity.QuotesModel
 import com.ashok.myapplication.data.local.entry.BibleIndexModelEntry
 import com.ashok.myapplication.data.local.entry.BibleModelEntry
 import java.io.BufferedReader
@@ -61,19 +66,18 @@ object BibleUtils {
     }
 
     fun shareText(context: Context?, str: String) {
-        val sendIntent = Intent()
-        sendIntent.action = Intent.ACTION_SEND
-        sendIntent.putExtra(Intent.EXTRA_TEXT, str)
-
-        sendIntent.type = "text/plain"
+        val sendIntent = Intent(Intent.ACTION_SEND)
+        sendIntent.type = "text/plain "
+        sendIntent.putExtra(Intent.EXTRA_TEXT, htmlToPlainText(str))
         context?.startActivity(sendIntent)
 
     }
 
     fun copyText(context: Context?, str: String) {
+
         val clipboard =
             context?.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager?
-        val clip = ClipData.newPlainText("label", str)
+        val clip = ClipData.newPlainText("label", htmlToPlainText(str))
         clipboard!!.setPrimaryClip(clip)
     }
 
@@ -152,6 +156,29 @@ object BibleUtils {
         val str = "$verse \n  $bibleIndex"
         copyText(context, str)
         Toast.makeText(context, "Copied", Toast.LENGTH_SHORT).show()
+    }
+
+    fun onClickShare({
+        shareText(context, "$des - \n $title")
+
+    }
+        context: Context,
+        title: String?,
+        des: String?
+    )
+
+    fun onClickCopy(
+        context: Context,
+        title: String?,
+        des: String?
+    ) {
+        copyText(context, "$des - \n $title")
+        Toast.makeText(context, "Copied", Toast.LENGTH_SHORT).show()
+    }
+
+    fun htmlToPlainText(html: String): String {
+        val regex = "<[^>]*>".toRegex()
+        return regex.replace(html, "")
     }
 
 }

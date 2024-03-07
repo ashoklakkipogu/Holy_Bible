@@ -20,6 +20,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -31,8 +32,10 @@ import androidx.constraintlayout.motion.widget.MotionScene.Transition.Transition
 @Composable
 fun TitleView(
     title:String,
+    isButtonVisible:Boolean = true,
     onClick: () -> Unit
 ) {
+    val alpha = if(isButtonVisible) 1f else 0f
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -45,7 +48,7 @@ fun TitleView(
             fontWeight = FontWeight.Bold,
             fontSize = 18.sp
         )
-        IconButton(onClick = { onClick.invoke() }) {
+        IconButton(onClick = { onClick.invoke() }, modifier = Modifier.alpha(alpha)) {
             Icon(imageVector = Icons.Default.ArrowForward, contentDescription = null)
 
         }

@@ -1,36 +1,26 @@
 package com.ashok.myapplication.ui.discovery
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.PathEffect
-import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
-import com.ashok.myapplication.R
 import com.ashok.myapplication.ui.bibleindex.components.TopAppBarView
 import com.ashok.myapplication.ui.component.ButtonView
 import com.ashok.myapplication.ui.component.CardView
+import com.ashok.myapplication.ui.component.ImageShare
 import com.ashok.myapplication.ui.component.TitleView
-import com.ashok.myapplication.ui.component.colorView
 import com.ashok.myapplication.ui.discovery.component.CardShimmer
 import com.ashok.myapplication.ui.discovery.component.QuotesShimmer
+import com.ashok.myapplication.ui.discovery.model.ImageGrid
 import com.ashok.myapplication.ui.theme.BibleTheme
 import com.ashok.myapplication.ui.utilities.RandomColors
 
@@ -39,7 +29,11 @@ import com.ashok.myapplication.ui.utilities.RandomColors
 @Composable
 fun DiscoveryScreen(
     state: DiscoveryUIState,
-    onBackPress: () -> Unit
+    onBackPress: () -> Unit,
+    onClickMoreStory: () -> Unit,
+    onClickMoreTopic: () -> Unit,
+    onClickButton: (String?) -> Unit,
+    onClickImage: (Int) -> Unit
 ) {
     BibleTheme {
         Surface(
@@ -49,47 +43,106 @@ fun DiscoveryScreen(
                 TopAppBarView("Discovery") {
                     onBackPress.invoke()
                 }
-                Column(
-                    modifier = Modifier.padding(10.dp)
+
+
+
+                LazyColumn(
+                    contentPadding = PaddingValues(20.dp)
                 ) {
-                    if (state.quotesTitles.isNotEmpty()) {
-                        TitleView(title = "Search by Topic", onClick = {})
-                        LazyRow(
-                            horizontalArrangement = Arrangement.spacedBy(10.dp)
-
-                        ) {
-                            items(state.quotesTitles) { item ->
-                                ButtonView(title = item, color = Color(RandomColors().color)) {}
-                            }
+                    item {
+                        if (state.isLoadingQuotes) {
+                            QuotesShimmer()
                         }
-                    }
+                        if (state.quotesTitles.isNotEmpty()) {
+                            TitleView(title = "Search by Topic", onClick = {
+                                onClickMoreTopic.invoke()
+                            })
+                            LazyRow(
+                                horizontalArrangement = Arrangement.spacedBy(10.dp)
 
-                    if (state.isLoadingQuotes) {
-                        QuotesShimmer()
-                    }
-
-                    if (state.storyList.isNotEmpty()){
-                        TitleView(title = "New to Faith", onClick = {})
-                        LazyRow(
-                            horizontalArrangement = Arrangement.spacedBy(10.dp)
-
-                        ) {
-                            items(state.storyList) { item ->
-                                CardView(
-                                    title = item.title,
-                                    time = "12/12/2023",
-                                    image = item.url
-                                ) {
-
+                            ) {
+                                items(state.quotesTitles) { item ->
+                                    ButtonView(title = item.title, color = item.color) {
+                                        onClickButton.invoke(item.title)
+                                    }
                                 }
                             }
+                        }
+                    }
+                    item {
+                        if (state.isLoadingStory) {
+                            CardShimmer()
+                        }
+                        if (state.storyList.isNotEmpty()) {
+                            TitleView(title = "New to Faith", onClick = {
+                                onClickMoreStory.invoke()
+                            })
+                            LazyRow(
+                                horizontalArrangement = Arrangement.spacedBy(10.dp)
 
+                            ) {
+                                itemsIndexed(state.storyList) {index, item ->
+                                    CardView(data = ImageGrid(
+                                        title = item.title,
+                                        image = item.url
+                                    ),
+                                        onClickButton = {
+                                            //onClickButton.invoke(it)
+                                        },
+                                        onClickImage = {
+                                            onClickImage.invoke(index)
+                                        })
+                                }
+                            }
+                        }
+                    }
+                    if (state.isLoadingStatus) {
+                        repeat(5) {
+                            item {
+                                CardShimmer()
+                            }
                         }
                     }
 
-                    if (state.isLoadingStory){
-                        CardShimmer()
-                    }
+                    if (state.statusList.isNotEmpty()) {
+                        item {
+                            TitleView(title = "Bible Word", isButtonVisible = false, onClick = {})
+                        }
+                        items(state.statusList) { post ->
+                            ImageShare(
+                                image = post.url
+                            )
+                            Spacer(modifier = Modifier.height(10.dp))/*CardView(
+                                title = "",
+                                time = "12/12/2023",
+                                image = post.url
+                            ) {
+
+                            }*/
+                        }
+                    }/*item {
+                        if (state.isLoadingStatus){
+                            CardShimmer()
+                        }
+                        if (state.statusList.isNotEmpty()){
+                            TitleView(title = "Bible Word", onClick = {})
+                            LazyColumn(
+                                verticalArrangement = Arrangement.spacedBy(10.dp)
+
+                            ) {
+                                items(state.statusList) { item ->
+                                    CardView(
+                                        title = "",
+                                        time = "12/12/2023",
+                                        image = item.url
+                                    ) {
+
+                                    }
+                                }
+                            }
+                        }
+                    }*/
+
 
                 }
             }
@@ -102,5 +155,10 @@ fun DiscoveryScreen(
 @Preview
 @Composable
 fun DiscoveryScreenPreview() {
-    DiscoveryScreen(state = DiscoveryUIState()) {}
+    DiscoveryScreen(state = DiscoveryUIState(),
+        onBackPress = {},
+        onClickMoreStory = {},
+        onClickMoreTopic = {},
+        {},
+        {})
 }

@@ -13,6 +13,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.sp
 import com.ashok.myapplication.R
 
 
@@ -24,7 +25,7 @@ fun TopAppBarView(
 ){
     TopAppBar(
         title = {
-            Text(title)
+            Text(title, fontSize = 16.sp, lineHeight = 16.sp)
         },
         navigationIcon = {
             IconButton(onClick = {

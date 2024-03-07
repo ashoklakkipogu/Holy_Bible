@@ -2,7 +2,7 @@ package com.ashok.myapplication.ui.utilities
 
 import java.util.*
 
-class RandomColors {
+object RandomColors {
     private val recycle: Stack<Int> = Stack()
     private val colors: Stack<Int> = Stack()
     val color: Int

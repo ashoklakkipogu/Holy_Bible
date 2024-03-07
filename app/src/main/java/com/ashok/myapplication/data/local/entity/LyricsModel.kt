@@ -2,6 +2,7 @@ package com.ashok.myapplication.data.local.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.ashok.myapplication.ui.utilities.RandomColors
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable
@@ -56,4 +57,5 @@ class LyricsModel: Serializable {
     var titleEn: String = ""
     var isSecondLan: Boolean = false
     var isProgressBar: Boolean = false
+    var color = RandomColors.color
 }

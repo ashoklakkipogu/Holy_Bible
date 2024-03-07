@@ -8,10 +8,13 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ashok.myapplication.data.local.entity.LyricsModel
+import com.ashok.myapplication.data.local.entity.StatusImagesModel
 import com.ashok.myapplication.data.local.entity.StoryModel
 import com.ashok.myapplication.domain.repository.BibleRepository
+import com.ashok.myapplication.ui.discovery.model.ImageGrid
 import com.ashok.myapplication.ui.utilities.Result
 import com.ashok.myapplication.ui.utilities.SharedPrefUtils
+import com.ashok.myapplication.ui.viewmodel.SharedViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -28,31 +31,34 @@ class DiscoveryViewModel @Inject constructor(
     init {
         getQuotes()
         getStories()
+        getStatusImages()
     }
+
 
     private fun getQuotes() {
         viewModelScope.launch {
-            repository.getQuotes().collect{ result->
-                when(result){
+            repository.getQuotes().collect { result ->
+                when (result) {
                     is Result.Error -> {
-                        Log.i("data", "data..........e"+result.message)
+                        Log.i("data", "data..........e" + result.message)
                         state = state.copy(isLoadingQuotes = false, errorQuote = result.message)
                     }
+
                     is Result.Loading -> {
                         Log.i("data", "data..........l")
                         state = state.copy(isLoadingQuotes = true)
                     }
+
                     is Result.Success -> {
-                        val modelList: ArrayList<String> = ArrayList()
+                        val modelList: ArrayList<ImageGrid> = ArrayList()
                         result.data?.let {
                             for (obj in it.keys) {
-                                modelList.add(obj)
+                                modelList.add(ImageGrid(title = obj))
                             }
                             state = state.copy(isLoadingQuotes = false, quotesTitles = modelList)
-                            Log.i("data", "data..........d"+it.size)
-
+                            Log.i("data", "data..........d" + it.size)
+                            state = state.copy(isLoadingQuotes = false, quotesMap = it)
                         }
-                        Log.i("data", "data..........S"+modelList.size)
 
                     }
                 }
@@ -92,5 +98,37 @@ class DiscoveryViewModel @Inject constructor(
             }
         }
 
+    }
+
+    private fun getStatusImages() {
+        viewModelScope.launch {
+            repository.getStatusImages().collect { result ->
+                when (result) {
+                    is Result.Error -> {
+                        state = state.copy(
+                            errorStatus = result.message,
+                            isLoadingStatus = false
+                        )
+                    }
+
+                    is Result.Loading -> {
+                        state = state.copy(isLoadingStatus = true)
+                    }
+
+                    is Result.Success -> {
+                        result.data?.let { data ->
+                            val list = ArrayList<StatusImagesModel>()
+                            for ((_, value) in data) {
+                                list.add(value)
+                            }
+                            state = state.copy(
+                                statusList = list,
+                                isLoadingStatus = false
+                            )
+                        }
+                    }
+                }
+            }
+        }
     }
 }

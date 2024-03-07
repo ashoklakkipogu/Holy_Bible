@@ -8,6 +8,8 @@ import com.ashok.myapplication.data.local.entity.LyricsModel
 const val BOOK_ID = "BOOK_ID"
 const val CHAPTER_ID = "CHAPTER_ID"
 const val LYRIC_OBJ = "LYRIC_OBJ"
+const val IMAGE_GRID = "IMAGE_GRID"
+const val QUOTES_OBJ = "QUOTES_OBJ"
 
 sealed class Route(var router: String, var title: String, @DrawableRes val icon: Int) {
     /*object Bible : Screens("Bible?scrollId={$SCROLL_ID}", "Bible", R.drawable.menu_book){
@@ -23,6 +25,9 @@ sealed class Route(var router: String, var title: String, @DrawableRes val icon:
     object LyricDetails : Route("LyricDetails", "LyricDetails", R.drawable.lyrics_24)
 
     object Discovery : Route("Discovery", "Discovery", R.drawable.search_24)
+    object DiscoveryGridDetails : Route("DiscoveryGridDetails", "DiscoveryGridDetails", R.drawable.search_24)
+    object DiscoveryStoryDetails : Route("DiscoveryStoryDetails", "DiscoveryStoryDetails", R.drawable.search_24)
+    object DiscoveryTopicDetails : Route("DiscoveryTopicDetails", "DiscoveryTopicDetails", R.drawable.search_24)
     object More : Route("More", "More", R.drawable.more_24)
 
     object DashboardRoute : Route("dashboard", "dashboard", R.drawable.menu_book)

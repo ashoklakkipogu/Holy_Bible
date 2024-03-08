@@ -1,5 +1,6 @@
 package com.ashok.myapplication.ui.dashboard
 
+import android.content.Context
 import com.ashok.myapplication.data.local.entry.BibleModelEntry
 
 sealed class DashboardUiEvent {
@@ -15,4 +16,9 @@ sealed class DashboardUiEvent {
     ) : DashboardUiEvent()
 
     data class ExpandedState(val expandedState: String = "") : DashboardUiEvent()
+    data class TextSpeechPlay(
+        val playingText: String,
+    ) : DashboardUiEvent()
+
+    object TextSpeechStop : DashboardUiEvent()
 }

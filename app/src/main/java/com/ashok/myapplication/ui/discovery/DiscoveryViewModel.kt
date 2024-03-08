@@ -51,14 +51,17 @@ class DiscoveryViewModel @Inject constructor(
 
                     is Result.Success -> {
                         val modelList: ArrayList<ImageGrid> = ArrayList()
-                        result.data?.let {
-                            for (obj in it.keys) {
+                        val data = result.data
+                        if (data != null) {
+                            for (obj in data.keys) {
                                 modelList.add(ImageGrid(title = obj))
                             }
                             state = state.copy(isLoadingQuotes = false, quotesTitles = modelList)
-                            Log.i("data", "data..........d" + it.size)
-                            state = state.copy(isLoadingQuotes = false, quotesMap = it)
+                            state = state.copy(isLoadingQuotes = false, quotesMap = data)
+                        } else {
+                            state = state.copy(isLoadingQuotes = false)
                         }
+
 
                     }
                 }
@@ -83,7 +86,8 @@ class DiscoveryViewModel @Inject constructor(
                     }
 
                     is Result.Success -> {
-                        result.data?.let { data ->
+                        val data = result.data
+                        if (data != null) {
                             val list = ArrayList<StoryModel>()
                             for ((_, value) in data) {
                                 list.add(value)
@@ -92,7 +96,12 @@ class DiscoveryViewModel @Inject constructor(
                                 storyList = list,
                                 isLoadingStory = false
                             )
+                        } else {
+                            state = state.copy(
+                                isLoadingStory = false
+                            )
                         }
+
                     }
                 }
             }
@@ -116,13 +125,18 @@ class DiscoveryViewModel @Inject constructor(
                     }
 
                     is Result.Success -> {
-                        result.data?.let { data ->
+                        val data = result.data
+                        if (data != null) {
                             val list = ArrayList<StatusImagesModel>()
                             for ((_, value) in data) {
                                 list.add(value)
                             }
                             state = state.copy(
                                 statusList = list,
+                                isLoadingStatus = false
+                            )
+                        } else {
+                            state = state.copy(
                                 isLoadingStatus = false
                             )
                         }

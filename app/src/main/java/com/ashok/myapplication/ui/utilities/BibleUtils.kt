@@ -1,13 +1,17 @@
 package com.ashok.myapplication.ui.utilities
 
+import android.R.attr.bitmap
+import android.app.Activity
+import android.content.ActivityNotFoundException
 import android.content.ClipData
 import android.content.ClipboardManager
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.os.Build
-import android.text.Html
-import android.text.Spanned
-import android.view.View
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
+import android.provider.MediaStore
 import android.widget.Toast
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.text.InlineTextContent
@@ -18,21 +22,24 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.text.PlaceholderVerticalAlign
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.util.fastForEach
+import androidx.core.app.ShareCompat
+import androidx.core.content.ContextCompat.startActivity
 import com.ashok.myapplication.R
 import com.ashok.myapplication.data.AppConstants
-import com.ashok.myapplication.data.local.dao.BibleIndexDao
-import com.ashok.myapplication.data.local.entity.QuotesModel
 import com.ashok.myapplication.data.local.entry.BibleIndexModelEntry
 import com.ashok.myapplication.data.local.entry.BibleModelEntry
 import java.io.BufferedReader
 import java.io.IOException
+import java.io.InputStreamReader
+import java.net.HttpURLConnection
+import java.net.URL
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Calendar
 
+
 object BibleUtils {
-    suspend fun getJsonDataFromAsset(context: Context, fileName: String): String? {
+    /*suspend fun getJsonDataFromAsset(context: Context, fileName: String): String? {
         val jsonString: String
         try {
             jsonString = context.assets.open(fileName).bufferedReader().use { it.readText() }
@@ -41,12 +48,41 @@ object BibleUtils {
             return null
         }
         return jsonString
+    }*/
+
+
+
+    fun getJsonDataFromUrl(url:String):String {
+        val obj = URL(url)
+
+        with(obj.openConnection() as HttpURLConnection) {
+            // optional default is GET
+            requestMethod = "GET"
+
+            println("\nSending 'GET' request to URL : $url")
+            println("Response Code : $responseCode")
+
+            BufferedReader(InputStreamReader(inputStream)).use {
+                val response = StringBuffer()
+
+                var inputLine = it.readLine()
+                while (inputLine != null) {
+                    response.append(inputLine)
+                    inputLine = it.readLine()
+                }
+                return response.toString()
+                println("GET Response : " + response.toString())
+            }
+        }
     }
 
+
     fun getBibleIndex(context: Context, langaue: String): ArrayList<BibleIndexModelEntry> {
-        val bufferedReader: BufferedReader =
+        val url ="https://firebasestorage.googleapis.com/v0/b/bible-8bdba.appspot.com/o/bibledb%2F$langaue%2Fbooks.h?alt=media&token=d0540dcc-8c45-4ca6-8a7d-225cea539319"
+        val inputString =  getJsonDataFromUrl(url)
+        /*val bufferedReader: BufferedReader =
             context.assets.open("books.h").bufferedReader()
-        val inputString = bufferedReader.use { it.readText() }
+        val inputString = bufferedReader.use { it.readText() }*/
         println(inputString)
         val bibleIndex = inputString.replace("Books[] = ", "").replace("{", "").replace("};", "")
             .replace("\"", "")
@@ -158,14 +194,13 @@ object BibleUtils {
         Toast.makeText(context, "Copied", Toast.LENGTH_SHORT).show()
     }
 
-    fun onClickShare({
-        shareText(context, "$des - \n $title")
-
-    }
+    fun onClickShare(
         context: Context,
         title: String?,
         des: String?
-    )
+    ) {
+        shareText(context, "$des - \n $title")
+    }
 
     fun onClickCopy(
         context: Context,
@@ -179,6 +214,76 @@ object BibleUtils {
     fun htmlToPlainText(html: String): String {
         val regex = "<[^>]*>".toRegex()
         return regex.replace(html, "")
+    }
+
+    fun getBitmapFromURL(src: String?): Bitmap? {
+        return try {
+            val url = URL(src)
+            val connection =
+                url.openConnection() as HttpURLConnection
+            connection.doInput = true
+            connection.connect()
+            val input = connection.inputStream
+            BitmapFactory.decodeStream(input)
+        } catch (e: IOException) {
+            e.printStackTrace()
+            null
+        }
+    }
+
+    fun goToPlayStore(activity: Context) {
+        val playStoreMarketUrl = "market://details?id="
+        val playStoreWebUrl = "https://play.google.com/store/apps/details?id="
+        val packageName: String = activity.packageName
+        try {
+            var intent: Intent =
+                activity.packageManager.getLaunchIntentForPackage("com.android.vending")!!
+            if (intent != null) {
+                val androidComponent = ComponentName(
+                    "com.android.vending",
+                    "com.google.android.finsky.activities.LaunchUrlHandlerActivity"
+                )
+                intent.component = androidComponent
+                intent.data = Uri.parse(playStoreMarketUrl + packageName)
+            } else {
+                intent = Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse(playStoreMarketUrl + packageName)
+                )
+            }
+            activity.startActivity(intent)
+        } catch (e: ActivityNotFoundException) {
+            val intent =
+                Intent(Intent.ACTION_VIEW, Uri.parse(playStoreWebUrl + packageName))
+            activity.startActivity(intent)
+        }
+    }
+
+    fun shareApp(activity: Activity) {
+        try {
+            ShareCompat.IntentBuilder.from(activity)
+                .setType("text/plain")
+                .setChooserTitle("Chooser title")
+                .setText("http://play.google.com/store/apps/details?id=" + activity.packageName)
+                .startChooser();
+
+        } catch (e: Exception) { //e.toString();
+        }
+
+
+    }
+
+    fun sendMail(activity: Context) {
+        try {
+            val email = Intent(Intent.ACTION_SEND)
+            email.putExtra(Intent.EXTRA_EMAIL, arrayOf(AppConstants.EMAIL))
+            email.putExtra(Intent.EXTRA_SUBJECT, AppConstants.SUBJECT)
+            email.putExtra(Intent.EXTRA_TEXT, android.R.id.message)
+            email.type = "message/rfc822"
+            activity.startActivity(Intent.createChooser(email, "Choose an Email client :"))
+
+        } catch (e: Exception) { //e.toString();
+        }
     }
 
 }

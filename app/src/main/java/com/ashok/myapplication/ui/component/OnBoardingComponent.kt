@@ -1,5 +1,6 @@
 package com.ashok.myapplication.ui.component
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -33,19 +35,21 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ashok.myapplication.R
+import com.ashok.myapplication.data.AppConstants
 import com.ashok.myapplication.ui.viewmodel.OnBoardingViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OnBoardingComponent(
-    onClick: () -> Unit
+    onClick: (name: String, language: String) -> Unit
 ) {
     var userName by remember {
         mutableStateOf("")
     }
+    val context = LocalContext.current
     var expanded by remember { mutableStateOf(false) }
-    val options = listOf("Telugu", "Option 2", "Option 3", "Option 4", "Option 5")
-    var selectedOptionText by remember { mutableStateOf(options[0]) }
+    val languages = AppConstants.LANGUAGES
+    var selectedOptionText by remember { mutableStateOf(languages[0]) }
 
 
     Box(
@@ -113,11 +117,11 @@ fun OnBoardingComponent(
                             expanded = false
                         }
                     ) {
-                        options.forEach {
+                        languages.forEach {
                             DropdownMenuItem(
-                                text = { Text(text = selectedOptionText) },
+                                text = { Text(text = it) },
                                 onClick = {
-                                    selectedOptionText = selectedOptionText
+                                    selectedOptionText = it
                                     expanded = false
                                 },
                                 contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
@@ -128,10 +132,14 @@ fun OnBoardingComponent(
                 }
                 Spacer(modifier = Modifier.height(20.dp))
                 Button(
-                    onClick = { onClick.invoke() },
+                    onClick = {
+                        if (userName.isBlank()) {
+                            Toast.makeText(context, "Please enter name", Toast.LENGTH_SHORT).show()
+                        } else
+                            onClick.invoke(userName, selectedOptionText)
+                    },
                     modifier = Modifier.fillMaxWidth(),
-
-                    ) {
+                ) {
                     Text(
                         text = "Get Started", color = Color.White, fontSize = 16.sp
                     )
@@ -145,5 +153,7 @@ fun OnBoardingComponent(
 @Preview
 @Composable
 fun OnBoardingPreview() {
-    OnBoardingComponent {}
+    OnBoardingComponent() { _, _ ->
+
+    }
 }

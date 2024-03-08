@@ -7,8 +7,8 @@ import com.ashok.myapplication.data.local.model.FavModel
 
 @Dao
 interface FavoriteDao {
-    @Query("SELECT bible.Book, bible.Chapter, bible.Versecount, bible.verse,bible.langauge,bible.bibleIndex, favorite.createdDate, favorite.bibleId, favorite.bibleLangIndex, favorite.id FROM favorite LEFT JOIN bible ON bible.id = favorite.bibleId")
-    suspend fun getAllFavorites(): List<FavModel>?
+    @Query("SELECT bible.Book, bible.Chapter, bible.Versecount, bible.verse,bible.langauge,bible.bibleIndex, favorite.createdDate, favorite.bibleId, favorite.bibleLangIndex, favorite.id FROM favorite LEFT JOIN bible ON bible.id = favorite.bibleId WHERE favorite.langauge=:language")
+    suspend fun getAllFavorites(language:String): List<FavModel>?
 
     @Query("SELECT * FROM favorite")
     suspend fun getAllFavoritesList(): List<FavoriteModelEntry>

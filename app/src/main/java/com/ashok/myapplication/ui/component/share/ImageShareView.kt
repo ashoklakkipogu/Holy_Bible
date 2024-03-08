@@ -376,12 +376,12 @@ private fun DraggableTextLowLevel(
                 fontSize = textSize.sp,
                 lineHeight = textLineHeight.sp,
                 textDecoration = if (textUnder.isNotBlank() && textUnder == "underline") TextDecoration.Underline else TextDecoration.None,
-                color = if (textColor.isNotBlank()) Color(textColor.toColorInt()) else Color.White,
+                color = if (textColor.isNotBlank()) Color(textColor.toColorInt()).copy(textAlpha) else Color.White.copy(textAlpha),
                 letterSpacing = if (textSpace > 0) textSpace.sp else TextUnit.Unspecified,
                 modifier = Modifier
                     .padding(10.dp)
                     .align(textPos)
-                    .alpha(textAlpha)
+                    //.alpha(textAlpha)
                     .offset { IntOffset(offsetX.roundToInt(), offsetY.roundToInt()) }
                     .pointerInput(Unit) {
                         detectDragGestures { change, dragAmount ->

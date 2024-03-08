@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -18,7 +20,9 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavController
 import com.ashok.myapplication.ui.bibleindex.components.ExpandableCard
 import com.ashok.myapplication.ui.bibleindex.components.SearchBarView
@@ -42,6 +46,11 @@ fun BibleIndexScreen(
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
 
+    DisposableEffect(Unit) {
+        onDispose {
+            event(DashboardUiEvent.TextSpeechStop)
+        }
+    }
     Column(
         modifier = Modifier
             .background(color = Color.White)
@@ -111,11 +120,12 @@ fun BibleIndexScreen(
                             data = dataItem,
                             onClick = {
                                 event(DashboardUiEvent.ExpandedState(it.chapter))
-                               // state.expandedState = it.chapter
-
                             },
                             onClickIndex = {bookId, chapterId->
                                 navController.navigate(route = Route.BibleIndexDetails.getFullRoute(bookId = bookId, chapterId = chapterId))
+                            },
+                            onSoundClick = {
+                                event(DashboardUiEvent.TextSpeechPlay(it))
                             }
                         )
                         Spacer(modifier = Modifier.height(8.dp))

@@ -34,10 +34,12 @@ class DbRepoImp @Inject constructor(
         chapterId: Int,
         verseId: Int
     ): Flow<Result<BibleModelEntry>> = wrap {
+        val language = SharedPrefUtils.getLanguage(pref)!!
         bibleDao.getBibleScrollPosition(
             bookId,
             chapterId,
-            verseId
+            verseId,
+            language
         )
     }
 
@@ -47,16 +49,12 @@ class DbRepoImp @Inject constructor(
         chapterId: Int
     ): Flow<Result<List<BibleModelEntry>>> = wrap {
         val language = SharedPrefUtils.getLanguage(pref)!!
-        Log.i("bibleData", "bibleData......l" + language)
         var data = bibleDao.getBibleListByBookIdAndChapterId(bookId, chapterId, language)
-        Log.i("bibleData", "bibleData......d" + data?.size)
-
-
         if (data.isNullOrEmpty()) {
             if (clickAction == "LEFT" && bookId != 1 && chapterId != 1) {
                 val lastPos = bibleDao.getBibleScrollLastPosition(bookId - 1)
                 if (lastPos != null)
-                    data =bibleDao.getBibleListByBookIdAndChapterId(
+                    data = bibleDao.getBibleListByBookIdAndChapterId(
                         lastPos.Book,
                         lastPos.Chapter,
                         language
@@ -70,10 +68,18 @@ class DbRepoImp @Inject constructor(
     }
 
     override suspend fun getAllNotes(): Flow<Result<List<NoteModel>>> =
-        wrap { noteDao.getAllNote()?.sortedBy { sort -> sort.createdDate }?.reversed() }
+        wrap {
+            val language = SharedPrefUtils.getLanguage(pref)!!
+            noteDao.getAllNote(language)?.sortedBy { sort ->
+                sort.createdDate
+            }?.reversed()
+        }
 
     override suspend fun getAllFav(): Flow<Result<List<FavModel>>> =
-        wrap { favoriteDao.getAllFavorites()?.sortedBy { sort -> sort.createdDate }?.reversed() }
+        wrap {
+            val language = SharedPrefUtils.getLanguage(pref)!!
+            favoriteDao.getAllFavorites(language)?.sortedBy { sort -> sort.createdDate }?.reversed()
+        }
 
 
     override suspend fun getBibleIndex(): Flow<Result<List<BibleIndexModelEntry>>> = wrap {
@@ -81,8 +87,16 @@ class DbRepoImp @Inject constructor(
         bibleIndexDao.getAllBibleIndexContent(language)
     }
 
+    override suspend fun getLanguage(): Flow<Result<List<BibleIndexModelEntry>>> = wrap {
+        val language = SharedPrefUtils.getLanguage(pref)!!
+        bibleIndexDao.getLanguage(language)
+    }
+
     override suspend fun getAllHighlights(): Flow<Result<List<HighlightModel>>> =
-        wrap { highlightDao.getAllHighlight()?.sortedBy { sort -> sort.createdDate }?.reversed() }
+        wrap {
+            val language = SharedPrefUtils.getLanguage(pref)!!
+            highlightDao.getAllHighlight(language)?.sortedBy { sort -> sort.createdDate }?.reversed()
+        }
 
     override suspend fun getBibleVerseByBookIdAndChapterId(
         bookId: Int,

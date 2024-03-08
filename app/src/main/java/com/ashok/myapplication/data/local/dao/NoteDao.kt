@@ -8,8 +8,8 @@ import com.ashok.myapplication.data.local.model.NoteModel
 
 @Dao
 interface NoteDao {
-    @Query("SELECT bible.Book, bible.Chapter, bible.Versecount, bible.verse,bible.langauge,bible.bibleIndex, note.createdDate, note.noteName, note.bibleId, note.bibleLangIndex, note.id FROM note LEFT JOIN bible ON bible.id = note.bibleId")
-    suspend fun getAllNote(): List<NoteModel>?
+    @Query("SELECT bible.Book, bible.Chapter, bible.Versecount, bible.verse,bible.langauge,bible.bibleIndex, note.createdDate, note.noteName, note.bibleId, note.bibleLangIndex, note.id FROM note LEFT JOIN bible ON bible.id = note.bibleId WHERE note.langauge=:language")
+    suspend fun getAllNote(language:String): List<NoteModel>?
 
     @Query("SELECT * FROM note")
     suspend fun  getAllNoteList(): List<NoteModelEntry>

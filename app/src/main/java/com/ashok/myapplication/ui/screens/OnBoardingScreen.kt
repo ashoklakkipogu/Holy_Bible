@@ -49,7 +49,7 @@ fun OnBoarding(
         mutableStateOf("")
     }
     var expanded by remember { mutableStateOf(false) }
-    val options = listOf("Option 1", "Option 2", "Option 3", "Option 4", "Option 5")
+    val options = listOf("English", "Telugu", "Tamil", "Hindi", "Kannada")
     var selectedOptionText by remember { mutableStateOf(options[0]) }
 
 
@@ -105,7 +105,7 @@ fun OnBoarding(
                         colors = OutlinedTextFieldDefaults.colors(
                             unfocusedBorderColor = Color.White,
                             unfocusedTrailingIconColor = Color.White,
-                            unfocusedTextColor = Color.White
+                            unfocusedTextColor = Color.White,
                         ),
                         trailingIcon = {
                             ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)

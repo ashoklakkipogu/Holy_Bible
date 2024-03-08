@@ -19,11 +19,12 @@ interface BibleDao {
     @Query("SELECT * FROM bible WHERE Book =:bookId AND langauge =:langauge")
     suspend fun getBibleChaptersByBookIdAndLangauge(bookId: Int, langauge:String): List<BibleModelEntry>
 
-    @Query("SELECT * FROM bible WHERE Book = :bookId AND Chapter =:chapterId AND Versecount = :verseId")
+    @Query("SELECT * FROM bible WHERE Book = :bookId AND Chapter =:chapterId AND Versecount = :verseId AND langauge =:language")
     suspend fun getBibleScrollPosition(
         bookId: Int,
         chapterId: Int,
-        verseId: Int
+        verseId: Int,
+        language:String
     ): BibleModelEntry?
 
     @Query("SELECT * FROM bible WHERE book = :bookId ORDER BY chapter DESC LIMIT 1")

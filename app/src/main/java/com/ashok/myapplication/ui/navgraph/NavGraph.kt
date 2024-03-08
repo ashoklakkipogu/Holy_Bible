@@ -34,6 +34,7 @@ import com.ashok.myapplication.ui.discovery.DiscoveryTopicDetailsScreen
 import com.ashok.myapplication.ui.discovery.model.ImageGrid
 import com.ashok.myapplication.ui.utilities.sharedViewModel
 import com.ashok.myapplication.ui.viewmodel.SharedViewModel
+import com.ashok.myapplication.ui.viewmodel.SplashViewModel
 
 
 @Composable
@@ -160,13 +161,16 @@ fun NavGraph(
                 DiscoveryTopicDetailsScreen(
                     title = title.value,
                     state.value,
+                    homeEvent = homeViewModel::onEvent,
                     onBackPress = {
                         navController.popBackStack()
                     }
                 )
             }
             composable(Route.More.router) {
-                ProfileScreen(navController)
+                val viewModel: SplashViewModel = hiltViewModel()
+                val state = viewModel.state
+                ProfileScreen(state = state, homeState = homeViewModel.state, event= viewModel::onEvent)
             }
             composable(Route.BibleIndex.router) {
                 val state: DashboardUiState = homeViewModel.state

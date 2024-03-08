@@ -9,9 +9,15 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.ashok.myapplication.MainActivity
+import com.ashok.myapplication.ui.common.LoadingDialog
 import com.ashok.myapplication.ui.component.OnBoardingComponent
+import com.ashok.myapplication.ui.onboarding.OnboardingUIEvent
 import com.ashok.myapplication.ui.theme.BibleTheme
 import com.ashok.myapplication.ui.utilities.Result
 import com.ashok.myapplication.ui.viewmodel.SplashViewModel
@@ -24,29 +30,8 @@ class SplashActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (viewModel.isFirstTime()) {
-            startActivity(Intent(this, MainActivity::class.java))
-            finish()
-        }
-        viewModel.bibleInsert.observe(this) { state ->
-            when (state) {
-                is Result.Loading -> {
-                    Log.d("userApi", "Loading.......")
 
-                }
 
-                is Result.Success -> {
-                    Log.d("userApi", "success......." + state.data)
-                    startActivity(Intent(this@SplashActivity, MainActivity::class.java))
-                    finish()
-                }
-
-                is Result.Error -> {
-                    //Log.d("userApi", "error......." + state.error)
-
-                }
-            }
-        }
 
         setContent {
             BibleTheme {
@@ -54,8 +39,24 @@ class SplashActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    OnBoardingComponent {
-                        viewModel.insertBible(this, langauge = "Telugu")
+                    val event = viewModel::onEvent
+                    val state = viewModel.state
+                    event(OnboardingUIEvent.OnEventIsFirstTime)
+                    var showDialog by remember { mutableStateOf(false) }
+                    if (state.isLoading) {
+                        showDialog = true
+                    }
+                    if (state.isBibleInserted || state.isFirstTime) {
+                        startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+                        finish()
+                    }
+                    if (showDialog) {
+                        LoadingDialog {
+                            showDialog = false
+                        }
+                    }
+                    OnBoardingComponent { userName, langauge ->
+                        event(OnboardingUIEvent.InsertBible(langauge = langauge))
                     }
                 }
             }

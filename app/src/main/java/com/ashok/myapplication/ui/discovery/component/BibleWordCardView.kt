@@ -19,6 +19,10 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -31,7 +35,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ashok.myapplication.R
 import com.ashok.myapplication.ui.component.HtmlText
+import com.ashok.myapplication.ui.dashboard.DashboardUiEvent
+import com.ashok.myapplication.ui.dashboard.DashboardUiState
 import com.ashok.myapplication.ui.utilities.BibleUtils
+import com.ashok.myapplication.ui.utilities.BibleUtils.htmlToPlainText
 import com.ashok.myapplication.ui.utilities.RandomColors
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -39,16 +46,24 @@ import com.ashok.myapplication.ui.utilities.RandomColors
 fun BibleWordCardView(
     heading: String? = null,
     title: String? = null,
-    des: String? = null
+    des: String? = null,
+    color: Int,
+    isSelectedIndex: Boolean,
+    homeEvent: (DashboardUiEvent) -> Unit,
+    onMicClick: () -> Unit
 ) {
     val context = LocalContext.current
+
+    /*var micIconToggle by remember {
+        mutableStateOf(false)
+    }*/
 
     ElevatedCard(
         modifier = Modifier
             .padding(4.dp)
             .fillMaxWidth(),
         colors = CardDefaults.cardColors(
-            containerColor = Color(RandomColors.color)
+            containerColor = Color(color)
         ),
         elevation = CardDefaults.cardElevation(
             defaultElevation = 2.dp
@@ -125,8 +140,20 @@ fun BibleWordCardView(
                 Image(
                     modifier = Modifier
                         .size(30.dp)
-                        .clickable { },
-                    painter = painterResource(android.R.drawable.ic_lock_silent_mode_off),
+                        .clickable {
+                            onMicClick.invoke()
+                            if (!isSelectedIndex)
+                                homeEvent(
+                                    DashboardUiEvent.TextSpeechPlay(
+                                        htmlToPlainText("$title - \n $des")
+                                    )
+                                )
+                            else
+                                homeEvent(DashboardUiEvent.TextSpeechStop)
+                        },
+                    painter = if (isSelectedIndex) painterResource(R.drawable.ic_stop_icon) else painterResource(
+                        android.R.drawable.ic_lock_silent_mode_off
+                    ),
                     contentDescription = "share",
                 )
             }
@@ -140,5 +167,12 @@ fun BibleWordCardView(
 @Composable
 @Preview
 fun BibleWordCardViewPreview() {
-    BibleWordCardView(heading = "Heading", title = "Title", des = "desc")
+    BibleWordCardView(
+        heading = "Heading",
+        title = "Title",
+        des = "desc",
+        color = RandomColors.color,
+        isSelectedIndex = false,
+        {}, {}
+    )
 }

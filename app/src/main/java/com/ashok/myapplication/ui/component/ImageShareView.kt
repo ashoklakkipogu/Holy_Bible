@@ -37,7 +37,8 @@ import com.ashok.myapplication.R
 
 @Composable
 fun ImageShare(
-    image:String
+    image:String,
+    onShareClick:(String)->Unit
 ) {
     Box (
 
@@ -60,7 +61,7 @@ fun ImageShare(
                 .align(Alignment.BottomEnd)
                 .padding(8.dp)
                 .alpha(0.9f),
-            onClick = { },
+            onClick = { onShareClick.invoke(image)},
             border = BorderStroke(1.dp, colorResource(id = R.color.colorAccent)),
             colors = ButtonDefaults.buttonColors(containerColor = Color.White)
 
@@ -82,5 +83,5 @@ fun ImageShare(
 @Composable
 @Preview
 fun ImageSharePreview() {
-    ImageShare("https://www.bible.com/w_next/image?url=https%3A%2F%2Fimageproxy.youversionapi.com%2Fhttps%3A%2F%2Fs3.amazonaws.com%2Fyvplans%2F16431%2F1280x720.jpg&w=1920&q=75")
+    ImageShare("https://www.bible.com/w_next/image?url=https%3A%2F%2Fimageproxy.youversionapi.com%2Fhttps%3A%2F%2Fs3.amazonaws.com%2Fyvplans%2F16431%2F1280x720.jpg&w=1920&q=75"){}
 }

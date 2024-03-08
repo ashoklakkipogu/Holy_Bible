@@ -11,6 +11,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ashok.myapplication.ui.bibleindex.components.TopAppBarView
@@ -22,7 +23,9 @@ import com.ashok.myapplication.ui.discovery.component.CardShimmer
 import com.ashok.myapplication.ui.discovery.component.QuotesShimmer
 import com.ashok.myapplication.ui.discovery.model.ImageGrid
 import com.ashok.myapplication.ui.theme.BibleTheme
+import com.ashok.myapplication.ui.utilities.BibleUtils
 import com.ashok.myapplication.ui.utilities.RandomColors
+import com.ashok.myapplication.ui.utilities.ShareUtils
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -39,6 +42,8 @@ fun DiscoveryScreen(
         Surface(
             modifier = Modifier.fillMaxWidth(), color = MaterialTheme.colorScheme.background
         ) {
+            val context = LocalContext.current
+
             Column {
                 TopAppBarView("Discovery") {
                     onBackPress.invoke()
@@ -111,7 +116,9 @@ fun DiscoveryScreen(
                         items(state.statusList) { post ->
                             ImageShare(
                                 image = post.url
-                            )
+                            ){
+                                ShareUtils.shareUrl(context, it)
+                            }
                             Spacer(modifier = Modifier.height(10.dp))/*CardView(
                                 title = "",
                                 time = "12/12/2023",

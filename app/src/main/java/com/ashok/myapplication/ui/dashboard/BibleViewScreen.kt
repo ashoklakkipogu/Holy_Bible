@@ -15,7 +15,7 @@ import com.ashok.myapplication.data.local.entry.BibleModelEntry
 import com.ashok.myapplication.ui.activity.ShareImageActivity
 import com.ashok.myapplication.ui.component.InputDialogView
 import com.ashok.myapplication.ui.dashboard.component.BibleVerseList
-import com.ashok.myapplication.ui.dashboard.component.bottomSheet
+import com.ashok.myapplication.ui.dashboard.component.BottomSheet
 import com.ashok.myapplication.ui.dashboard.DashboardUiEvent
 import com.ashok.myapplication.ui.dashboard.DashboardUiState
 import com.ashok.myapplication.ui.navgraph.HomeTopView
@@ -54,7 +54,7 @@ fun BibleViewScreen(
     }
 
     if (showSheet) {
-        bottomSheet(
+        BottomSheet(
             selectedBible = selectedBible.selectedBackground,
             isBookMark = selectedBible.isBookMark,
             isNote = selectedBible.isNote,
@@ -97,9 +97,16 @@ fun BibleViewScreen(
             onGridImgClick = {
                 val intent = Intent(context, ShareImageActivity::class.java)
                 intent.putExtra("selected_image", it)
-                intent.putExtra("selected_title", selectedBible.verse)
+                val str = "${selectedBible.verse} \n ${selectedBible.bibleIndex} ${selectedBible.Chapter}:${selectedBible.Versecount}"
+                intent.putExtra("selected_title", str)
                 context.startActivity(intent)
+            },
+            onSoundClick = {
+                val str = "${selectedBible.bibleIndex} ${selectedBible.Chapter} ${selectedBible.Versecount} \n ${selectedBible.verse}"
+                event(DashboardUiEvent.TextSpeechPlay(str))
             })
+    } else {
+        event(DashboardUiEvent.TextSpeechStop)
     }
 
     if (showNoteDialog) {

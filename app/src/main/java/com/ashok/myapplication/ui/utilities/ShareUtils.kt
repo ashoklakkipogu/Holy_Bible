@@ -3,16 +3,22 @@ package com.ashok.myapplication.ui.utilities
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Environment
 import androidx.core.content.FileProvider
 import com.ashok.myapplication.R
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.OutputStream
 import java.lang.Exception
+import java.net.HttpURLConnection
+import java.net.URL
 import java.text.SimpleDateFormat
 import java.util.Date
 
@@ -115,5 +121,27 @@ class ShareUtils {
                 e.printStackTrace()
             }
         }
+        fun shareUrl(context: Context, url: String){
+            CoroutineScope(Dispatchers.IO).launch {
+                val bitmap = getBitmapFromURL(url)
+                bitmap?.let { shareBitmap(context, it) }
+            }
+        }
+        fun getBitmapFromURL(src: String?): Bitmap? {
+            return try {
+                val url = URL(src)
+                val connection =
+                    url.openConnection() as HttpURLConnection
+                connection.doInput = true
+                connection.connect()
+                val input = connection.inputStream
+                BitmapFactory.decodeStream(input)
+            } catch (e: IOException) {
+                e.printStackTrace()
+                null
+            }
+        }
     }
+
+
 }

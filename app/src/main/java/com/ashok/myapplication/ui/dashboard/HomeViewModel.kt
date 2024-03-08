@@ -1,6 +1,10 @@
 package com.ashok.myapplication.ui.dashboard
 
+import android.app.Application
+import android.content.Context
+import android.content.DialogInterface.OnClickListener
 import android.content.SharedPreferences
+import android.speech.tts.TextToSpeech
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -26,28 +30,40 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableIntStateOf
+import com.ashok.myapplication.data.AppConstants
 import com.ashok.myapplication.data.local.entry.BibleIndexModelEntry
 import com.ashok.myapplication.ui.dashboard.DashboardUiEvent
 import com.ashok.myapplication.ui.dashboard.DashboardUiState
 import com.ashok.myapplication.ui.lyric.LyricState
 import com.ashok.myapplication.ui.utilities.BibleUtils
 import com.ashok.myapplication.ui.utilities.SharedPrefUtils
+import com.ashok.myapplication.ui.utilities.TtsManager
 import com.ashok.myapplication.ui.utilities.favDelete
 import com.ashok.myapplication.ui.utilities.highlightDelete
+import java.util.Locale
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     val dbRepo: DbRepository,
-    val pref: SharedPreferences
+    val pref: SharedPreferences,
+    val application: Application
 ) :
     ViewModel() {
 
     var state by mutableStateOf(DashboardUiState())
+    private var ttsManager: TtsManager? = null
 
 
     init {
         getBibleActionForLeftRight()
         getBibleIndex()
+        ttsManager = TtsManager(application)
+        getSelectedLanguge()
+    }
+
+    private fun getSelectedLanguge() {
+        val lang = SharedPrefUtils.getLanguage(pref)
+        lang?.let { state = state.copy(selectedLanguage = it) }
     }
 
     fun onEvent(event: DashboardUiEvent) {
@@ -107,6 +123,14 @@ class HomeViewModel @Inject constructor(
                     event.chapterId,
                     event.isScrollTop
                 )
+            }
+
+            is DashboardUiEvent.TextSpeechPlay -> {
+                ttsManager?.say(event.playingText)
+            }
+
+            DashboardUiEvent.TextSpeechStop -> {
+                ttsManager?.stop()
             }
         }
     }
@@ -297,6 +321,40 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    //var expandedState by mutableStateOf("")
+    /*fun textToSpeech(context: Context, playingText: String?, onStop: () -> Unit) {
+        textToSpeech = TextToSpeech(
+            context
+        ) {
+            if (it == TextToSpeech.SUCCESS) {
+                textToSpeech?.let { txtToSpeech ->
+                    //txtToSpeech.language = Locale.US
+                    txtToSpeech.language = Locale("te_IN")
+                    txtToSpeech.setSpeechRate(1.0f)
+                    if (playingText != null) {
+                        txtToSpeech.speak(
+                            playingText,
+                            TextToSpeech.QUEUE_FLUSH,
+                            null,
+                            null
+                        )
+                    }
+                }
+            }
+            if (it == TextToSpeech.STOPPED) {
+                onStop.invoke()
+            }
+        }
+    }
+
+    fun stopPlaying() {
+        textToSpeech?.stop()
+    }*/
+
+    override fun onCleared() {
+        super.onCleared()
+        ttsManager?.stop()
+        ttsManager?.shutDown()
+    }
+
 
 }

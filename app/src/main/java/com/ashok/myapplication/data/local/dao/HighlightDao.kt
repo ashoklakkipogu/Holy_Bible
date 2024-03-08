@@ -7,8 +7,8 @@ import com.ashok.myapplication.data.local.model.HighlightModel
 
 @Dao
 interface HighlightDao {
-    @Query("SELECT bible.Book, bible.Chapter, bible.Versecount, bible.verse,bible.langauge,bible.bibleIndex, highlights.createdDate, highlights.colorCode, highlights.bibleId, highlights.bibleLangIndex, highlights.id FROM highlights LEFT JOIN bible ON bible.id = highlights.bibleId")
-    suspend fun getAllHighlight(): List<HighlightModel>?
+    @Query("SELECT bible.Book, bible.Chapter, bible.Versecount, bible.verse,bible.langauge,bible.bibleIndex, highlights.createdDate, highlights.colorCode, highlights.bibleId, highlights.bibleLangIndex, highlights.id FROM highlights LEFT JOIN bible ON bible.id = highlights.bibleId WHERE highlights.langauge=:language")
+    suspend fun getAllHighlight(language:String): List<HighlightModel>?
 
     @Query("SELECT * FROM highlights")
     suspend fun  getAllHighlightList(): List<HighlightModelEntry>

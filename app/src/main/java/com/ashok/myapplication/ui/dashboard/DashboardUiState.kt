@@ -9,5 +9,6 @@ data class DashboardUiState(
     var isLoading:Boolean = false,
     var error:String? = null,
     var bibleScrollPos:Int = 0,
-    var expandedState:String = ""
+    var expandedState:String = "",
+    var selectedLanguage:String = ""
 )

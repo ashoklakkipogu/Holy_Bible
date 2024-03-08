@@ -30,6 +30,7 @@ interface DbRepository {
     ): Flow<Result<List<BibleModelEntry>>>
 
     suspend fun getBibleIndex(): Flow<Result<List<BibleIndexModelEntry>>>
+    suspend fun getLanguage(): Flow<Result<List<BibleIndexModelEntry>>>
 
 
     suspend fun deleteHighlightByBibleLangIndex(bibleLangIndex: String)

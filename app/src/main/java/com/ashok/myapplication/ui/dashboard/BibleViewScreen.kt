@@ -55,6 +55,7 @@ fun BibleViewScreen(
 
     if (showSheet) {
         BottomSheet(
+            state = state,
             selectedBible = selectedBible.selectedBackground,
             isBookMark = selectedBible.isBookMark,
             isNote = selectedBible.isNote,

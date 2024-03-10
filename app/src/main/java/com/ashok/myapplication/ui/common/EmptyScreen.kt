@@ -44,7 +44,7 @@ fun EmptyScreen(errorMessage: String? = null, error: LoadState.Error? = null) {
     }
 
     if (error == null && errorMessage == null) {
-        message = "You have not saved so far !"
+        message = "You have not saved so far!"
         icon = R.drawable.ic_search_document
     }
     errorMessage?.let {

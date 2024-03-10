@@ -35,7 +35,7 @@ class LyricViewModel @Inject constructor(
                 when (result) {
                     is Result.Error -> {
                         state = state.copy(
-                            error = result.message,
+                            error = result.apiError?.getErrorMessage(),
                             isLoading = false
                         )
                     }
@@ -45,18 +45,20 @@ class LyricViewModel @Inject constructor(
                     }
 
                     is Result.Success -> {
-                        result.data?.let { data ->
-                            val list = ArrayList<LyricsModel>()
+                        val data = result.data
+                        val list = ArrayList<LyricsModel>()
+                        if (data != null) {
                             for ((key, value) in data) {
                                 val sample: LyricsModel = value
                                 sample.lyricId = key
                                 list.add(sample)
                             }
-                            state = state.copy(
-                                lyric = list,
-                                isLoading = false
-                            )
                         }
+                        state = state.copy(
+                            lyric = list,
+                            isLoading = false
+                        )
+
                     }
                 }
             }

@@ -22,6 +22,7 @@ import androidx.compose.ui.text.input.KeyboardType
 
 @Composable
 fun SearchAppBar(
+    onSearValue: (String) -> Unit
 ) {
     // Immediately update and keep track of query from text field changes.
     var query: String by rememberSaveable { mutableStateOf("") }
@@ -36,9 +37,8 @@ fun SearchAppBar(
     TextField(
         value = query,
         onValueChange = { onQueryChanged ->
-            // If user makes changes to text, immediately updated it.
             query = onQueryChanged
-            // To avoid crash, only query when string isn't empty.
+            onSearValue.invoke(onQueryChanged)
             if (onQueryChanged.isNotEmpty()) {
                 // Pass latest query to refresh search results.
                 //viewModel.performQuery(onQueryChanged)
@@ -53,7 +53,10 @@ fun SearchAppBar(
         },
         trailingIcon = {
             if (showClearIcon) {
-                IconButton(onClick = { query = "" }) {
+                IconButton(onClick = {
+                    query = ""
+                    onSearValue.invoke(query)
+                }) {
                     Icon(
                         imageVector = Icons.Rounded.Clear,
                         tint = MaterialTheme.colorScheme.onBackground,

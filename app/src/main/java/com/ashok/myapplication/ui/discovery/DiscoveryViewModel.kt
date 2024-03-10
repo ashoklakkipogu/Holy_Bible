@@ -40,16 +40,18 @@ class DiscoveryViewModel @Inject constructor(
             repository.getQuotes().collect { result ->
                 when (result) {
                     is Result.Error -> {
-                        Log.i("data", "data..........e" + result.message)
-                        state = state.copy(isLoadingQuotes = false, errorQuote = result.message)
+                        //Log.i("data", "data..........e" + result.apiError?.getErrorMessage())
+                        state = state.copy(isLoadingQuotes = false, errorQuote = result.apiError?.getErrorMessage())
                     }
 
                     is Result.Loading -> {
-                        Log.i("data", "data..........l")
+                        //Log.i("data", "data..........l")
                         state = state.copy(isLoadingQuotes = true)
                     }
 
                     is Result.Success -> {
+                        //Log.i("data", "data..........s" + result.data.toString())
+
                         val modelList: ArrayList<ImageGrid> = ArrayList()
                         val data = result.data
                         if (data != null) {
@@ -76,7 +78,7 @@ class DiscoveryViewModel @Inject constructor(
                 when (result) {
                     is Result.Error -> {
                         state = state.copy(
-                            errorStory = result.message,
+                            errorStory = result.apiError?.getErrorMessage(),
                             isLoadingStory = false
                         )
                     }
@@ -87,17 +89,20 @@ class DiscoveryViewModel @Inject constructor(
 
                     is Result.Success -> {
                         val data = result.data
-                        if (data != null) {
+                        state = if (data != null) {
                             val list = ArrayList<StoryModel>()
                             for ((_, value) in data) {
                                 list.add(value)
                             }
-                            state = state.copy(
-                                storyList = list,
+                            val newList = list.sortedBy { sort ->
+                                sort.createdDate
+                            }.reversed()
+                            state.copy(
+                                storyList = newList,
                                 isLoadingStory = false
                             )
                         } else {
-                            state = state.copy(
+                            state.copy(
                                 isLoadingStory = false
                             )
                         }
@@ -115,7 +120,7 @@ class DiscoveryViewModel @Inject constructor(
                 when (result) {
                     is Result.Error -> {
                         state = state.copy(
-                            errorStatus = result.message,
+                            errorStatus = result.apiError?.getErrorMessage(),
                             isLoadingStatus = false
                         )
                     }
@@ -131,8 +136,11 @@ class DiscoveryViewModel @Inject constructor(
                             for ((_, value) in data) {
                                 list.add(value)
                             }
+                            val newList = list.sortedBy { sort ->
+                                sort.createdDate
+                            }.reversed()
                             state = state.copy(
-                                statusList = list,
+                                statusList = newList,
                                 isLoadingStatus = false
                             )
                         } else {

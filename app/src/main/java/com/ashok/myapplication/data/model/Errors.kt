@@ -1,4 +1,4 @@
-package com.ashok.myapplication.data.local.entity
+package com.ashok.myapplication.data.model
 
 open class Errors (
     var error: Error? = null

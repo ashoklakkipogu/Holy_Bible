@@ -40,12 +40,12 @@ class SharedViewModel @Inject constructor(
     }
 
     fun storeImageGridList(
-        storyList: List<StoryModel>? = null,
+        storyList: List<StoryModel?>? = null,
         quotesTitles: List<ImageGrid>? = null) {
         val imageGrid = ArrayList<ImageGrid>()
         if (storyList != null)
             for (obj in storyList) {
-                imageGrid.add(ImageGrid(image = obj.url, title = obj.title, des = obj.description))
+                imageGrid.add(ImageGrid(image = obj?.url, title = obj?.title, des = obj?.description))
             }
         if (quotesTitles != null) {
             imageGrid.addAll(quotesTitles)

@@ -3,13 +3,19 @@ package com.ashok.myapplication.ui.lyric
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import com.ashok.myapplication.data.AppConstants
 import com.ashok.myapplication.ui.common.EmptyScreen
 import com.ashok.myapplication.data.local.entity.LyricsModel
 import com.ashok.myapplication.ui.bibleindex.components.TopAppBarView
@@ -29,25 +35,33 @@ fun LyricScreen(
 ) {
 
     BibleTheme {
-
         Surface(
             modifier = Modifier.fillMaxWidth(),
             color = MaterialTheme.colorScheme.background
         ) {
+            var searchText by remember { mutableStateOf("") } // Query for SearchBar
+
             Column {
                 TopAppBarView("Lyric") {
                     onBackPress.invoke()
                 }
-                SearchAppBar()
+                SearchAppBar() {
+                    searchText = it
+                }
                 if (state.isLoading) {
                     ShimmerEffect()
                 }
                 if (state.error != null) {
                     EmptyScreen(errorMessage = state.error)
                 }
-                if (state.lyric.isNotEmpty()) {
-                    LyricList(state.lyric) {
-                        onClick.invoke(it)
+                val lyrics = state.lyric
+                if (lyrics != null) {
+                    if (lyrics.isNotEmpty()) {
+                        LyricList(lyrics, searchText) {
+                            onClick.invoke(it)
+                        }
+                    } else {
+                        EmptyScreen(errorMessage = AppConstants.NO_DATA_FOUND)
                     }
                 }
             }
@@ -57,16 +71,22 @@ fun LyricScreen(
 }
 
 @Composable
-fun LyricList(data: List<LyricsModel>, onClick: (LyricsModel) -> Unit) {
+fun LyricList(data: List<LyricsModel>, searchText: String, onClick: (LyricsModel) -> Unit) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
     ) {
-        items(
-            count = data.size,
-        ) { index: Int ->
-            val model: LyricsModel = data[index]
+        itemsIndexed(
+            items = data.filter {
+                it.title.contains(
+                    searchText,
+                    ignoreCase = true
+                ) || it.titleEn.contains(
+                    searchText,
+                    ignoreCase = true
+                )
+            }) { _, model ->
             LyricCardView(
                 data = model
             ) {

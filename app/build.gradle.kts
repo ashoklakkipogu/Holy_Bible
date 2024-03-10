@@ -123,6 +123,7 @@ dependencies {
     implementation("androidx.paging:paging-compose:3.3.0-alpha02")
     implementation( "com.pierfrancescosoffritti.androidyoutubeplayer:chromecast-sender:0.28")
 
+    implementation("com.google.firebase:firebase-messaging:20.1.6")
 
 
 

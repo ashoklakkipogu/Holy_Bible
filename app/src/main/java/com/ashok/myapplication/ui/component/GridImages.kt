@@ -5,43 +5,36 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
 import com.ashok.myapplication.R
+import com.ashok.myapplication.data.local.entity.StatusEmptyImagesModel
+import com.ashok.myapplication.ui.dashboard.DashboardUiState
 
 @Composable
-fun GridImages(onClickImage: (Int) -> Unit) {
-    val items = arrayListOf(
-        R.drawable.onboard,
-        R.drawable.banner_1,
-        R.drawable.image_1,
-        R.drawable.image_2,
-        R.drawable.image_3,
-        R.drawable.image_4,
-        R.drawable.image_6,
-        R.drawable.image_7,
-        R.drawable.image_9,
-        R.drawable.image_8,
-        R.drawable.image_10,
-        R.drawable.image_11,
-        R.drawable.image_12,
-        R.drawable.image_13
-    )
+fun GridImages(state: DashboardUiState, onClickImage: (String) -> Unit) {
+
     Column {
         Column(Modifier.padding(top = 10.dp)) {
             Text(text = "Create image", fontSize = 14.sp)
@@ -49,30 +42,47 @@ fun GridImages(onClickImage: (Int) -> Unit) {
                 text = "Choose your background image", color = Color.Gray, fontSize = 14.sp
             )
         }
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(3)
-        ) {
-            items(items) { item ->
-                val painter =
-                    rememberAsyncImagePainter("https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/1200px-Image_created_with_a_mobile_phone.png")/*Image(
+
+        if (state.statusImages != null)
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(3)
+            ) {
+                items(state.statusImages) { item ->
+                    val painter =
+                        rememberAsyncImagePainter("https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/1200px-Image_created_with_a_mobile_phone.png")/*Image(
                     painter = painter,
                     contentDescription = "Images"
                 )*/
+                    AsyncImage(
+                        model = ImageRequest.Builder(LocalContext.current)
+                            .data(item.image)
+                            .crossfade(true)
+                            .build(),
+                        placeholder = painterResource(id = R.drawable.place_holder),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .clickable {
+                                onClickImage.invoke(item.image)
+                            }
+                            .size(128.dp),
+                        contentScale = ContentScale.Crop
+                    )
 
-                Image(
-                    painter = painterResource(item),
-                    contentDescription = "Image",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .clickable {
-                            onClickImage.invoke(item)
-                        }
-                        .size(128.dp)
-                )
+
+                    /*Image(
+                        painter = painterResource(item),
+                        contentDescription = "Image",
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .clickable {
+                                onClickImage.invoke(item)
+                            }
+                            .size(128.dp)
+                    )*/
 
 
+                }
             }
-        }
     }
 
 }
@@ -80,5 +90,5 @@ fun GridImages(onClickImage: (Int) -> Unit) {
 @Preview
 @Composable
 fun GridImagesPreview() {
-    GridImages(){}
+    GridImages(state = DashboardUiState()) {}
 }

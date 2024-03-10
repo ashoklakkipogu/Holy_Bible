@@ -1,6 +1,7 @@
 package com.ashok.myapplication.ui.bibleindex
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -29,6 +31,7 @@ import com.ashok.myapplication.ui.bibleindex.components.SearchBarView
 import com.ashok.myapplication.ui.bibleindex.components.TopAppBarView
 import com.ashok.myapplication.ui.dashboard.DashboardUiEvent
 import com.ashok.myapplication.ui.dashboard.DashboardUiState
+import com.ashok.myapplication.ui.lyric.component.SearchAppBar
 import com.ashok.myapplication.ui.navgraph.Route
 import kotlinx.coroutines.launch
 
@@ -37,8 +40,8 @@ import kotlinx.coroutines.launch
 fun BibleIndexScreen(
     navController: NavController,
     state: DashboardUiState,
-    event: (DashboardUiEvent) ->Unit
-    ) {
+    event: (DashboardUiEvent) -> Unit
+) {
     val bibleIndexData = state.bibleIndexData
 
     var searchText by remember { mutableStateOf("") } // Query for SearchBar
@@ -60,80 +63,97 @@ fun BibleIndexScreen(
         TopAppBarView("References") {
             navController.popBackStack()
         }
-        Box(
+        /*Box(
             modifier = Modifier
                 .padding(start = 16.dp, end = 16.dp)
-        ){
+        ) {
             SearchBarView(
                 text = searchText,
                 readOnly = false,
-                onValueChange = { searchText = it},
+                onValueChange = { searchText = it },
                 onSearch = {
                     //searchText=it
                 }
             )
+        }*/
+        SearchAppBar() {
+            searchText = it
         }
 
         Box(
             modifier = Modifier
                 .padding(16.dp)
         ) {
-
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color.White),
-                state = listState
-            ) {
-               /* itemsIndexed(bibleIndexData.filter { it.chapter.contains(searchText, ignoreCase = true) }){index, model ->
-                    model.isExpand = viewModel.expandedState == model.chapter
-                    ExpandableCard(
-                        data = model,
-                        viewModel = viewModel,
-                        onClick = {
-                            currentIndex = index
-                            viewModel.expandedState = it.chapter
-                            //event(BibleIndexEvent.ChaptersByBookIdAndLangauge(it.chapter_id))
-                            coroutineScope.launch {
-                                listState.animateScrollToItem(currentIndex)
+            if (bibleIndexData != null)
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Color.White),
+                    state = listState,
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    itemsIndexed(items = bibleIndexData.filter {
+                        it.chapter.contains(
+                            searchText,
+                            ignoreCase = true
+                        )
+                    }) { i, dataItem ->
+                        dataItem.isExpand = state.expandedState == dataItem.chapter
+                        if (dataItem.isExpand) {
+                            LaunchedEffect(Unit) {
+                                listState.animateScrollToItem(i)
                             }
-                        },
-                        onClickIndex = {bookId, chapterId->
-                            navController.navigate(route = Route.BibleIndexDetails.getFullRoute(bookId = bookId, chapterId = chapterId))
                         }
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                }
 
-                */
-
-                bibleIndexData?.forEachIndexed { i, dataItem ->
-                    dataItem.isExpand = state.expandedState == dataItem.chapter
-                    if (dataItem.isExpand){
-                        coroutineScope.launch {
-                            listState.animateScrollToItem(i)
-                        }
-                    }
-
-                    item(key = "header_$i") {
                         ExpandableCard(
                             data = dataItem,
                             onClick = {
                                 event(DashboardUiEvent.ExpandedState(it.chapter))
                             },
-                            onClickIndex = {bookId, chapterId->
-                                navController.navigate(route = Route.BibleIndexDetails.getFullRoute(bookId = bookId, chapterId = chapterId))
+                            onClickIndex = { bookId, chapterId ->
+                                navController.navigate(
+                                    route = Route.BibleIndexDetails.getFullRoute(
+                                        bookId = bookId,
+                                        chapterId = chapterId
+                                    )
+                                )
                             },
                             onSoundClick = {
                                 event(DashboardUiEvent.TextSpeechPlay(it))
                             }
                         )
-                        Spacer(modifier = Modifier.height(8.dp))
+                       // Spacer(modifier = Modifier.height(8.dp))
+
                     }
 
-                }
 
-            }
+                    /*bibleIndexData?.forEachIndexed { i, dataItem ->
+                        dataItem.isExpand = state.expandedState == dataItem.chapter
+                        if (dataItem.isExpand){
+                            coroutineScope.launch {
+                                listState.animateScrollToItem(i)
+                            }
+                        }
+
+                        item(key = "header_$i") {
+                            ExpandableCard(
+                                data = dataItem,
+                                onClick = {
+                                    event(DashboardUiEvent.ExpandedState(it.chapter))
+                                },
+                                onClickIndex = {bookId, chapterId->
+                                    navController.navigate(route = Route.BibleIndexDetails.getFullRoute(bookId = bookId, chapterId = chapterId))
+                                },
+                                onSoundClick = {
+                                    event(DashboardUiEvent.TextSpeechPlay(it))
+                                }
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+                        }
+
+                    }*/
+
+                }
         }
 
     }

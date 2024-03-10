@@ -62,7 +62,9 @@ class BookmarkViewModel @Inject constructor(
         viewModelScope.launch {
             dbRepo.getAllNotes().collect { result ->
                 when (result) {
-                    is Result.Error -> Unit
+                    is Result.Error -> {
+                        state = state.copy(noteDataError = true)
+                    }
                     is Result.Loading -> Unit
                     is Result.Success -> {
                         state = state.copy(noteData = result.data)
@@ -76,7 +78,9 @@ class BookmarkViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             dbRepo.getAllFav().collect { result ->
                 when (result) {
-                    is Result.Error -> Unit
+                    is Result.Error -> {
+                        state = state.copy(favDataError = true)
+                    }
                     is Result.Loading -> Unit
                     is Result.Success -> {
                         state = state.copy(favData = result.data)
@@ -91,7 +95,9 @@ class BookmarkViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             dbRepo.getAllHighlights().collect { result ->
                 when (result) {
-                    is Result.Error -> Unit
+                    is Result.Error -> {
+                        state = state.copy(highlightDataError = true)
+                    }
                     is Result.Loading -> Unit
                     is Result.Success -> {
                         state = state.copy(highlightData = result.data)
@@ -103,7 +109,7 @@ class BookmarkViewModel @Inject constructor(
     }
 
     fun deleteNoteById(obj: NoteModel) {
-        Log.i("index", "...........$obj")
+        //Log.i("index", "...........$obj")
         viewModelScope.launch {
             dbRepo.deleteNote(obj.id)
             val noteData = state.noteData?.toMutableList().also { list ->

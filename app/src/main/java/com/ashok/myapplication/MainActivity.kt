@@ -66,7 +66,7 @@ class MainActivity : androidx.activity.ComponentActivity() {
 
         setContent {
             BibleTheme {
-                Log.i("test", "test.......BibleTheme")
+                //Log.i("test", "test.......BibleTheme")
                 /*val navController = rememberNavController()
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
                 val currentDestination = navBackStackEntry?.destination

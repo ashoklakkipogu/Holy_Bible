@@ -14,6 +14,7 @@ import com.ashok.myapplication.data.local.model.HighlightModel
 import com.ashok.myapplication.data.local.model.NoteModel
 import kotlinx.coroutines.flow.Flow
 import com.ashok.myapplication.ui.utilities.Result
+import org.intellij.lang.annotations.Language
 
 interface DbRepository {
     //fun getBible(): PagingSource<Int, BibleModelEntry>
@@ -30,7 +31,7 @@ interface DbRepository {
     ): Flow<Result<List<BibleModelEntry>>>
 
     suspend fun getBibleIndex(): Flow<Result<List<BibleIndexModelEntry>>>
-    suspend fun getLanguage(): Flow<Result<List<BibleIndexModelEntry>>>
+    suspend fun getLanguage(language: String): Flow<Result<List<BibleIndexModelEntry>>>
 
 
     suspend fun deleteHighlightByBibleLangIndex(bibleLangIndex: String)

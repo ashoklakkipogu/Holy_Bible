@@ -110,8 +110,9 @@ fun NavGraph(
                         navController.navigate(Route.DiscoveryTopicDetails.router)
                     },
                     onClickImage = {
-                        sharedViewModel.putTitle(state.storyList[it].title)
-                        sharedViewModel.storeImageGridList(storyList = listOf( state.storyList[it]))
+                        sharedViewModel.putTitle(state.storyList?.get(it)?.title)
+                        val list = listOf(state.storyList?.get(it))
+                        sharedViewModel.storeImageGridList(storyList = list)
                         navController.navigate(Route.DiscoveryStoryDetails.router)
                     }
                 )

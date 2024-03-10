@@ -54,7 +54,7 @@ fun MainScreen(viewModel: HomeViewModel) {
         bottomNavigation(navController)
 
     }) {
-        Log.i("test", "test.......padding")
+        //Log.i("test", "test.......padding")
 
         Box(modifier = Modifier.padding(it)) {
             NavGraph(navController, viewModel)

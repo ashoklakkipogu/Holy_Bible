@@ -31,7 +31,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableIntStateOf
 import com.ashok.myapplication.data.AppConstants
+import com.ashok.myapplication.data.local.entity.StatusEmptyImagesModel
+import com.ashok.myapplication.data.local.entity.StatusImagesModel
 import com.ashok.myapplication.data.local.entry.BibleIndexModelEntry
+import com.ashok.myapplication.domain.repository.BibleRepository
 import com.ashok.myapplication.ui.dashboard.DashboardUiEvent
 import com.ashok.myapplication.ui.dashboard.DashboardUiState
 import com.ashok.myapplication.ui.lyric.LyricState
@@ -44,6 +47,7 @@ import java.util.Locale
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
+    val bibleRepository: BibleRepository,
     val dbRepo: DbRepository,
     val pref: SharedPreferences,
     val application: Application
@@ -59,6 +63,7 @@ class HomeViewModel @Inject constructor(
         getBibleIndex()
         ttsManager = TtsManager(application)
         getSelectedLanguge()
+        getStatusImages()
     }
 
     private fun getSelectedLanguge() {
@@ -164,7 +169,7 @@ class HomeViewModel @Inject constructor(
                 }
             }
 
-            Log.i("data", "data1........$bibleData")
+            //Log.i("data", "data1........$bibleData")
             withContext(Dispatchers.Main) {
                 *//* allModel.bible = bibleData!!
                  allModel.notes = noteData!!*//*
@@ -193,7 +198,7 @@ class HomeViewModel @Inject constructor(
         dbRepo.getBiblePageActionLeftOrRight(clickAction, bookId, chapterId).collect { result ->
             when (result) {
                 is Result.Error -> {
-                    state = state.copy(isLoading = false, error = result.message)
+                    state = state.copy(isLoading = false, error = result.apiError?.getErrorMessage())
                 }
 
                 is Result.Loading -> {
@@ -254,7 +259,7 @@ class HomeViewModel @Inject constructor(
 
             withContext(Dispatchers.Main) {
                 data?.let {
-                    Log.i(
+                    //Log.i(
                         "data....",
                         "data............." + (it.bibleLangIndex.split("-")[1].toInt() - 1)
                     )
@@ -349,6 +354,46 @@ class HomeViewModel @Inject constructor(
     fun stopPlaying() {
         textToSpeech?.stop()
     }*/
+
+    private fun getStatusImages() {
+        viewModelScope.launch {
+            bibleRepository.getStatusEmptyImages().collect { result ->
+                when (result) {
+                    is Result.Error -> {
+                        state = state.copy(
+                            statusImagesError = result.apiError?.getErrorMessage(),
+                            isLoadingStatus = false
+                        )
+                    }
+
+                    is Result.Loading -> {
+                        state = state.copy(isLoadingStatus = true)
+                    }
+
+                    is Result.Success -> {
+                        val data = result.data
+                        state = if (data != null) {
+                            val list = ArrayList<StatusEmptyImagesModel>()
+                            for ((_, value) in data) {
+                                list.add(value)
+                            }
+                            val newList = list.sortedBy { sort ->
+                                sort.createdDate
+                            }.reversed()
+                            state.copy(
+                                statusImages = newList,
+                                isLoadingStatus = false
+                            )
+                        } else {
+                            state.copy(
+                                isLoadingStatus = false
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     override fun onCleared() {
         super.onCleared()

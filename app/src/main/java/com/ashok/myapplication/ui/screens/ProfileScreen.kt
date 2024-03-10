@@ -14,6 +14,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -27,6 +28,7 @@ import androidx.compose.ui.graphics.TileMode
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -47,6 +49,7 @@ import com.ashok.myapplication.ui.theme.BibleTheme
 import com.ashok.myapplication.ui.utilities.BibleUtils.goToPlayStore
 import com.ashok.myapplication.ui.utilities.BibleUtils.sendMail
 import com.ashok.myapplication.ui.utilities.BibleUtils.shareApp
+import kotlinx.coroutines.delay
 
 @Composable
 fun ProfileScreen(
@@ -59,27 +62,33 @@ fun ProfileScreen(
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            val context = LocalContext.current
+            val context = LocalContext.current as Activity
             var isLoadingDialog by remember { mutableStateOf(false) }
             if (state.isLoading) {
                 isLoadingDialog = true
             }
             if (state.isBibleInserted) {
-                Toast.makeText(context, "Successfully updated language.", Toast.LENGTH_SHORT).show()
+                LaunchedEffect(state.isBibleInserted) {
+                    context.startActivity(Intent(context, MainActivity::class.java))
+                    context.finish()
+                    Toast.makeText(context, "Successfully updated language.", Toast.LENGTH_SHORT)
+                        .show()
+                }
+                isLoadingDialog = false
             }
             var isShowLanguageDialog by remember {
                 mutableStateOf(false)
             }
 
             val gradient =
-                Brush.horizontalGradient(listOf(Color(0xFF28D8A3), Color(0xFF00BEB2)))
+                Brush.horizontalGradient(listOf(colorResource(id = R.color.colorPrimaryDark), colorResource(id = R.color.colorPrimary)))
 
             if (isShowLanguageDialog) {
                 DialogLangaugeChange(title = homeState.selectedLanguage, onDismiss = {
                     isShowLanguageDialog = false
                 },
                     onSelectedLangauge = {
-                        event(OnboardingUIEvent.InsertBible(it))
+                        event(OnboardingUIEvent.InsertBible(langauge = it))
                     }
                 )
             }
@@ -98,7 +107,7 @@ fun ProfileScreen(
                         modifier = Modifier.padding(vertical = 50.dp, horizontal = 20.dp)
                     ) {
                         Text(
-                            text = stringResource(id = R.string.app_name),
+                            text = state.userName ?: stringResource(id = R.string.app_name),
                             fontSize = 20.sp,
                             color = Color.White
                         )
@@ -111,12 +120,12 @@ fun ProfileScreen(
                                     contentDescription = "more",
                                     tint = Color.White,
                                     modifier = Modifier
-                                        .size(12.dp)
+                                        .size(18.dp)
                                         .padding(end = 2.dp)
                                 )
                                 Text(
                                     text = homeState.selectedLanguage,
-                                    fontSize = 12.sp,
+                                    fontSize = 18.sp,
                                     color = Color.White,
                                     textAlign = TextAlign.Center
                                 )

@@ -1,91 +1,136 @@
 package com.ashok.myapplication.data.repository
 
 import android.content.SharedPreferences
+import android.util.Log
 import androidx.compose.ui.text.toLowerCase
+import com.ashok.myapplication.data.local.entity.BaseModel
 import com.ashok.myapplication.data.remote.ApiService
 import com.ashok.myapplication.data.local.entity.LyricsModel
 import com.ashok.myapplication.data.local.entity.QuotesModel
+import com.ashok.myapplication.data.local.entity.StatusEmptyImagesModel
 import com.ashok.myapplication.data.local.entity.StatusImagesModel
 import com.ashok.myapplication.data.local.entity.StoryModel
+import com.ashok.myapplication.data.local.entity.UserModel
+import com.ashok.myapplication.data.model.ApiError
+import com.ashok.myapplication.data.model.Errors
 import com.ashok.myapplication.domain.repository.BibleRepository
 import com.ashok.myapplication.ui.utilities.Result
 import com.ashok.myapplication.ui.utilities.SharedPrefUtils
+import com.google.gson.Gson
+import com.google.gson.JsonObject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import okhttp3.ResponseBody
 import retrofit2.HttpException
 import retrofit2.Response
 import java.io.IOException
+import java.net.SocketTimeoutException
+import java.net.UnknownHostException
 import javax.inject.Inject
 
 class BibleRepositoryImpl @Inject constructor(
-    val api: ApiService,
-    val pref: SharedPreferences
+    val api: ApiService, val pref: SharedPreferences
 ) : BibleRepository {
+    private val TAG = BibleRepositoryImpl::class.java.simpleName
+
     override suspend fun getLyrics(): Flow<Result<Map<String, LyricsModel>?>> = wrap {
-        api.getLyrics()
+        val lang = SharedPrefUtils.getLanguage(pref)!!
+        api.getLyrics(language = "\"${lang.lowercase()}\"")
     }.flowOn(Dispatchers.IO)
 
-    override suspend fun getQuotes(): Flow<Result<Map<String, List<QuotesModel>>?>> =
-        wrap {
-            val lang = SharedPrefUtils.getLanguage(pref)!!.lowercase()
-            api.getQuotes(lang)
-        }.flowOn(Dispatchers.IO)
+    override suspend fun getQuotes(): Flow<Result<Map<String, List<QuotesModel>>?>> = wrap {
+        val lang = SharedPrefUtils.getLanguage(pref)!!.lowercase()
+        api.getQuotes(lang)
+    }.flowOn(Dispatchers.IO)
 
     override suspend fun getStory(): Flow<Result<Map<String, StoryModel>?>> = wrap {
-        api.getStories()
+        val lang = SharedPrefUtils.getLanguage(pref)!!
+        api.getStories(language = "\"$lang\"")
     }.flowOn(Dispatchers.IO)
 
     override suspend fun getStatusImages(): Flow<Result<Map<String, StatusImagesModel>?>> = wrap {
-        api.getStatus()
+        val lang = SharedPrefUtils.getLanguage(pref)!!
+        api.getStatus(language = "\"$lang\"")
     }.flowOn(Dispatchers.IO)
-    /* {
-        return try {
-            val result = api.getQuotes(lang)
-            if (result.isSuccessful) {
-                Result.Success(result.body())
-            } else {
-                Result.Error(result.message())
-            }
-        } catch (e: IOException) {
-            e.printStackTrace()
-            Result.Error(
-                message = e.message.toString()
-            )
-        } catch (e: HttpException) {
-            e.printStackTrace()
-            Result.Error(
-                message = e.message.toString()
-            )
-        }
-    }*/
+
+
+    override suspend fun getStatusEmptyImages(): Flow<Result<Map<String, StatusEmptyImagesModel>?>> =
+        wrap {
+            api.getStatusEmptyImages()
+        }.flowOn(Dispatchers.IO)
+
+    override suspend fun  saveUsers(userModel: UserModel): Flow<Result<BaseModel?>> = wrap {
+        api.saveUsers(userModel)
+    }.flowOn(Dispatchers.IO)
+
 
     private fun <T : Any> wrap(function: suspend () -> Response<T>): Flow<Result<T?>> {
         return flow {
             emit(Result.Loading(true))
-            val response = function()
             try {
-                response.body()?.let {
-                    if (response.isSuccessful) {
-                        emit(Result.Success(it))
-                    } else {
-                        emit(Result.Error(response.message()))
-                    }
+                val response = function()
+                //Log.i("response", "response.........remote$response")
+                if (response.isSuccessful) {
+                    val result = response.body()
+                    if (result != null) {
+                        emit(Result.Success(response.body()))
+                    } else
+                        emit(Result.Error(ApiError(ApiError.ApiStatus.EMPTY_RESPONSE)))
+                } else {
+                    emit(Result.Error(ApiError(ApiError.ApiStatus.EMPTY_RESPONSE)))
                 }
-            } catch (e: IOException) {
-                emit(
-                    Result.Error(
-                        message = e.message.toString()
-                    )
-                )
-            } catch (e: HttpException) {
-                emit(
-                    Result.Error(
-                        message = e.message.toString()
+            } catch (throwable: Throwable) {
+                emit(onError(throwable))
+            }
+
+            //else -> failure(ApiError(ApiError.ApiStatus.NOT_DEFINED))
+        }
+    }
+
+    private fun <T> onError(e: Throwable): Result<T?> {
+        Log.d(TAG, "onError: $e")
+        return when (e) {
+            is HttpException -> {
+                val errorMessage = getErrorMessage(e.response()?.errorBody())
+                var errors = Errors()
+                try {
+                    errors = Gson().fromJson(errorMessage, Errors::class.java)
+                } catch (e: Exception) {
+                    //e.printStackTrace()
+                }
+
+                Result.Error(
+                    ApiError(
+                        ApiError.ApiStatus.BAD_RESPONSE, e.code(), errorMessage,
+                        errors
                     )
                 )
             }
+
+            is SocketTimeoutException -> {
+                Result.Error(ApiError(ApiError.ApiStatus.TIMEOUT, message = e.localizedMessage))
+            }
+
+            is IOException -> {
+                Result.Error(ApiError(ApiError.ApiStatus.NO_CONNECTION, message = e.localizedMessage))
+            }
+
+            is NullPointerException -> {
+                Result.Error(ApiError(ApiError.ApiStatus.EMPTY_RESPONSE))
+            }
+
+            else -> Result.Error(ApiError(ApiError.ApiStatus.NOT_DEFINED))
         }
+    }
+
+    private fun getErrorMessage(errorBody: ResponseBody?): String = try {
+        val result = errorBody?.string()
+        Log.d(TAG, "getErrorMessage() called with: errorBody = [$result]")
+        val json = Gson().fromJson(result, JsonObject::class.java)
+        json.toString()
+    } catch (t: Throwable) {
+        ""
     }
 }

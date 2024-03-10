@@ -31,7 +31,9 @@ class SplashActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-
+        if (viewModel.isFirstTime()) {
+            callMainActivity()
+        }
 
         setContent {
             BibleTheme {
@@ -41,26 +43,31 @@ class SplashActivity : ComponentActivity() {
                 ) {
                     val event = viewModel::onEvent
                     val state = viewModel.state
-                    event(OnboardingUIEvent.OnEventIsFirstTime)
+                    if (viewModel.state.isBibleInserted) {
+                        callMainActivity()
+                    }
+                    //event(OnboardingUIEvent.OnEventIsFirstTime)
                     var showDialog by remember { mutableStateOf(false) }
                     if (state.isLoading) {
                         showDialog = true
                     }
-                    if (state.isBibleInserted || state.isFirstTime) {
-                        startActivity(Intent(this@SplashActivity, MainActivity::class.java))
-                        finish()
-                    }
+
                     if (showDialog) {
                         LoadingDialog {
                             showDialog = false
                         }
                     }
                     OnBoardingComponent { userName, langauge ->
-                        event(OnboardingUIEvent.InsertBible(langauge = langauge))
+                        event(OnboardingUIEvent.InsertBible(userName = userName, langauge = langauge))
                     }
                 }
             }
         }
+    }
+
+    private fun callMainActivity() {
+        startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+        finish()
     }
 
 }

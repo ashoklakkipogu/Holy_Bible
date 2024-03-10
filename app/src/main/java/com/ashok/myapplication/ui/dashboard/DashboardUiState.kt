@@ -1,5 +1,6 @@
 package com.ashok.myapplication.ui.dashboard
 
+import com.ashok.myapplication.data.local.entity.StatusEmptyImagesModel
 import com.ashok.myapplication.data.local.entry.BibleIndexModelEntry
 import com.ashok.myapplication.data.local.entry.BibleModelEntry
 
@@ -10,5 +11,9 @@ data class DashboardUiState(
     var error:String? = null,
     var bibleScrollPos:Int = 0,
     var expandedState:String = "",
-    var selectedLanguage:String = ""
+    var selectedLanguage:String = "",
+
+    val isLoadingStatus:Boolean = false,
+    val statusImages:List<StatusEmptyImagesModel>? = null,
+    val statusImagesError:String? = null
 )

@@ -3,6 +3,7 @@ package com.ashok.myapplication.ui.component.share
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -58,6 +59,8 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.core.graphics.toColorInt
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.ashok.myapplication.R
 import com.ashok.myapplication.ui.component.ButtonView
 import com.ashok.myapplication.ui.component.circleColor
@@ -71,7 +74,7 @@ import dev.shreyaspatil.capturable.*
 @Composable
 fun ImageShareView(
     bibleVerse: String?,
-    image: Int,
+    image: String?,
     captureController: CaptureController,
     onCaptured: (ImageBitmap?, Throwable?) -> Unit
 ) {
@@ -324,7 +327,7 @@ fun BottomView(
 @Composable
 private fun DraggableTextLowLevel(
     bibleVerse:String?,
-    image: Int,
+    image: String?,
     textAlign: TextAlign,
     textPos: Alignment,
     textLineHeight: Int,
@@ -342,7 +345,7 @@ private fun DraggableTextLowLevel(
     var offsetY by remember { mutableFloatStateOf(0f) }
     val context = LocalContext.current
 
-    Log.i("textAlpha", "textAlpha...........$textAlpha")
+    //Log.i("textAlpha", "textAlpha...........$textAlpha")
     Capturable(controller = captureController, onCaptured = { bitmap, error ->
         onCaptured.invoke(bitmap, error)
     }
@@ -352,15 +355,18 @@ private fun DraggableTextLowLevel(
             modifier = Modifier.fillMaxSize()
 
         ) {
-            Image(
-                painter = painterResource(id = image),
+            AsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(image)
+                    .crossfade(true)
+                    .build(),
+                placeholder = painterResource(id = R.drawable.place_holder),
                 contentDescription = null,
-                contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .fillMaxWidth()
                     .blur(bgBlur.dp)
-                    .alpha(bgAlpha)
-
+                    .alpha(bgAlpha),
+                contentScale = ContentScale.Crop
             )
             Text(
                 text = context.resources.getString(R.string.app_name),
@@ -404,7 +410,7 @@ private fun DraggableTextLowLevel(
 fun ImageShareViewPreview() {
     ImageShareView(
         bibleVerse = "Test",
-        image = R.drawable.image_4,
+        image = "",
         captureController = rememberCaptureController(),
         onCaptured = { bitmap, error ->
 

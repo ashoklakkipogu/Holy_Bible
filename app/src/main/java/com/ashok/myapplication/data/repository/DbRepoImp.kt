@@ -11,6 +11,7 @@ import com.ashok.myapplication.data.local.entry.NoteModelEntry
 import com.ashok.myapplication.data.local.model.FavModel
 import com.ashok.myapplication.data.local.model.HighlightModel
 import com.ashok.myapplication.data.local.model.NoteModel
+import com.ashok.myapplication.data.model.ApiError
 import com.ashok.myapplication.domain.repository.DbRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -87,15 +88,16 @@ class DbRepoImp @Inject constructor(
         bibleIndexDao.getAllBibleIndexContent(language)
     }
 
-    override suspend fun getLanguage(): Flow<Result<List<BibleIndexModelEntry>>> = wrap {
-        val language = SharedPrefUtils.getLanguage(pref)!!
-        bibleIndexDao.getLanguage(language)
-    }
+    override suspend fun getLanguage(language: String): Flow<Result<List<BibleIndexModelEntry>>> =
+        wrap {
+            bibleIndexDao.getLanguage(language)
+        }
 
     override suspend fun getAllHighlights(): Flow<Result<List<HighlightModel>>> =
         wrap {
             val language = SharedPrefUtils.getLanguage(pref)!!
-            highlightDao.getAllHighlight(language)?.sortedBy { sort -> sort.createdDate }?.reversed()
+            highlightDao.getAllHighlight(language)?.sortedBy { sort -> sort.createdDate }
+                ?.reversed()
         }
 
     override suspend fun getBibleVerseByBookIdAndChapterId(
@@ -207,16 +209,26 @@ class DbRepoImp @Inject constructor(
             emit(Result.Loading(true))
             val response = function()
             try {
-                if (response != null)
+                //if (response != null)
+                /*//Log.i("response", "response.........db$response")
+                //Log.i("response", "response.........db1${(response is List<*> && response.isEmpty())}")
+                //Log.i("response", "response.........db2${(response is Map<*, *> && response.isEmpty())}")*/
+                if (response !=null) {
+                    //Log.i("response", "response.........dbs$response")
                     emit(
                         Result.Success(
                             data = response
                         )
                     )
+                } else {
+                    emit(Result.Error(ApiError(ApiError.ApiStatus.EMPTY_RESPONSE)))
+                    //Log.i("response", "response.........dbe$response")
+                }
+
             } catch (e: Exception) {
                 emit(
                     Result.Error(
-                        message = e.message.toString()
+                        ApiError(ApiError.ApiStatus.EMPTY_RESPONSE, message = e.message.toString())
                     )
                 )
             }

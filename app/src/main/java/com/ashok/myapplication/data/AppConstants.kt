@@ -18,6 +18,10 @@ object AppConstants {
 
     const val EMAIL: String = "lakkideveloper@gmail.com"
     const val SUBJECT: String = "Holy Bible"
+    const val NO_DATA_FOUND: String = "No data found, Coming soon!!"
 
     val LANGUAGES:List<String> = listOf("English", "Telugu", "Tamil", "Hindi", "Kannada")
+
+    const val SUBSCRIBE_TO_TOPIC: String = "bible"
+    const val NOTIFICATION_ID:Int = 101
 }

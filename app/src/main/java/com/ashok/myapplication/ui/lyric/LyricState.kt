@@ -6,6 +6,6 @@ import com.ashok.myapplication.ui.utilities.Result
 
 data class LyricState(
     val isLoading: Boolean = false,
-    val lyric: List<LyricsModel> = emptyList(),
+    val lyric: List<LyricsModel>? = null,
     val error: String? = null
 )

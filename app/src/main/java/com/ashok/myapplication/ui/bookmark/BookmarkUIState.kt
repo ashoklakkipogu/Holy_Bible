@@ -15,4 +15,9 @@ data class BookmarkUIState(
     val noteDelete: Boolean = false,
     val favDelete: Boolean = false,
     val highlightDelete: Boolean = false,
-)
+
+    val noteDataError: Boolean = false,
+    val favDataError: Boolean = false,
+    val highlightDataError: Boolean = false,
+
+    )

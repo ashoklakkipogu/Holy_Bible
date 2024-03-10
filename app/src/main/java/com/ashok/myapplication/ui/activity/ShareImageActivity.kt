@@ -46,7 +46,7 @@ class ShareImageActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val selectedImg = intent.getIntExtra("selected_image", R.drawable.place_holder)
+        val selectedImg = intent.getStringExtra("selected_image")
         val selectedBibleVerse = intent.getStringExtra("selected_title")
 
 
@@ -118,7 +118,7 @@ class ShareImageActivity : ComponentActivity() {
                         }
                     }
                     viewBitmap?.let {
-                        Log.i("bitmap......", "bitmap.............${it.asAndroidBitmap()}")
+                        //Log.i("bitmap......", "bitmap.............${it.asAndroidBitmap()}")
                         if (isShare) {
                             ShareUtils.shareBitmap(this, it.asAndroidBitmap())
                         } else {

@@ -14,7 +14,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.ashok.myapplication.data.AppConstants.NO_DATA_FOUND
 import com.ashok.myapplication.ui.bibleindex.components.TopAppBarView
+import com.ashok.myapplication.ui.common.EmptyScreen
 import com.ashok.myapplication.ui.component.ButtonView
 import com.ashok.myapplication.ui.component.CardView
 import com.ashok.myapplication.ui.component.ImageShare
@@ -49,7 +51,12 @@ fun DiscoveryScreen(
                     onBackPress.invoke()
                 }
 
-
+                if (state.quotesTitles?.isEmpty() == true && state.statusList?.isEmpty() == true && state.storyList?.isEmpty() == true) {
+                    EmptyScreen(errorMessage = NO_DATA_FOUND)
+                }
+                if (state.errorQuote !=null && state.errorStory !=null && state.errorStatus !=null) {
+                    EmptyScreen(errorMessage = state.errorQuote)
+                }
 
                 LazyColumn(
                     contentPadding = PaddingValues(20.dp)
@@ -58,7 +65,8 @@ fun DiscoveryScreen(
                         if (state.isLoadingQuotes) {
                             QuotesShimmer()
                         }
-                        if (state.quotesTitles.isNotEmpty()) {
+                        val quotesTitles = state.quotesTitles
+                        if (quotesTitles !=null) {
                             TitleView(title = "Search by Topic", onClick = {
                                 onClickMoreTopic.invoke()
                             })
@@ -66,7 +74,7 @@ fun DiscoveryScreen(
                                 horizontalArrangement = Arrangement.spacedBy(10.dp)
 
                             ) {
-                                items(state.quotesTitles) { item ->
+                                items(quotesTitles) { item ->
                                     ButtonView(title = item.title, color = item.color) {
                                         onClickButton.invoke(item.title)
                                     }
@@ -78,7 +86,8 @@ fun DiscoveryScreen(
                         if (state.isLoadingStory) {
                             CardShimmer()
                         }
-                        if (state.storyList.isNotEmpty()) {
+                        val storyList = state.storyList
+                        if (storyList !=null) {
                             TitleView(title = "New to Faith", onClick = {
                                 onClickMoreStory.invoke()
                             })
@@ -86,7 +95,7 @@ fun DiscoveryScreen(
                                 horizontalArrangement = Arrangement.spacedBy(10.dp)
 
                             ) {
-                                itemsIndexed(state.storyList) {index, item ->
+                                itemsIndexed(storyList) {index, item ->
                                     CardView(data = ImageGrid(
                                         title = item.title,
                                         image = item.url
@@ -109,48 +118,20 @@ fun DiscoveryScreen(
                         }
                     }
 
-                    if (state.statusList.isNotEmpty()) {
+                    val statusList = state.statusList
+                    if (statusList !=null) {
                         item {
                             TitleView(title = "Bible Word", isButtonVisible = false, onClick = {})
                         }
-                        items(state.statusList) { post ->
+                        items(statusList) { post ->
                             ImageShare(
                                 image = post.url
                             ){
                                 ShareUtils.shareUrl(context, it)
                             }
-                            Spacer(modifier = Modifier.height(10.dp))/*CardView(
-                                title = "",
-                                time = "12/12/2023",
-                                image = post.url
-                            ) {
-
-                            }*/
+                            Spacer(modifier = Modifier.height(10.dp))
                         }
-                    }/*item {
-                        if (state.isLoadingStatus){
-                            CardShimmer()
-                        }
-                        if (state.statusList.isNotEmpty()){
-                            TitleView(title = "Bible Word", onClick = {})
-                            LazyColumn(
-                                verticalArrangement = Arrangement.spacedBy(10.dp)
-
-                            ) {
-                                items(state.statusList) { item ->
-                                    CardView(
-                                        title = "",
-                                        time = "12/12/2023",
-                                        image = item.url
-                                    ) {
-
-                                    }
-                                }
-                            }
-                        }
-                    }*/
-
-
+                    }
                 }
             }
 

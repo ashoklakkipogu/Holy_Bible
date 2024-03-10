@@ -28,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -56,7 +57,7 @@ fun OnBoardingComponent(
         modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center
     ) {
         Image(
-            painter = painterResource(R.drawable.onboard),
+            painter = painterResource(R.drawable.new_banner),
             contentDescription = "onboard image",
             contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxSize()
@@ -73,13 +74,13 @@ fun OnBoardingComponent(
                     text = "Welcome to Holy Bible",
                     lineHeight = 40.sp,
                     fontSize = 40.sp,
-                    color = Color.White,
+                    color = colorResource(id = R.color.colorPrimaryDark),
                     textAlign = TextAlign.Center
                 )
                 Text(
                     text = "Read bible description",
                     fontSize = 16.sp,
-                    color = Color.White,
+                    color = colorResource(id = R.color.colorPrimary),
                     textAlign = TextAlign.Center
                 )
                 Spacer(modifier = Modifier.height(40.dp))

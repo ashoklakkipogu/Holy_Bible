@@ -24,17 +24,19 @@ import androidx.compose.ui.unit.dp
 import com.ashok.myapplication.ui.component.ButtonComponent
 import com.ashok.myapplication.ui.component.GridImages
 import com.ashok.myapplication.ui.component.circleColor
+import com.ashok.myapplication.ui.dashboard.DashboardUiState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BottomSheet(
+    state: DashboardUiState,
     selectedBible: String = "",
     isBookMark: Boolean = false,
     isNote: Boolean = false,
     onDismiss: () -> Unit,
     onCircleColor: (String) -> Unit,
     onButtonClick: (String) -> Unit,
-    onGridImgClick: (Int) -> Unit,
+    onGridImgClick: (String) -> Unit,
     onSoundClick: () -> Unit
 ) {
     val colorList = arrayListOf(
@@ -90,7 +92,9 @@ fun BottomSheet(
                 ButtonComponent(isBookMark = isBookMark, isNote = isNote) {
                     onButtonClick.invoke(it)
                 }
-                GridImages {
+                GridImages(
+                    state = state
+                ) {
                     onGridImgClick.invoke(it)
                 }
             }
@@ -104,5 +108,5 @@ fun BottomSheet(
 @Preview
 @Composable
 fun bottomSheetPreview() {
-    BottomSheet(onDismiss = { }, onCircleColor = {}, onButtonClick = {}, onGridImgClick = {}) {}
+    BottomSheet(state = DashboardUiState(), onDismiss = { }, onCircleColor = {}, onButtonClick = {}, onGridImgClick = {}) {}
 }

@@ -66,7 +66,7 @@ fun SearchAppBar(
             }
         },
         maxLines = 1,
-        placeholder = { Text(text = "Search Lyric") },
+        placeholder = { Text(text = "Search") },
         singleLine = true,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
         modifier = Modifier

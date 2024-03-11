@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.MyApplication" parent="android:Theme.Material.Light.NoActionBar">
+    <style name="Theme.MyBible" parent="android:Theme.Material.Light.NoActionBar">
         <!-- Status bar color. -->
         <item name="android:statusBarColor">@color/colorPrimaryDark</item>
         <!-- Primary brand color. -->
@@ -13,7 +13,7 @@
         <item name="windowSplashScreenBackground">@color/blue</item>
         <item name="windowSplashScreenAnimationDuration">2000</item>
         <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
-        <item name="postSplashScreenTheme">@style/Theme.MyApplication</item>
+        <item name="postSplashScreenTheme">@style/Theme.MyBible</item>
     </style>
 
     <style name="Theme.Bible" parent="android:Theme.Material.Light.NoActionBar" />

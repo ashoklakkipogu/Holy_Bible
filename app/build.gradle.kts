@@ -7,11 +7,11 @@ plugins {
 }
 
 android {
-    namespace = "com.ashok.myapplication"
+    namespace = "com.ashok.bible"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.ashok.myapplication"
+        applicationId = "com.ashok.bible"
         minSdk = 24
         targetSdk = 33
         versionCode = 1

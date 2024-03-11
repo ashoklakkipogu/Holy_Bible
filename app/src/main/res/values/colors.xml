@@ -5,53 +5,16 @@
     <color name="colorPrimary">#1584A1</color>
     <color name="colorPrimaryDark">#033B4C</color>
     <color name="colorAccent">#1584A1</color>
-    <color name="colorAccent_2">#FFFFFF</color>
     <!--<color name="colorPrimary">#FFFFFF</color>
     <color name="colorPrimaryDark">#4E0D3A</color>
     <color name="colorAccent">#5D1049</color>-->
-    <color name="color_1">#e0e0e0</color>
-    <color name="textColorSecondary">#FFFFFF</color>
-    <color name="colorBackground">#fafafa</color>
-    <color name="color_2">#000000</color>
-    <color name="color_3">#FFFFFF</color>
-    <color name="color_4">@color/colorAccent</color>
-    <color name="color_5">@android:color/darker_gray</color>
-    <color name="color_6">#000000</color>
 
 
     <!--<color name="color_g_1">#720D5D</color>-->
-    <color name="color_g_1">#4fb3bf</color>
-    <color name="color_g_2">@color/colorAccent</color>
-    <color name="color_g_3">@color/colorPrimaryDark</color>
 
-    <color name="gradient_color_1">#4c84ff</color>
-    <color name="gradient_color_3">#9c27b0</color>
-    <color name="yellow">#FF9800</color>
-    <color name="lite_blue">#80deea</color>
     <color name="blue">#4099FF</color>
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
-    <array name="colorPickerColors">
-        <item>#607D8B</item>
-        <item>#795548</item>
-        <item>#FF5722</item>
-        <item>#FF9800</item>
-        <item>#4CAF50</item>
-        <item>#009688</item>
-        <item>#03A9F4</item>
-        <item>#3F51B5</item>
-        <item>#9C27B0</item>
-        <item>#E91E63</item>
-    </array>
     <color name="placeholder">#A0A3BD</color>
     <color name="input_background">#fff</color>
-
-    <color name="shimmer">#414243</color>
 
 
 </resources>

@@ -39,11 +39,7 @@ fun GridImages(state: DashboardUiState, onClickImage: (String) -> Unit) {
                 columns = GridCells.Fixed(3)
             ) {
                 items(state.statusImages) { item ->
-                    val painter =
-                        rememberAsyncImagePainter("https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/1200px-Image_created_with_a_mobile_phone.png")/*Image(
-                    painter = painter,
-                    contentDescription = "Images"
-                )*/
+                    
                     AsyncImage(
                         model = ImageRequest.Builder(LocalContext.current)
                             .data(item.image)

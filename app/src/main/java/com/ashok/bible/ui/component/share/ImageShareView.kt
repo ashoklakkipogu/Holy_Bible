@@ -60,7 +60,6 @@ fun ImageShareView(
     captureController: CaptureController,
     onCaptured: (ImageBitmap?, Throwable?) -> Unit
 ) {
-    val context = LocalContext.current
     var textAlign by remember {
         mutableStateOf(TextAlign.Center)
     }
@@ -394,7 +393,7 @@ fun ImageShareViewPreview() {
         bibleVerse = "Test",
         image = "",
         captureController = rememberCaptureController(),
-        onCaptured = { bitmap, error ->
+        onCaptured = { _, _ ->
 
         })
 }

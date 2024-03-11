@@ -48,7 +48,7 @@ fun DiscoveryScreen(
                     onBackPress.invoke()
                 }
 
-                if (state.quotesTitles?.isEmpty() == true && state.statusList?.isEmpty() == true && state.storyList?.isEmpty() == true) {
+                if (state.quotesTitles.isNullOrEmpty() && state.statusList.isNullOrEmpty() && state.storyList.isNullOrEmpty()) {
                     EmptyScreen(errorMessage = NO_DATA_FOUND)
                 }
                 if (state.errorQuote !=null && state.errorStory !=null && state.errorStatus !=null) {
@@ -84,7 +84,7 @@ fun DiscoveryScreen(
                             CardShimmer()
                         }
                         val storyList = state.storyList
-                        if (storyList !=null) {
+                        if (!storyList.isNullOrEmpty()) {
                             TitleView(title = "New to Faith", onClick = {
                                 onClickMoreStory.invoke()
                             })

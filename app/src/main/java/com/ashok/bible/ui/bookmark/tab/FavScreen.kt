@@ -58,7 +58,7 @@ fun FavRow(
             .padding(10.dp)
     ) {
 
-        itemsIndexed(data) { index, model ->
+        itemsIndexed(data) { _, model ->
             Column {
                 BibleWordListView(
                     title = model.verse,

@@ -72,7 +72,7 @@ fun DialogLangaugeChange(
                         .background(Color.White),
                     verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
-                    itemsIndexed(langauges) { index, model ->
+                    itemsIndexed(langauges) { _, model ->
                         val isSelected = selectedLangauge == model
                         TextRoundBox(
                             title = model,

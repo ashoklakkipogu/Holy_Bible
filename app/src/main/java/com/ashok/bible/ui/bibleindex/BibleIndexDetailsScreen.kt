@@ -45,7 +45,7 @@ fun BibleIndexDetailsScreen(
             LazyVerticalGrid(
                 columns = GridCells.Fixed(6)
             ) {
-                itemsIndexed(verseListData) { index, model ->
+                itemsIndexed(verseListData) { _, model ->
                     IndexView(title = model) {
                         onClickIndex.invoke(it)
                     }

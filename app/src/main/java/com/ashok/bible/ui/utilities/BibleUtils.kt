@@ -98,13 +98,13 @@ object BibleUtils {
                     inputLine = it.readLine()
                 }
                 return response.toString()
-                println("GET Response : " + response.toString())
+                //println("GET Response : $response")
             }
         }
     }
 
 
-    fun getBibleIndex(context: Context, langaue: String): ArrayList<BibleIndexModelEntry> {
+    fun getBibleIndex(langaue: String): ArrayList<BibleIndexModelEntry> {
         val url ="https://firebasestorage.googleapis.com/v0/b/bible-8bdba.appspot.com/o/bibledb%2F$langaue%2Fbooks.h?alt=media&token=d0540dcc-8c45-4ca6-8a7d-225cea539319"
         val inputString =  getJsonDataFromUrl(url)
         /*val bufferedReader: BufferedReader =

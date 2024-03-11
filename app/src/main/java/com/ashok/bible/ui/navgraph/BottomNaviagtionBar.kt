@@ -40,16 +40,14 @@ fun bottomNavigation(navController: NavHostController) {
         navController
             .currentBackStackEntryAsState().value?.destination?.route
     )
-    var navSelectedItem by remember {
-        mutableIntStateOf(0)
-    }
+
     if (isShowBottomBar)
         BottomAppBar(
             modifier = Modifier
                 .shadow(elevation = 10.dp)
                 .background(color = Color.White),
         ) {
-            items.forEachIndexed { index, item ->
+            items.forEachIndexed { _, item ->
                 NavigationBarItem(
                     selected = currentDestination?.hierarchy?.any { it.route == item.router } == true,
                     label = {

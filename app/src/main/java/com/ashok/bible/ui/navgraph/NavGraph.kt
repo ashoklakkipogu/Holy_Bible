@@ -64,7 +64,7 @@ fun NavGraph(
             composable(Route.Lyrics.router) {
                 val viewModel: LyricViewModel = hiltViewModel()
                 val state = viewModel.state
-                LyricScreen(state = state, event = viewModel::onEvent, onBackPress = {
+                LyricScreen(state = state, onBackPress = {
                     navController.popBackStack()
                 }, onClick = {
                     navController.currentBackStackEntry?.savedStateHandle?.set(

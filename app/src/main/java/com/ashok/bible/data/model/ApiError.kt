@@ -6,7 +6,7 @@ import com.ashok.bible.data.AppConstants.NO_DATA_FOUND
 data class ApiError(
     val status: ApiStatus,
     val code: Int = -1,
-    var message: String = "",
+    var message: String? = "",
     var error: Errors? = null
 ) {
     fun getErrorMessage(): String {
@@ -27,7 +27,7 @@ data class ApiError(
             }
         }*/
 
-        return message
+        return message?:""
     }
 
     enum class ApiStatus {

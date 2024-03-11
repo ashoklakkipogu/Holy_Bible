@@ -50,7 +50,7 @@ class DiscoveryViewModel @Inject constructor(
 
                         val modelList: ArrayList<ImageGrid> = ArrayList()
                         val data = result.data
-                        if (data != null) {
+                        if (!data.isNullOrEmpty()) {
                             for (obj in data.keys) {
                                 modelList.add(ImageGrid(title = obj))
                             }
@@ -85,7 +85,7 @@ class DiscoveryViewModel @Inject constructor(
 
                     is Result.Success -> {
                         val data = result.data
-                        state = if (data != null) {
+                        state = if (!data.isNullOrEmpty()) {
                             val list = ArrayList<StoryModel>()
                             for ((_, value) in data) {
                                 list.add(value)
@@ -127,7 +127,7 @@ class DiscoveryViewModel @Inject constructor(
 
                     is Result.Success -> {
                         val data = result.data
-                        if (data != null) {
+                        if (!data.isNullOrEmpty()) {
                             val list = ArrayList<StatusImagesModel>()
                             for ((_, value) in data) {
                                 list.add(value)

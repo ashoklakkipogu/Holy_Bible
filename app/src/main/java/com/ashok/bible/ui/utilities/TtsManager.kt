@@ -38,7 +38,7 @@ class TtsManager constructor(context: Context?) {
     }
 
     fun say(text: String?, locale: Locale = Locale.getDefault()): Boolean {
-        return if (isLoaded && text != null && locale != null) {
+        return if (isLoaded && text != null) {
             val newText = text.replace(":", " ")
             val available = tts!!.isLanguageAvailable(locale)
             if (available >= TextToSpeech.LANG_AVAILABLE) {

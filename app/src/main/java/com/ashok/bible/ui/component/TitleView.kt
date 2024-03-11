@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -38,7 +39,7 @@ fun TitleView(
             fontSize = 18.sp
         )
         IconButton(onClick = { onClick.invoke() }, modifier = Modifier.alpha(alpha)) {
-            Icon(imageVector = Icons.Default.ArrowForward, contentDescription = null)
+            Icon(imageVector = Icons.AutoMirrored.Filled.ArrowForward, contentDescription = null)
 
         }
 

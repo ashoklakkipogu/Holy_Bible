@@ -87,9 +87,9 @@ class SplashViewModel @Inject constructor(
                         SharedPrefUtils.setLanguage(pref, langauge)
                         SharedPrefUtils.saveFirstTime(pref)
                         state = if (result.data.isNullOrEmpty()) {
-                            val bibleIndex = getBibleIndex(application, langauge)
+                            val bibleIndex = getBibleIndex(langauge)
                             dbRepo.insertBibleIndex(bibleIndex)
-                            val bible = getBibleData(application, langauge, bibleIndex)
+                            val bible = getBibleData(langauge, bibleIndex)
                             dbRepo.insertBible(bible)
                             state.copy(isLoading = false, isBibleInserted = true)
                         } else {
@@ -103,7 +103,6 @@ class SplashViewModel @Inject constructor(
     }
 
     private suspend fun getBibleData(
-        context: Context,
         langauge: String,
         bibleIndex: ArrayList<BibleIndexModelEntry>,
     ): ArrayList<BibleModelEntry> {
@@ -120,7 +119,7 @@ class SplashViewModel @Inject constructor(
         var inc = 0
         bibleJson.book.forEach { books ->
             books.chapter.forEach { chapter ->
-                chapter.verse.forEachIndexed { i, verse ->
+                chapter.verse.forEachIndexed { _, verse ->
                     inc++
                     val first = verse.verseid.subSequence(0, 2).toString().toInt() + 1
                     val second = verse.verseid.subSequence(2, 5).toString().toInt() + 1

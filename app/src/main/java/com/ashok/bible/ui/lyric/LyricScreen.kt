@@ -29,7 +29,6 @@ import com.ashok.bible.ui.theme.BibleTheme
 @Composable
 fun LyricScreen(
     state: LyricState,
-    event: (LyricEvent) -> Unit,
     onClick: (LyricsModel) -> Unit,
     onBackPress: () -> Unit
 ) {
@@ -111,7 +110,6 @@ fun ShimmerEffect() {
 fun LyricScreenPreview() {
     LyricScreen(
         LyricState().copy(isLoading = true),
-        event = {},
         onClick = {},
         onBackPress = {})
 }

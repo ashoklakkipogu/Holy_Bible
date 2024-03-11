@@ -27,10 +27,10 @@ class ShareUtils {
     companion object {
         fun saveBitmapAndGetUri(context: Context, bitmap: Bitmap): Uri? {
             val path: String = context.externalCacheDir.toString() + "/testImg.jpg"
-            var out: OutputStream? = null
+            //val out: OutputStream?
             val file = File(path)
             try {
-                out = FileOutputStream(file)
+                val out = FileOutputStream(file)
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out)
                 out.flush()
                 out.close()

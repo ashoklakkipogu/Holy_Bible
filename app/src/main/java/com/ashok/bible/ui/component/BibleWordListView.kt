@@ -20,6 +20,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -70,7 +71,7 @@ fun BibleWordListView(
                 .height(IntrinsicSize.Min)
                 .padding(5.dp)
         ) {
-            Divider(
+            HorizontalDivider(
                 color = dividerColor,
                 modifier = Modifier
                     .fillMaxHeight()
@@ -153,12 +154,12 @@ fun deleteRow(context: Context, onClickYes: () -> Unit) {
     val ab: AlertDialog.Builder = AlertDialog.Builder(context)
     ab.setTitle("Delete")
     ab.setMessage("Are you sure to delete this item?")
-    ab.setPositiveButton("Yes") { _, id ->
+    ab.setPositiveButton("Yes") { _, _ ->
         onClickYes.invoke()
     }
     ab.setNegativeButton(
         "No"
-    ) { pObjDialog, id -> pObjDialog.dismiss() }
+    ) { pObjDialog, _ -> pObjDialog.dismiss() }
     ab.show()
 
 }

@@ -41,7 +41,6 @@ fun BibleIndexScreen(
     var searchText by remember { mutableStateOf("") } // Query for SearchBar
 
     val listState = rememberLazyListState()
-    val coroutineScope = rememberCoroutineScope()
 
     DisposableEffect(Unit) {
         onDispose {

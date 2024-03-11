@@ -32,7 +32,6 @@ fun InputDialogView(
     onDismiss: () -> Unit,
     onEnteredText: (String) -> Unit
 ) {
-    val context = LocalContext.current
     var searchedFood by remember {
         mutableStateOf("")
     }

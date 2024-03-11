@@ -19,12 +19,8 @@ import com.ashok.bible.ui.dashboard.HomeViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(viewModel: HomeViewModel) {
-    val coroutineScope = rememberCoroutineScope()
     val navController = rememberNavController()
-
-
-
-
+    
     Scaffold(/*topBar = {
         topAppBar(currentRoute = currentRoute, headingData = headingData, leftArrowClick = {
             clickAction.value = "LEFT"

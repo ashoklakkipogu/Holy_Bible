@@ -129,7 +129,7 @@ fun ProfileScreen(
                         isShowLanguageDialog = true
                     }
                     MenuItemView("Share App", R.drawable.ic_share) {
-                        shareApp(context as Activity)
+                        shareApp(context)
                     }
                     MenuItemView("Rate Us", R.drawable.ic_rate_us) {
                         goToPlayStore(context)

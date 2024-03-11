@@ -23,10 +23,6 @@ class LyricViewModel @Inject constructor(
 
     var state by mutableStateOf(LyricState())
 
-    fun onEvent(event: LyricEvent) {
-
-    }
-
     private fun getLyrics() {
         viewModelScope.launch {
             repository.getLyrics().collect { result ->

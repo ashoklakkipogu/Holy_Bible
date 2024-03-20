@@ -1,6 +1,7 @@
 package com.ashok.bible.ui.screens
 
 import android.content.Intent
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
@@ -13,6 +14,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
 import com.ashok.bible.data.local.entry.BibleModelEntry
 import com.ashok.bible.ui.activity.ShareImageActivity
+import com.ashok.bible.ui.common.BackPressHandler
 import com.ashok.bible.ui.component.InputDialogView
 import com.ashok.bible.ui.dashboard.component.BibleVerseList
 import com.ashok.bible.ui.dashboard.component.BottomSheet
@@ -52,6 +54,7 @@ fun BibleViewScreen(
         showSheet = true
         selectedBible = model
     }
+
 
     if (showSheet) {
         BottomSheet(
@@ -98,12 +101,14 @@ fun BibleViewScreen(
             onGridImgClick = {
                 val intent = Intent(context, ShareImageActivity::class.java)
                 intent.putExtra("selected_image", it)
-                val str = "${selectedBible.verse} \n ${selectedBible.bibleIndex} ${selectedBible.Chapter}:${selectedBible.Versecount}"
+                val str =
+                    "${selectedBible.verse} \n ${selectedBible.bibleIndex} ${selectedBible.Chapter}:${selectedBible.Versecount}"
                 intent.putExtra("selected_title", str)
                 context.startActivity(intent)
             },
             onSoundClick = {
-                val str = "${selectedBible.bibleIndex} ${selectedBible.Chapter} ${selectedBible.Versecount} \n ${selectedBible.verse}"
+                val str =
+                    "${selectedBible.bibleIndex} ${selectedBible.Chapter} ${selectedBible.Versecount} \n ${selectedBible.verse}"
                 event(DashboardUiEvent.TextSpeechPlay(str))
             })
     } else {

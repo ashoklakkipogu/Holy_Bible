@@ -17,6 +17,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.ashok.bible.data.local.entity.StatusEmptyImagesModel
+import com.ashok.bible.domain.RequestState
 import com.ashok.bible.domain.repository.BibleRepository
 import com.ashok.bible.ui.utilities.BibleUtils
 import com.ashok.bible.ui.utilities.SharedPrefUtils
@@ -175,7 +176,8 @@ class HomeViewModel @Inject constructor(
         dbRepo.getBiblePageActionLeftOrRight(clickAction, bookId, chapterId).collect { result ->
             when (result) {
                 is Result.Error -> {
-                    state = state.copy(isLoading = false, error = result.apiError?.getErrorMessage())
+                    state =
+                        state.copy(isLoading = false)
                 }
 
                 is Result.Loading -> {
@@ -336,6 +338,27 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             bibleRepository.getStatusEmptyImages().collect { result ->
                 when (result) {
+                    is RequestState.Success -> {
+                        val data = result.data
+                        var newList: List<StatusEmptyImagesModel>? = null
+                        if (data != null) {
+                            val list = ArrayList<StatusEmptyImagesModel>()
+                            for ((_, value) in data) {
+                                list.add(value)
+                            }
+                            newList = list.sortedBy { sort ->
+                                sort.createdDate
+                            }.reversed()
+                        }
+                        state = state.copy(
+                            statusImages = newList
+                        )
+                    }
+
+                    else -> {}
+                }
+
+                /*when (result) {
                     is Result.Error -> {
                         state = state.copy(
                             statusImagesError = result.apiError?.getErrorMessage(),
@@ -367,7 +390,7 @@ class HomeViewModel @Inject constructor(
                             )
                         }
                     }
-                }
+                }*/
             }
         }
     }

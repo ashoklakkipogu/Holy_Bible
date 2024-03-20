@@ -5,15 +5,14 @@ import com.ashok.bible.data.local.entry.BibleIndexModelEntry
 import com.ashok.bible.data.local.entry.BibleModelEntry
 
 data class DashboardUiState(
-    var bibleData:List<BibleModelEntry>? = null,
-    var bibleIndexData:List<BibleIndexModelEntry>? = null,
-    var isLoading:Boolean = false,
-    var error:String? = null,
-    var bibleScrollPos:Int = 0,
-    var expandedState:String = "",
-    var selectedLanguage:String = "",
+    var bibleData: List<BibleModelEntry>? = null,
+    var bibleIndexData: List<BibleIndexModelEntry>? = null,
+    var isLoading: Boolean = false,
+    var bibleScrollPos: Int = 0,
+    var expandedState: String = "",
+    var selectedLanguage: String = "",
 
-    val isLoadingStatus:Boolean = false,
-    val statusImages:List<StatusEmptyImagesModel>? = null,
-    val statusImagesError:String? = null
-)
+
+    val statusImages: List<StatusEmptyImagesModel>? = null,
+
+    )

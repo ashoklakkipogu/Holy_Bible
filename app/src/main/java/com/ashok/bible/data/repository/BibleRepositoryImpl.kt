@@ -11,7 +11,9 @@ import com.ashok.bible.data.local.entity.StatusImagesModel
 import com.ashok.bible.data.local.entity.StoryModel
 import com.ashok.bible.data.local.entity.UserModel
 import com.ashok.bible.data.model.ApiError
+import com.ashok.bible.data.model.DataError
 import com.ashok.bible.data.model.Errors
+import com.ashok.bible.domain.RequestState
 import com.ashok.bible.domain.repository.BibleRepository
 import com.ashok.bible.ui.utilities.Result
 import com.ashok.bible.ui.utilities.SharedPrefUtils
@@ -33,93 +35,70 @@ class BibleRepositoryImpl @Inject constructor(
 ) : BibleRepository {
     private val TAG = BibleRepositoryImpl::class.java.simpleName
 
-    override suspend fun getLyrics(): Flow<Result<Map<String, LyricsModel>?>> = wrap {
+    override suspend fun getLyrics(): Flow<RequestState<Map<String, LyricsModel>?>> = wrap {
         val lang = SharedPrefUtils.getLanguage(pref)!!
         api.getLyrics(language = "\"${lang.lowercase()}\"")
+
     }.flowOn(Dispatchers.IO)
 
-    override suspend fun getQuotes(): Flow<Result<Map<String, List<QuotesModel>>?>> = wrap {
+    override suspend fun getQuotes(): Flow<RequestState<Map<String, List<QuotesModel>>?>> = wrap {
         val lang = SharedPrefUtils.getLanguage(pref)!!.lowercase()
         api.getQuotes(lang)
-    }.flowOn(Dispatchers.IO)
+    }
 
-    override suspend fun getStory(): Flow<Result<Map<String, StoryModel>?>> = wrap {
+    override suspend fun getStory(): Flow<RequestState<Map<String, StoryModel>?>> = wrap {
         val lang = SharedPrefUtils.getLanguage(pref)!!
         api.getStories(language = "\"$lang\"")
-    }.flowOn(Dispatchers.IO)
+    }
 
-    override suspend fun getStatusImages(): Flow<Result<Map<String, StatusImagesModel>?>> = wrap {
+    override suspend fun getStatusImages(): Flow<RequestState<Map<String, StatusImagesModel>?>> = wrap {
         val lang = SharedPrefUtils.getLanguage(pref)!!
         api.getStatus(language = "\"$lang\"")
-    }.flowOn(Dispatchers.IO)
+    }
 
 
-    override suspend fun getStatusEmptyImages(): Flow<Result<Map<String, StatusEmptyImagesModel>?>> =
+    override suspend fun getStatusEmptyImages(): Flow<RequestState<Map<String, StatusEmptyImagesModel>?>> =
         wrap {
             api.getStatusEmptyImages()
-        }.flowOn(Dispatchers.IO)
+        }
 
-    override suspend fun  saveUsers(userModel: UserModel): Flow<Result<BaseModel?>> = wrap {
+    override suspend fun saveUsers(userModel: UserModel): Flow<RequestState<BaseModel?>> = wrap {
         api.saveUsers(userModel)
-    }.flowOn(Dispatchers.IO)
+    }
 
-
-    private fun <T : Any> wrap(function: suspend () -> Response<T>): Flow<Result<T?>> {
+    private fun <T : Any> wrap(function: suspend () -> Response<T>): Flow<RequestState<T?>> {
         return flow {
-            emit(Result.Loading(true))
+            emit(RequestState.Loading)
             try {
-                val response = function()
-                //Log.i("response", "response.........remote$response")
-                if (response.isSuccessful) {
-                    val result = response.body()
-                    if (result != null) {
-                        emit(Result.Success(response.body()))
-                    } else
-                        emit(Result.Error(ApiError(ApiError.ApiStatus.EMPTY_RESPONSE)))
-                } else {
-                    emit(Result.Error(ApiError(ApiError.ApiStatus.EMPTY_RESPONSE)))
-                }
+                emit(RequestState.Success(function().body()))
             } catch (throwable: Throwable) {
                 emit(onError(throwable))
             }
-
-            //else -> failure(ApiError(ApiError.ApiStatus.NOT_DEFINED))
-        }
+        }.flowOn(Dispatchers.IO)
     }
 
-    private fun <T> onError(e: Throwable): Result<T?> {
+    private fun <T> onError(e: Throwable): RequestState<T?> {
         Log.d(TAG, "onError: $e")
         return when (e) {
             is HttpException -> {
-                val errorMessage = getErrorMessage(e.response()?.errorBody())
-                var errors = Errors()
-                try {
-                    errors = Gson().fromJson(errorMessage, Errors::class.java)
-                } catch (e: Exception) {
-                    //e.printStackTrace()
-                }
-
-                Result.Error(
-                    ApiError(
-                        ApiError.ApiStatus.BAD_RESPONSE, e.code(), errorMessage,
-                        errors
-                    )
+                RequestState.Error(
+                    DataError.Network.BAD_RESPONSE
                 )
             }
 
             is SocketTimeoutException -> {
-                Result.Error(ApiError(ApiError.ApiStatus.TIMEOUT, message = e.localizedMessage))
+                RequestState.Error(DataError.Network.TIMEOUT)
             }
 
             is IOException -> {
-                Result.Error(ApiError(ApiError.ApiStatus.NO_CONNECTION, message = e.localizedMessage))
+                RequestState.Error(DataError.Network.NO_CONNECTION)
             }
 
             is NullPointerException -> {
-                Result.Error(ApiError(ApiError.ApiStatus.EMPTY_RESPONSE))
+                RequestState.Error(DataError.Network.EMPTY_RESPONSE)
             }
 
-            else -> Result.Error(ApiError(ApiError.ApiStatus.NOT_DEFINED))
+            else -> RequestState.Error(DataError.Network.NOT_DEFINED)
         }
     }
 

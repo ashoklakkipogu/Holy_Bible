@@ -28,8 +28,8 @@ abstract class BibleDatabase : RoomDatabase() {
     lateinit var pref: SharedPreferences
 
     companion object {
-        const val VERSION = 2
-        const val DATABASE = "Bible.db"
+        const val VERSION = 5
+        const val DATABASE = "HolyBible.db"
     }
 
     abstract fun bibleDao(): BibleDao

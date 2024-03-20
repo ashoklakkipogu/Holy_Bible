@@ -15,6 +15,7 @@ import com.ashok.bible.data.local.entity.UserModel
 import com.ashok.bible.data.local.entry.BibleIndexModelEntry
 import com.ashok.bible.data.local.entry.BibleModelEntry
 import com.ashok.bible.data.repository.DbRepoImp
+import com.ashok.bible.domain.RequestState
 import com.ashok.bible.domain.repository.BibleRepository
 import com.ashok.bible.ui.onboarding.OnboardingUIEvent
 import com.ashok.bible.ui.onboarding.OnboardingUIState
@@ -160,17 +161,11 @@ class SplashViewModel @Inject constructor(
         viewModelScope.launch {
             repository.saveUsers(obj).collect { result ->
                 when (result) {
-                    is Result.Error -> {
-
-                    }
-
-                    is Result.Loading -> {
-
-                    }
-
-                    is Result.Success -> {
+                    is RequestState.Success -> {
                         SharedPrefUtils.setUserName(pref, name)
                     }
+
+                    else -> {}
                 }
             }
         }

@@ -16,7 +16,7 @@ object AppConstants {
 
     const val DATE_FORMAT_yyyy_MM_dd_HH_mm_ss_SSS_Z = "yyyy-MM-dd'T'HH:mm:ss.SSS"
 
-    const val EMAIL: String = "lakkideveloper@gmail.com"
+    const val EMAIL: String = "pranaylakkidev@gmail.com"
     const val SUBJECT: String = "Holy Bible"
     const val NO_DATA_FOUND: String = "No data found, Coming soon!!"
 

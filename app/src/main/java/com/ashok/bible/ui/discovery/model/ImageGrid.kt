@@ -8,5 +8,5 @@ data class ImageGrid(
     var drawable: Int? = null,
     var title: String? = null,
     var des: String? = null,
-    var color: Color = Color(RandomColors.color),
+    var color: Color? = null,
 )

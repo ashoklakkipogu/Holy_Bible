@@ -13,12 +13,16 @@ class SharedViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle
 ): ViewModel() {
     val title = savedStateHandle.getStateFlow("title", null)
+    val gridPos = savedStateHandle.getStateFlow("gridPos", -1)
     val getImageGridList = savedStateHandle.getLiveData("ImageGridList", emptyList<ImageGrid>())
     val getQuotes = savedStateHandle.getStateFlow("quotesModel", emptyList<QuotesModel>())
     val getQuotesMap = savedStateHandle.getStateFlow("quotesMap", emptyMap<String, List<QuotesModel>>())
 
     fun putTitle(title: String?) {
         savedStateHandle["title"] = title
+    }
+    fun putGridId(gridPos: Int) {
+        savedStateHandle["gridPos"] = gridPos
     }
     fun putImageGridList(grid: List<ImageGrid>) {
         savedStateHandle["ImageGridList"] = grid

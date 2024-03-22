@@ -1,6 +1,7 @@
 package com.ashok.bible.data.repository
 
 import android.content.SharedPreferences
+import com.ashok.bible.data.error.DataError
 import com.ashok.bible.data.local.dao.*
 import com.ashok.bible.data.local.entry.BibleIndexModelEntry
 import com.ashok.bible.data.local.entry.BibleModelEntry
@@ -10,12 +11,11 @@ import com.ashok.bible.data.local.entry.NoteModelEntry
 import com.ashok.bible.data.local.model.FavModel
 import com.ashok.bible.data.local.model.HighlightModel
 import com.ashok.bible.data.local.model.NoteModel
-import com.ashok.bible.data.model.ApiError
+import com.ashok.bible.domain.RequestState
 import com.ashok.bible.domain.repository.DbRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
-import com.ashok.bible.ui.utilities.Result
 import com.ashok.bible.ui.utilities.SharedPrefUtils
 
 class DbRepoImp @Inject constructor(
@@ -33,7 +33,7 @@ class DbRepoImp @Inject constructor(
         bookId: Int,
         chapterId: Int,
         verseId: Int
-    ): Flow<Result<BibleModelEntry>> = wrap {
+    ): Flow<RequestState<BibleModelEntry>> = wrap {
         val language = SharedPrefUtils.getLanguage(pref)!!
         bibleDao.getBibleScrollPosition(
             bookId,
@@ -47,7 +47,7 @@ class DbRepoImp @Inject constructor(
         clickAction: String,
         bookId: Int,
         chapterId: Int
-    ): Flow<Result<List<BibleModelEntry>>> = wrap {
+    ): Flow<RequestState<List<BibleModelEntry>>> = wrap {
         val language = SharedPrefUtils.getLanguage(pref)!!
         var data = bibleDao.getBibleListByBookIdAndChapterId(bookId, chapterId, language)
         if (data.isNullOrEmpty()) {
@@ -67,7 +67,7 @@ class DbRepoImp @Inject constructor(
 
     }
 
-    override suspend fun getAllNotes(): Flow<Result<List<NoteModel>>> =
+    override suspend fun getAllNotes(): Flow<RequestState<List<NoteModel>>> =
         wrap {
             val language = SharedPrefUtils.getLanguage(pref)!!
             noteDao.getAllNote(language)?.sortedBy { sort ->
@@ -75,24 +75,24 @@ class DbRepoImp @Inject constructor(
             }?.reversed()
         }
 
-    override suspend fun getAllFav(): Flow<Result<List<FavModel>>> =
+    override suspend fun getAllFav(): Flow<RequestState<List<FavModel>>> =
         wrap {
             val language = SharedPrefUtils.getLanguage(pref)!!
             favoriteDao.getAllFavorites(language)?.sortedBy { sort -> sort.createdDate }?.reversed()
         }
 
 
-    override suspend fun getBibleIndex(): Flow<Result<List<BibleIndexModelEntry>>> = wrap {
+    override suspend fun getBibleIndex(): Flow<RequestState<List<BibleIndexModelEntry>>> = wrap {
         val language = SharedPrefUtils.getLanguage(pref)!!
         bibleIndexDao.getAllBibleIndexContent(language)
     }
 
-    override suspend fun getLanguage(language: String): Flow<Result<List<BibleIndexModelEntry>>> =
+    override suspend fun getLanguage(language: String): Flow<RequestState<List<BibleIndexModelEntry>>> =
         wrap {
             bibleIndexDao.getLanguage(language)
         }
 
-    override suspend fun getAllHighlights(): Flow<Result<List<HighlightModel>>> =
+    override suspend fun getAllHighlights(): Flow<RequestState<List<HighlightModel>>> =
         wrap {
             val language = SharedPrefUtils.getLanguage(pref)!!
             highlightDao.getAllHighlight(language)?.sortedBy { sort -> sort.createdDate }
@@ -102,7 +102,7 @@ class DbRepoImp @Inject constructor(
     override suspend fun getBibleVerseByBookIdAndChapterId(
         bookId: Int,
         chapterID: Int
-    ): Flow<Result<List<BibleModelEntry>>> = wrap {
+    ): Flow<RequestState<List<BibleModelEntry>>> = wrap {
         val language = SharedPrefUtils.getLanguage(pref)!!
         bibleDao.getBibleVerseByBookIdAndChapterId(bookId, chapterID, language)
     }
@@ -138,100 +138,22 @@ class DbRepoImp @Inject constructor(
 
     override suspend fun insertBible(bible: List<BibleModelEntry>) =
         bibleDao.insertBibleContent(bible)
-    /* override suspend fun getBibleScrollLastPosition(
-         bookId: Int
-     ) = bibleDao.getBibleScrollLastPosition(
-         bookId
-     )
 
 
-
-
-
-     override suspend fun getBibleListByBookIdAndChapterId(
-         bookId: Int,
-         chapterId: Int,
-         language: String
-     ) = bibleDao.getBibleListByBookIdAndChapterId(
-         bookId,
-         chapterId,
-         language
-     )
-
-     override suspend fun getBibleIndex(language: String) =
-         bibleIndexDao.getAllBibleIndexContent(language)
-
-     override suspend fun getBibleChaptersByBookIdAndLangauge(id: Int, language: String) =
-         bibleDao.getBibleChaptersByBookIdAndLangauge(id, language)
-
-
-
-     override suspend fun getBibleByBookIdAndChapterIdAndVerse(
-         bookId: Int,
-         chapterID: Int,
-         verseId: Int
-     ) = bibleDao.getAllBibleContentByBookIdAndChapterIdAndVerse(
-         bookId,
-         chapterID,
-         verseId
-     )
-
-
-
-     override suspend fun deleteFavoriteByBibleLangIndex(bibleLangIndex: String) =
-         favoriteDao.deleteFavoriteByBibleLangIndex(bibleLangIndex)
-
-     override suspend fun getAllNotes() = noteDao.getAllNote()
-     override suspend fun getAllNoteList() = noteDao.getAllNoteList()
-     override suspend fun getNotesById(id: Int) = noteDao.getNotesById(id)
-     override suspend fun insertAllFav(favList: ArrayList<FavoriteModelEntry>) =
-         favoriteDao.insertFavorites(favList)
-
-     override suspend fun insertAllNotes(noteList: ArrayList<NoteModelEntry>) =
-         noteDao.insertNote(noteList)
-
-     override suspend fun insertAllHighlight(highlights: ArrayList<HighlightModelEntry>) =
-         highlightDao.insertHighlight(highlights)
-
-     override suspend fun getHighlightById(id: Int) = highlightDao.getHighlightById(id)
-     override suspend fun deleteHighlightByBibleLangIndex(bibleLangIndex: String) =
-         highlightDao.deleteHighlightByBibleLangIndex(bibleLangIndex)
-
-     override suspend fun deleteNotesByBibleLangIndex(bibleLangIndex: String) =
-         noteDao.deleteNotesByBibleLangIndex(bibleLangIndex)
-
-     override suspend fun getAllLyrics(id: Int) = lyricsDao.getAllLyricsList()*/
-
-
-    private fun <T : Any> wrap(function: suspend () -> T?): Flow<Result<T>> {
+    private fun <T : Any> wrap(function: suspend () -> T?): Flow<RequestState<T>> {
         return flow {
-            emit(Result.Loading(true))
+            emit(RequestState.Loading)
             val response = function()
             try {
-                //if (response != null)
-                /*//Log.i("response", "response.........db$response")
-                //Log.i("response", "response.........db1${(response is List<*> && response.isEmpty())}")
-                //Log.i("response", "response.........db2${(response is Map<*, *> && response.isEmpty())}")*/
-                if (response !=null) {
-                    //Log.i("response", "response.........dbs$response")
-                    emit(
-                        Result.Success(
-                            data = response
-                        )
-                    )
+                if (response != null) {
+                    emit(RequestState.Success(data = response))
                 } else {
-                    emit(Result.Error(ApiError(ApiError.ApiStatus.EMPTY_RESPONSE)))
-                    //Log.i("response", "response.........dbe$response")
+                    emit(RequestState.Error(DataError.Local.EMPTY_RESPONSE))
                 }
 
             } catch (e: Exception) {
-                emit(
-                    Result.Error(
-                        ApiError(ApiError.ApiStatus.EMPTY_RESPONSE, message = e.message.toString())
-                    )
-                )
+                emit(RequestState.Error(DataError.Local.EMPTY_RESPONSE))
             }
         }
     }
-
 }

@@ -64,7 +64,7 @@ fun NavGraph(
             composable(Route.Lyrics.router) {
                 val viewModel: LyricViewModel = hiltViewModel()
                 val state = viewModel.state
-                LyricScreen(state = state, event = viewModel::onEvent, onBackPress = {
+                LyricScreen(state = state, onBackPress = {
                     navController.popBackStack()
                 }, onClick = {
                     navController.currentBackStackEntry?.savedStateHandle?.set(
@@ -87,31 +87,30 @@ fun NavGraph(
                 val state: DiscoveryUIState = viewModel.state
                 val sharedViewModel = entry.sharedViewModel<SharedViewModel>(navController)
                 DiscoveryScreen(state,
-                    event = viewModel::onEvent,
                     onBackPress = {
                         navController.popBackStack()
                     },
                     onClickMoreStory = {
                         sharedViewModel.putTitle("New to Faith")
-                        sharedViewModel.storeImageGridList(storyList = state.storyList)
+                        sharedViewModel.storeImageGridList(storyList = it)
                         navController.navigate(Route.DiscoveryGridDetails.router)
                     },
                     onClickMoreTopic = {
                         sharedViewModel.putTitle("Search by Topic")
-                        sharedViewModel.putQuotesMap(state.quotesMap)
-                        sharedViewModel.storeImageGridList(quotesTitles = state.quotesTitlesMapping)
+                        sharedViewModel.putQuotesMap(it.quotesMap)
+                        sharedViewModel.storeImageGridList(quotesTitles = it.quotesTitles)
                         navController.navigate(Route.DiscoveryGridDetails.router)
                     },
-                    onClickButton = {
-                        sharedViewModel.putTitle(it)
-                        sharedViewModel.putQuotes(state.quotesMap?.get(it))
+                    onClickButton = {title, quotesMap->
+                        sharedViewModel.putTitle(title)
+                        sharedViewModel.putQuotes(quotesMap.quotesMap?.get(title))
                         navController.navigate(Route.DiscoveryTopicDetails.router)
                     },
-                    onClickImage = {
-                        sharedViewModel.storeImageGridList(storyList = state.storyList)
-                        sharedViewModel.putTitle(state.storyList?.get(it)?.title)
+                    onClickImage = {pos, storyList->
+                        sharedViewModel.storeImageGridList(storyList = storyList)
+                        sharedViewModel.putTitle(storyList[pos].title)
                         //val list = listOf(state.storyList?.get(it))
-                        sharedViewModel.putGridId(gridPos = it)
+                        sharedViewModel.putGridId(gridPos = pos)
                         navController.navigate(Route.DiscoveryStoryDetails.router)
                     }
                 )
@@ -171,7 +170,11 @@ fun NavGraph(
             composable(Route.More.router) {
                 val viewModel: SplashViewModel = hiltViewModel()
                 val state = viewModel.state
-                ProfileScreen(state = state, homeState = homeViewModel.state, event= viewModel::onEvent)
+                ProfileScreen(
+                    state = state,
+                    homeState = homeViewModel.state,
+                    event = viewModel::onEvent
+                )
             }
             composable(Route.BibleIndex.router) {
                 val state: DashboardUiState = homeViewModel.state

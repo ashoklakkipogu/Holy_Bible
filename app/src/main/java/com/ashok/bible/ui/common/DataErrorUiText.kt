@@ -1,9 +1,10 @@
 package com.ashok.bible.ui.common
 
 import com.ashok.bible.data.AppConstants.NO_DATA_FOUND
-import com.ashok.bible.data.model.DataError
+import com.ashok.bible.data.error.DataError
+import com.ashok.bible.data.error.RootError
 
-fun DataError.dataErrorUiText():String{
+fun RootError.dataErrorUiText():String{
     return when(this){
         DataError.Local.DISK_FULL -> {
             ""
@@ -14,5 +15,8 @@ fun DataError.dataErrorUiText():String{
         DataError.Network.EMPTY_RESPONSE -> NO_DATA_FOUND
         DataError.Network.NOT_DEFINED -> "an unexpected error"
         DataError.Network.UNKNOWN -> "Something went wrong"
+        else -> {
+            ""
+        }
     }
 }

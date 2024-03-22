@@ -1,7 +1,6 @@
 package com.ashok.bible.ui.viewmodel
 
 import android.app.Application
-import android.content.Context
 import android.content.SharedPreferences
 import android.widget.Toast
 import androidx.compose.runtime.getValue
@@ -14,16 +13,15 @@ import com.ashok.bible.data.local.entity.BibleJson
 import com.ashok.bible.data.local.entity.UserModel
 import com.ashok.bible.data.local.entry.BibleIndexModelEntry
 import com.ashok.bible.data.local.entry.BibleModelEntry
-import com.ashok.bible.data.repository.DbRepoImp
 import com.ashok.bible.domain.RequestState
-import com.ashok.bible.domain.repository.BibleRepository
+import com.ashok.bible.domain.usecase.BibleUseCase
+import com.ashok.bible.domain.usecase.DatabaseUseCase
 import com.ashok.bible.ui.onboarding.OnboardingUIEvent
 import com.ashok.bible.ui.onboarding.OnboardingUIState
 import com.ashok.bible.ui.utilities.BibleUtils
 import com.ashok.bible.ui.utilities.BibleUtils.getBibleIndex
 import com.ashok.bible.ui.utilities.BibleUtils.getJsonDataFromUrl
 import com.ashok.bible.ui.utilities.BibleUtils.isNetworkAvailable
-import com.ashok.bible.ui.utilities.Result
 import com.ashok.bible.ui.utilities.SharedPrefUtils
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -34,13 +32,14 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SplashViewModel @Inject constructor(
-    val repository: BibleRepository,
-    val dbRepo: DbRepoImp,
+    val useCase: BibleUseCase,
+    val databaseUseCase: DatabaseUseCase,
     val pref: SharedPreferences,
     val application: Application
 ) :
     ViewModel() {
     var state by mutableStateOf(OnboardingUIState())
+    val dbRepo = databaseUseCase.mDbRepository
     /*private val _bibleInsert = MutableLiveData<Result<Boolean>>(Result.Loading())
     val bibleInsert: LiveData<Result<Boolean>> get() = _bibleInsert*/
 
@@ -77,9 +76,7 @@ class SplashViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             dbRepo.getLanguage(langauge).collect { result ->
                 when (result) {
-                    is Result.Error -> Unit
-                    is Result.Loading -> Unit
-                    is Result.Success -> {
+                    is RequestState.Success -> {
                         val prefUserName = SharedPrefUtils.getUserName(pref)
                         if (prefUserName != null) {
                             saveUser(prefUserName, langauge)
@@ -87,7 +84,7 @@ class SplashViewModel @Inject constructor(
                         //Log.i("data", "data........." + result.data?.size)
                         SharedPrefUtils.setLanguage(pref, langauge)
                         SharedPrefUtils.saveFirstTime(pref)
-                        state = if (result.data.isNullOrEmpty()) {
+                        state = if (result.data.isEmpty()) {
                             val bibleIndex = getBibleIndex(langauge)
                             dbRepo.insertBibleIndex(bibleIndex)
                             val bible = getBibleData(langauge, bibleIndex)
@@ -97,6 +94,8 @@ class SplashViewModel @Inject constructor(
                             state.copy(isLoading = false, isBibleInserted = true)
                         }
                     }
+
+                    else -> {}
                 }
             }
 
@@ -159,7 +158,7 @@ class SplashViewModel @Inject constructor(
         obj.userName = name
         obj.language = language
         viewModelScope.launch {
-            repository.saveUsers(obj).collect { result ->
+            useCase.saveUsers(obj).collect { result ->
                 when (result) {
                     is RequestState.Success -> {
                         SharedPrefUtils.setUserName(pref, name)

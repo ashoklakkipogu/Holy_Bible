@@ -30,24 +30,24 @@ fun NoteScreenView(
     }
 
 
-    val noteData = state.noteData
-
-    if (noteData?.isEmpty() == true) {
-        EmptyScreen()
+    val noteDataState = state.noteData
+    noteDataState?.let {
+        val noteData = noteDataState.getSuccessDataOrNull()
+        if (!noteData.isNullOrEmpty()){
+            NoteRow(
+                noteData,
+                onClick = {
+                    //onClick.invoke(it.bibleLangIndex.split("-")[1].toInt())
+                    onClick.invoke(it)
+                },
+                onClickDelete = { item ->
+                    event(BookmarkUIEvent.DeleteNoteById(item))
+                }
+            )
+        }else{
+            EmptyScreen()
+        }
     }
-    if (noteData != null) {
-        NoteRow(
-            noteData,
-            onClick = {
-                //onClick.invoke(it.bibleLangIndex.split("-")[1].toInt())
-                onClick.invoke(it)
-            },
-            onClickDelete = { item ->
-                event(BookmarkUIEvent.DeleteNoteById(item))
-            }
-        )
-    }
-
 }
 
 @Composable

@@ -4,6 +4,7 @@ import com.ashok.bible.data.local.entity.QuotesModel
 import com.ashok.bible.data.local.entity.StatusImagesModel
 import com.ashok.bible.data.local.entity.StoryModel
 import com.ashok.bible.domain.RequestState
+import com.ashok.bible.domain.model.QuotesMappingModel
 import com.ashok.bible.ui.discovery.model.ImageGrid
 
 data class DiscoveryUIState(
@@ -19,14 +20,9 @@ data class DiscoveryUIState(
     var isLoadingStatus: Boolean = true,
     var errorStatus: String? = null,*/
 
-    var quotesData: RequestState<Map<String, List<QuotesModel>>?>? = null,
-    var storyData: RequestState<Map<String, StoryModel>?>? = null,
-    var statusImagesData: RequestState<Map<String, StatusImagesModel>?>? = null,
-
-    var quotesTitlesMapping: List<ImageGrid>? = null,
-    var quotesMap: Map<String, List<QuotesModel>>? = null,
-    var storyList: List<StoryModel>? = null,
-    var statusList: List<StatusImagesModel>? = null,
+    var quotesData: RequestState<QuotesMappingModel>? = null,
+    var storyData: RequestState<List<StoryModel>?>? = null,
+    var statusImagesData: RequestState<List<StatusImagesModel>?>? = null,
 
 
 

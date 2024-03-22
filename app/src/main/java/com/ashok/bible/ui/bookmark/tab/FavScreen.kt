@@ -28,20 +28,24 @@ fun FavScreenView(
     LaunchedEffect(Unit) {
         event(BookmarkUIEvent.GetAllFavBibleData)
     }
-    if (state.favData?.isEmpty() == true) {
-        EmptyScreen()
+    val favDataState = state.favData
+    favDataState?.let {
+        val favData = favDataState.getSuccessDataOrNull()
+        if (!favData.isNullOrEmpty()){
+            FavRow(
+                favData,
+                onClick = {
+                    //onClick.invoke(it.bibleLangIndex.split("-")[1].toInt())
+                    onClick.invoke(it)
+                },
+                onClickDelete = { item ->
+                    event(BookmarkUIEvent.DeleteFavById(item))
+                }
+            )
+        }else{
+            EmptyScreen()
+        }
     }
-    if (state.favData != null)
-        FavRow(
-            state.favData,
-            onClick = {
-                //onClick.invoke(it.bibleLangIndex.split("-")[1].toInt())
-                onClick.invoke(it)
-            },
-            onClickDelete = { item ->
-                event(BookmarkUIEvent.DeleteFavById(item))
-            }
-        )
 
 }
 

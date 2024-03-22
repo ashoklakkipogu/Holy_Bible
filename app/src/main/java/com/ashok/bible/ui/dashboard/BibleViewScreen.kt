@@ -1,6 +1,7 @@
 package com.ashok.bible.ui.screens
 
 import android.content.Intent
+import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -32,8 +33,10 @@ fun BibleViewScreen(
     state: DashboardUiState,
     event: (DashboardUiEvent) -> Unit
 ) {
-    val listState = rememberLazyListState()
 
+    val context = LocalContext.current
+
+    val listState = rememberLazyListState()
     val index = state.bibleScrollPos
     LaunchedEffect(index) {
         if (index != -1) {
@@ -48,7 +51,6 @@ fun BibleViewScreen(
     var selectedBible by remember { mutableStateOf(BibleModelEntry()) }
     var headingData by remember { mutableStateOf(BibleModelEntry()) }
 
-    val context = LocalContext.current
 
     val onItemClick = { model: BibleModelEntry ->
         showSheet = true
@@ -147,15 +149,22 @@ fun BibleViewScreen(
         )
 
 
-        state.bibleData?.let {
-            BibleVerseList(
-                bibleData = it,
-                state = listState,
-                onItemClick = onItemClick
-            ) {
-                headingData = it
-            }
-        }
+        state.bibleData?.displayResult(
+            onLoading = { /*TODO*/ },
+            onSuccess = {
+                state.bibleData?.getSuccessDataOrNull()?.let {
+                    BibleVerseList(
+                        bibleData = it,
+                        state = listState,
+                        onItemClick = onItemClick
+                    ) {
+                        headingData = it
+                    }
+                }
+            },
+            onError = {}
+        )
+
     }
 
 

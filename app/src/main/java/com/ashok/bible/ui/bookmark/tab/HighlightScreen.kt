@@ -16,6 +16,7 @@ import com.ashok.bible.ui.common.EmptyScreen
 import com.ashok.bible.data.local.model.HighlightModel
 import com.ashok.bible.ui.bookmark.BookmarkUIEvent
 import com.ashok.bible.ui.bookmark.BookmarkUIState
+import com.ashok.bible.ui.bookmark.tab.NoteRow
 import com.ashok.bible.ui.component.BibleWordListView
 import com.ashok.bible.ui.utilities.BibleUtils.getUtcToDDMMYYYYHHMMA
 
@@ -28,19 +29,23 @@ fun HighlightScreenView(
     LaunchedEffect(Unit) {
         event(BookmarkUIEvent.GetAllHighlightBibleData)
     }
-    if (state.highlightData?.isEmpty() == true) {
-        EmptyScreen()
+    val highlightDataState = state.highlightData
+    highlightDataState?.let {
+        val highlightData = highlightDataState.getSuccessDataOrNull()
+        if (!highlightData.isNullOrEmpty()){
+            HighlightRow(
+                highlightData,
+                onClick = {
+                    onClick.invoke(it)
+                },
+                onClickDelete = { item ->
+                    event(BookmarkUIEvent.DeleteHighlightById(item))
+                }
+            )
+        }else{
+            EmptyScreen()
+        }
     }
-    if (state.highlightData != null)
-        HighlightRow(
-            state.highlightData,
-            onClick = {
-                onClick.invoke(it)
-            },
-            onClickDelete = { item ->
-                event(BookmarkUIEvent.DeleteHighlightById(item))
-            }
-        )
 }
 
 @Composable

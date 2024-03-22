@@ -1,6 +1,6 @@
-package com.ashok.bible.data.model
+package com.ashok.bible.data.error
 
-sealed interface DataError {
+sealed interface DataError: Error {
     enum class Network: DataError {
         NO_CONNECTION,
         BAD_RESPONSE,
@@ -10,6 +10,7 @@ sealed interface DataError {
         UNKNOWN
     }
     enum class Local: DataError {
-        DISK_FULL
+        DISK_FULL,
+        EMPTY_RESPONSE
     }
 }

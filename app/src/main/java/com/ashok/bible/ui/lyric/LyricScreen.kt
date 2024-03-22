@@ -8,7 +8,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -19,13 +18,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.ashok.bible.data.AppConstants
 import com.ashok.bible.ui.common.EmptyScreen
 import com.ashok.bible.data.local.entity.LyricsModel
-import com.ashok.bible.domain.RequestState
 import com.ashok.bible.ui.bibleindex.components.TopAppBarView
 import com.ashok.bible.ui.common.dataErrorUiText
 import com.ashok.bible.ui.lyric.component.AnimatedShimmer
 import com.ashok.bible.ui.lyric.component.LyricCardView
 import com.ashok.bible.ui.lyric.component.SearchAppBar
-import com.ashok.bible.ui.onboarding.OnboardingUIEvent
 import com.ashok.bible.ui.theme.BibleTheme
 
 
@@ -33,7 +30,6 @@ import com.ashok.bible.ui.theme.BibleTheme
 @Composable
 fun LyricScreen(
     state: LyricState,
-    event: (LyricEvent) -> Unit,
     onClick: (LyricsModel) -> Unit,
     onBackPress: () -> Unit
 ) {
@@ -55,23 +51,24 @@ fun LyricScreen(
                 val data = state.lyricData
                 data?.displayResult(
                     onLoading = { ShimmerEffect() },
-                    onSuccess = { event(LyricEvent.LyricDataMapping(data.getSuccessDataOrNull())) },
+                    onSuccess = { /*event(LyricEvent.LyricDataMapping(data.getSuccessDataOrNull()))*/
+                        val result = data.getSuccessDataOrNull()
+                        if (result != null) {
+                            if (result.isNotEmpty()) {
+                                LyricList(result, searchText) {
+                                    onClick.invoke(it)
+                                }
+                            } else
+                                EmptyScreen(errorMessage = AppConstants.NO_DATA_FOUND)
+                        }
+
+                    },
                     onError = {
                         EmptyScreen(
                             errorMessage = data.getErrorMessage().dataErrorUiText()
                         )
                     }
                 )
-
-                val mappingData = state.lyricMappingData
-                if (mappingData != null) {
-                    if (mappingData.isNotEmpty()) {
-                        LyricList(mappingData, searchText) {
-                            onClick.invoke(it)
-                        }
-                    } else
-                        EmptyScreen(errorMessage = AppConstants.NO_DATA_FOUND)
-                }
             }
 
         }
@@ -120,6 +117,5 @@ fun LyricScreenPreview() {
     LyricScreen(
         LyricState(),
         onClick = {},
-        onBackPress = {},
-        event = {})
+        onBackPress = {})
 }

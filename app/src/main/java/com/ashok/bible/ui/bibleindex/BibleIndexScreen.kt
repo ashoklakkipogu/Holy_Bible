@@ -16,12 +16,12 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.ashok.bible.data.local.entry.BibleIndexModelEntry
 import com.ashok.bible.ui.bibleindex.components.ExpandableCard
 import com.ashok.bible.ui.bibleindex.components.TopAppBarView
 import com.ashok.bible.ui.dashboard.DashboardUiEvent
@@ -36,11 +36,9 @@ fun BibleIndexScreen(
     state: DashboardUiState,
     event: (DashboardUiEvent) -> Unit
 ) {
-    val bibleIndexData = state.bibleIndexData
 
     var searchText by remember { mutableStateOf("") } // Query for SearchBar
 
-    val listState = rememberLazyListState()
 
     DisposableEffect(Unit) {
         onDispose {
@@ -56,19 +54,6 @@ fun BibleIndexScreen(
         TopAppBarView("References") {
             navController.popBackStack()
         }
-        /*Box(
-            modifier = Modifier
-                .padding(start = 16.dp, end = 16.dp)
-        ) {
-            SearchBarView(
-                text = searchText,
-                readOnly = false,
-                onValueChange = { searchText = it },
-                onSearch = {
-                    //searchText=it
-                }
-            )
-        }*/
         SearchAppBar() {
             searchText = it
         }
@@ -77,77 +62,111 @@ fun BibleIndexScreen(
             modifier = Modifier
                 .padding(16.dp)
         ) {
-            if (bibleIndexData != null)
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(Color.White),
-                    state = listState,
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    itemsIndexed(items = bibleIndexData.filter {
-                        it.chapter.contains(
-                            searchText,
-                            ignoreCase = true
-                        )
-                    }) { i, dataItem ->
-                        dataItem.isExpand = state.expandedState == dataItem.chapter
-                        if (dataItem.isExpand) {
-                            LaunchedEffect(Unit) {
-                                listState.animateScrollToItem(i)
-                            }
-                        }
+            val bibleIndexState = state.bibleIndexData
+            bibleIndexState?.displayResultNoAnimation(
+                onLoading = {
 
-                        ExpandableCard(
-                            data = dataItem,
-                            onClick = {
-                                event(DashboardUiEvent.ExpandedState(it.chapter))
-                            },
-                            onClickIndex = { bookId, chapterId ->
-                                navController.navigate(
-                                    route = Route.BibleIndexDetails.getFullRoute(
-                                        bookId = bookId,
-                                        chapterId = chapterId
-                                    )
-                                )
-                            },
-                            onSoundClick = {
-                                event(DashboardUiEvent.TextSpeechPlay(it))
-                            }
-                        )
-                       // Spacer(modifier = Modifier.height(8.dp))
-
-                    }
-
-
-                    /*bibleIndexData?.forEachIndexed { i, dataItem ->
-                        dataItem.isExpand = state.expandedState == dataItem.chapter
-                        if (dataItem.isExpand){
-                            coroutineScope.launch {
-                                listState.animateScrollToItem(i)
-                            }
-                        }
-
-                        item(key = "header_$i") {
-                            ExpandableCard(
-                                data = dataItem,
-                                onClick = {
-                                    event(DashboardUiEvent.ExpandedState(it.chapter))
-                                },
-                                onClickIndex = {bookId, chapterId->
-                                    navController.navigate(route = Route.BibleIndexDetails.getFullRoute(bookId = bookId, chapterId = chapterId))
-                                },
-                                onSoundClick = {
-                                    event(DashboardUiEvent.TextSpeechPlay(it))
-                                }
-                            )
-                            Spacer(modifier = Modifier.height(8.dp))
-                        }
-
-                    }*/
+                },
+                onSuccess = {
+                    bibleIndexLazyColumn(
+                        navController,
+                        bibleIndexState.getSuccessDataOrNull(),
+                        searchText,
+                        state,
+                        event
+                    )
+                },
+                onError = {
 
                 }
+            )
+
+
         }
 
     }
+}
+
+@Composable
+fun bibleIndexLazyColumn(
+    navController: NavController,
+    bibleIndexData: List<BibleIndexModelEntry>?,
+    searchText: String,
+    state: DashboardUiState,
+    event: (DashboardUiEvent) -> Unit
+) {
+    if (bibleIndexData != null) {
+        val listState = rememberLazyListState()
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.White),
+            state = listState,
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            itemsIndexed(items = bibleIndexData.filter {
+                it.chapter.contains(
+                    searchText,
+                    ignoreCase = true
+                )
+            }) { i, dataItem ->
+                dataItem.isExpand = state.expandedState == dataItem.chapter
+                if (dataItem.isExpand) {
+                    LaunchedEffect(Unit) {
+                        listState.animateScrollToItem(i)
+                    }
+                }
+
+                ExpandableCard(
+                    data = dataItem,
+                    onClick = {
+                        event(DashboardUiEvent.ExpandedState(it.chapter))
+                    },
+                    onClickIndex = { bookId, chapterId ->
+                        navController.navigate(
+                            route = Route.BibleIndexDetails.getFullRoute(
+                                bookId = bookId,
+                                chapterId = chapterId
+                            )
+                        )
+                    },
+                    onSoundClick = {
+                        event(DashboardUiEvent.TextSpeechPlay(it))
+                    }
+                )
+                // Spacer(modifier = Modifier.height(8.dp))
+
+            }
+
+
+            /*bibleIndexData?.forEachIndexed { i, dataItem ->
+                dataItem.isExpand = state.expandedState == dataItem.chapter
+                if (dataItem.isExpand){
+                    coroutineScope.launch {
+                        listState.animateScrollToItem(i)
+                    }
+                }
+
+                item(key = "header_$i") {
+                    ExpandableCard(
+                        data = dataItem,
+                        onClick = {
+                            event(DashboardUiEvent.ExpandedState(it.chapter))
+                        },
+                        onClickIndex = {bookId, chapterId->
+                            navController.navigate(route = Route.BibleIndexDetails.getFullRoute(bookId = bookId, chapterId = chapterId))
+                        },
+                        onSoundClick = {
+                            event(DashboardUiEvent.TextSpeechPlay(it))
+                        }
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
+
+            }*/
+
+        }
+
+    }
+
 }

@@ -9,7 +9,6 @@ import com.ashok.bible.data.local.model.FavModel
 import com.ashok.bible.data.local.model.HighlightModel
 import com.ashok.bible.data.local.model.NoteModel
 import com.ashok.bible.domain.repository.DbRepository
-import com.ashok.bible.ui.utilities.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -53,15 +52,7 @@ class BookmarkViewModel @Inject constructor(
     fun getAllNoteBibleData() {
         viewModelScope.launch {
             dbRepo.getAllNotes().collect { result ->
-                when (result) {
-                    is Result.Error -> {
-                        state = state.copy(noteDataError = true)
-                    }
-                    is Result.Loading -> Unit
-                    is Result.Success -> {
-                        state = state.copy(noteData = result.data)
-                    }
-                }
+                state = state.copy(noteData = result)
             }
         }
     }
@@ -69,15 +60,7 @@ class BookmarkViewModel @Inject constructor(
     fun getAllFavBibleData() {
         viewModelScope.launch(Dispatchers.IO) {
             dbRepo.getAllFav().collect { result ->
-                when (result) {
-                    is Result.Error -> {
-                        state = state.copy(favDataError = true)
-                    }
-                    is Result.Loading -> Unit
-                    is Result.Success -> {
-                        state = state.copy(favData = result.data)
-                    }
-                }
+                state = state.copy(favData = result)
             }
 
         }
@@ -86,15 +69,7 @@ class BookmarkViewModel @Inject constructor(
     fun getAllHighlightBibleData() {
         viewModelScope.launch(Dispatchers.IO) {
             dbRepo.getAllHighlights().collect { result ->
-                when (result) {
-                    is Result.Error -> {
-                        state = state.copy(highlightDataError = true)
-                    }
-                    is Result.Loading -> Unit
-                    is Result.Success -> {
-                        state = state.copy(highlightData = result.data)
-                    }
-                }
+                state = state.copy(highlightData = result)
             }
 
         }
@@ -104,30 +79,33 @@ class BookmarkViewModel @Inject constructor(
         //Log.i("index", "...........$obj")
         viewModelScope.launch {
             dbRepo.deleteNote(obj.id)
-            val noteData = state.noteData?.toMutableList().also { list ->
+            /*val noteData = state.noteData?.toMutableList().also { list ->
                 list?.remove(obj)
             }
-            state = state.copy(noteDelete = true, noteData = noteData)
+            state = state.copy(noteDelete = true, noteData = noteData)*/
+            getAllNoteBibleData()
         }
     }
 
     fun deleteHighlightById(obj: HighlightModel) {
         viewModelScope.launch {
             dbRepo.deleteHighlight(obj.id)
-            val highlightData = state.highlightData?.toMutableList().also { list ->
+           /* val highlightData = state.highlightData?.toMutableList().also { list ->
                 list?.remove(obj)
             }
-            state = state.copy(highlightDelete = true, highlightData = highlightData)
+            state = state.copy(highlightDelete = true, highlightData = highlightData)*/
+            getAllHighlightBibleData()
         }
     }
 
     fun deleteFavById(obj: FavModel) {
         viewModelScope.launch(Dispatchers.IO) {
             dbRepo.deleteFavorite(obj.id)
-            val favData = state.favData?.toMutableList().also { list ->
+           /* val favData = state.favData?.toMutableList().also { list ->
                 list?.remove(obj)
             }
-            state = state.copy(favDelete = true, favData = favData)
+            state = state.copy(favDelete = true, favData = favData)*/
+            getAllFavBibleData()
         }
     }
 

@@ -8,8 +8,8 @@ import com.ashok.bible.data.local.entry.NoteModelEntry
 import com.ashok.bible.data.local.model.FavModel
 import com.ashok.bible.data.local.model.HighlightModel
 import com.ashok.bible.data.local.model.NoteModel
+import com.ashok.bible.domain.RequestState
 import kotlinx.coroutines.flow.Flow
-import com.ashok.bible.ui.utilities.Result
 
 interface DbRepository {
     //fun getBible(): PagingSource<Int, BibleModelEntry>
@@ -17,16 +17,16 @@ interface DbRepository {
         bookId: Int,
         chapterId: Int,
         verseId: Int
-    ): Flow<Result<BibleModelEntry>>
+    ): Flow<RequestState<BibleModelEntry>>
 
     suspend fun getBiblePageActionLeftOrRight(
         clickAction: String = "",
         bookId: Int = 1,
         chapterId: Int = 1,
-    ): Flow<Result<List<BibleModelEntry>>>
+    ): Flow<RequestState<List<BibleModelEntry>>>
 
-    suspend fun getBibleIndex(): Flow<Result<List<BibleIndexModelEntry>>>
-    suspend fun getLanguage(language: String): Flow<Result<List<BibleIndexModelEntry>>>
+    suspend fun getBibleIndex(): Flow<RequestState<List<BibleIndexModelEntry>>>
+    suspend fun getLanguage(language: String): Flow<RequestState<List<BibleIndexModelEntry>>>
 
 
     suspend fun deleteHighlightByBibleLangIndex(bibleLangIndex: String)
@@ -36,15 +36,15 @@ interface DbRepository {
     suspend fun insertAllFav(favList: ArrayList<FavoriteModelEntry>)
     suspend fun deleteNotesByBibleLangIndex(bibleLangIndex: String)
     suspend fun insertAllNotes(noteList: ArrayList<NoteModelEntry>)
-    suspend fun getAllNotes(): Flow<Result<List<NoteModel>>>
+    suspend fun getAllNotes(): Flow<RequestState<List<NoteModel>>>
 
-    suspend fun getAllFav(): Flow<Result<List<FavModel>>>
+    suspend fun getAllFav(): Flow<RequestState<List<FavModel>>>
 
-    suspend fun getAllHighlights(): Flow<Result<List<HighlightModel>>>
+    suspend fun getAllHighlights(): Flow<RequestState<List<HighlightModel>>>
     suspend fun getBibleVerseByBookIdAndChapterId(
         bookId: Int,
         chapterID: Int
-    ): Flow<Result<List<BibleModelEntry>>>
+    ): Flow<RequestState<List<BibleModelEntry>>>
 
 
     suspend fun deleteNote(id: Int)

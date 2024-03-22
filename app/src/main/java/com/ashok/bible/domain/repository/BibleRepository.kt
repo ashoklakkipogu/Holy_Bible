@@ -1,5 +1,7 @@
 package com.ashok.bible.domain.repository
 
+import com.ashok.bible.data.error.Result
+import com.ashok.bible.data.error.RootError
 import com.ashok.bible.data.local.entity.BaseModel
 import com.ashok.bible.data.local.entity.LyricsModel
 import com.ashok.bible.data.local.entity.QuotesModel
@@ -7,14 +9,12 @@ import com.ashok.bible.data.local.entity.StatusEmptyImagesModel
 import com.ashok.bible.data.local.entity.StatusImagesModel
 import com.ashok.bible.data.local.entity.StoryModel
 import com.ashok.bible.data.local.entity.UserModel
-import com.ashok.bible.domain.RequestState
-import kotlinx.coroutines.flow.Flow
 
 interface BibleRepository {
-    suspend fun getLyrics(): Flow<RequestState<Map<String, LyricsModel>?>>
-    suspend fun getQuotes():Flow<RequestState<Map<String, List<QuotesModel>>?>>
-    suspend fun getStory():Flow<RequestState<Map<String, StoryModel>?>>
-    suspend fun getStatusImages():Flow<RequestState<Map<String, StatusImagesModel>?>>
-    suspend fun getStatusEmptyImages():Flow<RequestState<Map<String, StatusEmptyImagesModel>?>>
-    suspend fun saveUsers(userModel: UserModel):Flow<RequestState<BaseModel?>>
+    suspend fun getLyrics(): Result<Map<String, LyricsModel>?, RootError>
+    suspend fun getQuotes(): Result<Map<String, List<QuotesModel>>?, RootError>
+    suspend fun getStory(): Result<Map<String, StoryModel>?, RootError>
+    suspend fun getStatusImages(): Result<Map<String, StatusImagesModel>?, RootError>
+    suspend fun getStatusEmptyImages(): Result<Map<String, StatusEmptyImagesModel>?, RootError>
+    suspend fun saveUsers(userModel: UserModel): Result<BaseModel?, RootError>
 }

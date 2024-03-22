@@ -8,7 +8,6 @@ import com.ashok.bible.data.local.entry.FavoriteModelEntry
 import com.ashok.bible.data.local.entry.HighlightModelEntry
 import com.ashok.bible.data.local.entry.NoteModelEntry
 import com.ashok.bible.domain.repository.DbRepository
-import com.ashok.bible.ui.utilities.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -16,17 +15,17 @@ import javax.inject.Inject
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import com.ashok.bible.data.local.entity.StatusEmptyImagesModel
 import com.ashok.bible.domain.RequestState
-import com.ashok.bible.domain.repository.BibleRepository
+import com.ashok.bible.domain.usecase.BibleUseCase
+import com.ashok.bible.domain.usecase.DatabaseUseCase
 import com.ashok.bible.ui.utilities.BibleUtils
 import com.ashok.bible.ui.utilities.SharedPrefUtils
 import com.ashok.bible.ui.utilities.TtsManager
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    val bibleRepository: BibleRepository,
-    val dbRepo: DbRepository,
+    private val useCase: BibleUseCase,
+    private val dbUseCase: DatabaseUseCase,
     val pref: SharedPreferences,
     val application: Application
 ) :
@@ -35,6 +34,7 @@ class HomeViewModel @Inject constructor(
     var state by mutableStateOf(DashboardUiState())
     private var ttsManager: TtsManager? = null
 
+    private var dbRepo:DbRepository = dbUseCase.mDbRepository
 
     init {
         getBibleActionForLeftRight()
@@ -173,41 +173,10 @@ class HomeViewModel @Inject constructor(
         chapterId: Int = 1,
         isScrollTop: Int = 0
     ) = viewModelScope.launch {
-        dbRepo.getBiblePageActionLeftOrRight(clickAction, bookId, chapterId).collect { result ->
-            when (result) {
-                is Result.Error -> {
-                    state =
-                        state.copy(isLoading = false)
-                }
-
-                is Result.Loading -> {
-                    state = state.copy(isLoading = true)
-                }
-
-                is Result.Success -> {
-                    if (result.data?.isNotEmpty() == true)
-                        state = state.copy(isLoading = false, bibleData = result.data)
-                }
+        dbUseCase.mDbRepository.getBiblePageActionLeftOrRight(clickAction, bookId, chapterId)
+            .collect { result ->
+                state = state.copy(bibleData = result)
             }
-        }
-
-        /*val language = SharedPrefUtils.getLanguage(pref)!!
-        val data = dbRepo.getBibleListByBookIdAndChapterId(bookId, chapterId, language)
-        if (data.isNullOrEmpty()) {
-            if (clickAction == "LEFT" && bookId != 1 && chapterId != 1) {
-                val lastPos = dbRepo.getBibleScrollLastPosition(bookId - 1)
-                if (lastPos != null)
-                    bibleListData = dbRepo.getBibleListByBookIdAndChapterId(
-                        lastPos.Book,
-                        lastPos.Chapter,
-                        language
-                    )!!
-            } else if (clickAction == "RIGHT" && bookId != 66 && chapterId != 22) {
-                bibleListData = dbRepo.getBibleListByBookIdAndChapterId(bookId + 1, 1, language)!!
-            }
-        } else {
-            bibleListData = data
-        }*/
         setOrResetBibleScrollPos(isScrollTop)
     }
 
@@ -295,102 +264,22 @@ class HomeViewModel @Inject constructor(
 
     fun getBibleIndex() = viewModelScope.launch {
         dbRepo.getBibleIndex().collect { result ->
-            when (result) {
-                is Result.Error -> Unit
-                is Result.Loading -> Unit
-                is Result.Success -> {
-                    state = state.copy(bibleIndexData = result.data)
-                }
-            }
+            state = state.copy(bibleIndexData = result)
         }
     }
-
-    /*fun textToSpeech(context: Context, playingText: String?, onStop: () -> Unit) {
-        textToSpeech = TextToSpeech(
-            context
-        ) {
-            if (it == TextToSpeech.SUCCESS) {
-                textToSpeech?.let { txtToSpeech ->
-                    //txtToSpeech.language = Locale.US
-                    txtToSpeech.language = Locale("te_IN")
-                    txtToSpeech.setSpeechRate(1.0f)
-                    if (playingText != null) {
-                        txtToSpeech.speak(
-                            playingText,
-                            TextToSpeech.QUEUE_FLUSH,
-                            null,
-                            null
-                        )
-                    }
-                }
-            }
-            if (it == TextToSpeech.STOPPED) {
-                onStop.invoke()
-            }
-        }
-    }
-
-    fun stopPlaying() {
-        textToSpeech?.stop()
-    }*/
 
     private fun getStatusImages() {
         viewModelScope.launch {
-            bibleRepository.getStatusEmptyImages().collect { result ->
+            useCase.getStatusEmptyImages().collect { result ->
                 when (result) {
                     is RequestState.Success -> {
-                        val data = result.data
-                        var newList: List<StatusEmptyImagesModel>? = null
-                        if (data != null) {
-                            val list = ArrayList<StatusEmptyImagesModel>()
-                            for ((_, value) in data) {
-                                list.add(value)
-                            }
-                            newList = list.sortedBy { sort ->
-                                sort.createdDate
-                            }.reversed()
-                        }
                         state = state.copy(
-                            statusImages = newList
+                            statusImages = result.data
                         )
                     }
 
                     else -> {}
                 }
-
-                /*when (result) {
-                    is Result.Error -> {
-                        state = state.copy(
-                            statusImagesError = result.apiError?.getErrorMessage(),
-                            isLoadingStatus = false
-                        )
-                    }
-
-                    is Result.Loading -> {
-                        state = state.copy(isLoadingStatus = true)
-                    }
-
-                    is Result.Success -> {
-                        val data = result.data
-                        state = if (data != null) {
-                            val list = ArrayList<StatusEmptyImagesModel>()
-                            for ((_, value) in data) {
-                                list.add(value)
-                            }
-                            val newList = list.sortedBy { sort ->
-                                sort.createdDate
-                            }.reversed()
-                            state.copy(
-                                statusImages = newList,
-                                isLoadingStatus = false
-                            )
-                        } else {
-                            state.copy(
-                                isLoadingStatus = false
-                            )
-                        }
-                    }
-                }*/
             }
         }
     }
@@ -400,6 +289,4 @@ class HomeViewModel @Inject constructor(
         ttsManager?.stop()
         ttsManager?.shutDown()
     }
-
-
 }
